@@ -19,4 +19,5 @@ add_executable(eztest
     
     # root
     main.c
+    options.h
 )  

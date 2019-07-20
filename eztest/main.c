@@ -13,16 +13,7 @@
 #include <getopt.h>
 #include <assert.h>
 #include <stdio.h>
-
-
-/* Structs */
-
-/** Represents the application options. */
-struct options
-{
-    /** When set to @code true @endcode only default color is used when printing. */
-    bool no_color;
-};
+#include "options.h"
 
 
 /* Macros */
