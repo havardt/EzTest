@@ -34,9 +34,9 @@
 
 /* Prototypes */
 
-void      print_usage ( FILE            *                     );
-const int parse_opt   ( struct  options *, const int          );
-const int handle_opts ( struct  options *, const int, char ** );
+void      print_usage ( FILE            *               );
+const int parse_opt   ( struct  options *, int          );
+const int handle_opts ( struct  options *, int, char ** );
 
 
 /* Globals */
@@ -44,7 +44,8 @@ const int handle_opts ( struct  options *, const int, char ** );
 const struct option long_opts[] = {
     {"help"     , 0, NULL, 'h'},
     {"version"  , 0, NULL, 'v'},
-    {"no-color" , 0, NULL, 'c'}
+    {"no-color" , 0, NULL, 'c'},
+    {0}
 };
 
 
@@ -91,12 +92,10 @@ const int parse_opt(struct options *opts, const int opt)
         case 'v':
             printf("%s version %s\n", __PROGRAM_NAME__, __PROGRAM_VERSION__);
             exit(EXIT_SUCCESS);
-            break;
-        
+
         case 'h':
             print_usage(stdout); 
             exit(EXIT_SUCCESS);
-            break;
 
         case 'c':
             opts->no_color = true;
