@@ -19,5 +19,7 @@ add_executable(eztest
     
     # root
     main.c
+    eztest.c
+    eztest.h
     options.h
-)  
+    mytests.c)

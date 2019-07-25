@@ -6,6 +6,8 @@
 *
 */
 
+#include <stdbool.h>
+
 #ifndef OPTIONS_H
 #define OPTIONS_H
 

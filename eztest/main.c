@@ -6,6 +6,8 @@
 *
 */
 
+#define TEST_RUNNER
+
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -14,6 +16,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include "options.h"
+#include "eztest.h"
 
 
 /* Macros */
@@ -57,6 +60,8 @@ int main(int argc, char **argv)
     {
         return EXIT_FAILURE;
     }
+
+    eztest_run(&opts);
     
     return EXIT_SUCCESS;
 }
