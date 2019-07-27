@@ -96,7 +96,7 @@ TEST(_base_suite, _base_test){}
  * @param opts Application options.
  * @return @code EXIT_SUCCESS @endcode if no tests failed; otherwise @code EXIT_FAILURE @endcode.
  */
-extern int eztest_run(struct options *opts);
+int eztest_run(struct options *opts);
 
 #endif // TEST_RUNNER
 

@@ -11,26 +11,15 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include <unistd.h>
 #include <getopt.h>
 #include <assert.h>
 #include <stdio.h>
 #include "options.h"
 #include "eztest.h"
-
+#include "about.h"
+#include "../common/result.h"
 
 /* Macros */
-
-#define __PROGRAM_NAME__ "EzTest"
-#define __PROGRAM_VERSION__ "0.0.1"
-#define __PROGRAM_AUTHOR__ "havardt"
-#define __PROGRAM_WEBSITE__ "https://github.com/havardt/EzTest"
-
-/** Represents the standard ok/ success result value for non-pointer return types. */
-#define RESULT_OK 0
-
-/** Represents the standard error/ fail result value for non-pointer return types. */
-#define RESULT_ERR -1
 
 #define DEFAULT_OPTIONS { .no_color = false }
 

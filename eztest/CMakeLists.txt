@@ -13,13 +13,23 @@ if (CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
-#include_directories("")
+include_directories("common core")
 
-add_executable(eztest 
+add_executable(eztest
     
-    # root
-    main.c
-    eztest.c
-    eztest.h
-    options.h
+    # /
+
+    # /core
+    core/main.c
+    core/eztest.c
+    core/eztest.h
+    core/options.h
+    core/about.h
+
+    # /common
+    common/result.h
+
+    # Add your test files below using relative paths.
+    # Example 1: ../my_test.c
+    # Example 2: ../math_tests/addition_test.c
     mytests.c)
