@@ -27,8 +27,8 @@
 /* Prototypes */
 
 void      print_usage ( FILE            *               );
-const int parse_opt   ( struct  options *, int          );
-const int handle_opts ( struct  options *, int, char ** );
+int parse_opt   ( struct  options *, int          );
+int handle_opts ( struct  options *, int, char ** );
 
 
 /* Globals */
@@ -79,7 +79,7 @@ void print_usage(FILE *fd)
  * @param opt  The option to parse.
  * @return: On success @code RESULT_OK @endcode; otherwise @code RESULT_ERR @endcode .
  */
-const int parse_opt(struct options *opts, const int opt)
+int parse_opt(struct options *opts, const int opt)
 {
     switch(opt)
     {
@@ -111,7 +111,7 @@ const int parse_opt(struct options *opts, const int opt)
  * @return @code RESULT_OK @endcode on success and @code RESULT_ERR @endocode on failure. 
  *         Failure may occur if the user has given an unknown option. 
  */
-const int handle_opts(struct options *opts, const int argc, char **argv)
+int handle_opts(struct options *opts, const int argc, char **argv)
 {
     int opt, opt_index;
     while((opt = getopt_long(argc, argv, "vhc", long_opts, &opt_index)) != -1)

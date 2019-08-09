@@ -36,8 +36,20 @@ struct unit_test
 
 #define _GET_STRUCT_NAME(suite, name) struct_##suite##_##name
 
+/**
+ * Initializes the setup function for the given suite.
+ *
+ * @param suite The name of the test suite that this setup function belongs.
+ * @note Each suite should only have one (1) setup function.
+ */
 #define SETUP(suite) static void _GET_SETUP_FN_NAME(suite)(void)
 
+/**
+ * Initializes the teardown function for the given suite.
+ *
+ * @param suite The name of the test suite that this teardown function belongs.
+ * @note Each suite should only have one (1) teardown function.
+ */
 #define TEARDOWN(suite) static void _GET_TEARDOWN_FN_NAME(suite)(void)
 
 #define _NEW_UNIT_TEST_STRUCT(suite, name)\

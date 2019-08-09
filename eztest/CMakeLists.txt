@@ -28,8 +28,9 @@ add_executable(eztest
 
     # /common
     common/result.h
+    common/color.h
 
     # Add your test files below using relative paths.
     # Example 1: ../my_test.c
     # Example 2: ../math_tests/addition_test.c
-    mytests.c)
+    )
