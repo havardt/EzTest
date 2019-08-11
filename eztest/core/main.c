@@ -26,9 +26,9 @@
 
 /* Prototypes */
 
-void      print_usage ( FILE            *               );
-int parse_opt   ( struct  options *, int          );
-int handle_opts ( struct  options *, int, char ** );
+void print_usage ( FILE            *               );
+int  parse_opt   ( struct  options *, int          );
+int  handle_opts ( struct  options *, int, char ** );
 
 
 /* Globals */

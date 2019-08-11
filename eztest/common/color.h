@@ -14,4 +14,4 @@
 #define COLOR_GREEN  "\033[0;32m"
 #define COLOR_NONE   "\033[0m"
 
-#endif //EZTEST_COLOR_H
+#endif
