@@ -86,6 +86,26 @@ void _assert_is_false(bool condition, char *file, int line)
     }
 }
 
+void _assert_are_same(const void *expected, const void *actual, char *file, int line)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are same failed: different memory location.\n" COLOR_NONE,
+               current->test_suite, current->test_name);
+    }
+}
+
+void _assert_are_not_same(const void *unexpected, const void *actual, char *file, int line)
+{
+    if(unexpected == actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are not same failed: same memory location.\n" COLOR_NONE,
+               current->test_suite, current->test_name);
+    }
+}
+
 //endregion asserts
 
 

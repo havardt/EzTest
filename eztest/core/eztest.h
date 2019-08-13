@@ -111,6 +111,12 @@ void _assert_is_true(bool condition, char *file, int line);
 void _assert_is_false(bool condition, char *file, int line);
 #define ASSERT_IS_FALSE(condition) _assert_is_false(condition, __FILE__, __LINE__);
 
+void _assert_are_same(const void *expected, const void *actual, char *file, int line);
+#define ASSERT_ARE_SAME(expected, actual) _assert_are_same(expected, actual, __FILE__, __LINE__);
+
+void _assert_are_not_same(const void *unexpected, const void *actual, char *file, int line);
+#define ASSERT_ARE_NOT_SAME(unexpected, actual) _assert_are_not_same(unexpected, actual, __FILE__, __LINE__);
+
 TEST(_base_suite, _base_test){}
 
 #ifdef TEST_RUNNER
