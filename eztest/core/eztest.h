@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 struct unit_test
 {
@@ -103,6 +104,12 @@ void _assert_is_null(const void *value, char *file, int line);
 
 void _assert_is_not_null(const void *value, char *file, int line);
 #define ASSERT_IS_NOT_NULL(value) _assert_is_not_null(value, __FILE__, __LINE__);
+
+void _assert_is_true(bool condition, char *file, int line);
+#define ASSERT_IS_TRUE(condition) _assert_is_true(condition, __FILE__, __LINE__);
+
+void _assert_is_false(bool condition, char *file, int line);
+#define ASSERT_IS_FALSE(condition) _assert_is_false(condition, __FILE__, __LINE__);
 
 TEST(_base_suite, _base_test){}
 

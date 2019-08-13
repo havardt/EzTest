@@ -66,6 +66,26 @@ void _assert_is_not_null(const void *value, char *file, int line)
     }
 }
 
+void _assert_is_true(bool condition, char *file, int line)
+{
+    if(condition != true)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert is true failed.\n" COLOR_NONE,
+               current->test_suite, current->test_name);
+    }
+}
+
+void _assert_is_false(bool condition, char *file, int line)
+{
+    if(condition != false)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert is false failed.\n" COLOR_NONE,
+               current->test_suite, current->test_name);
+    }
+}
+
 //endregion asserts
 
 
