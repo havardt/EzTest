@@ -98,6 +98,12 @@ struct unit_test
     _NEW_FULL_UNIT_TEST_STRUCT(suite, name);\
     static void _GET_RUN_FN_NAME(suite, name)(void)
 
+void _assert_is_null(const void *value, char *file, int line);
+#define ASSERT_IS_NULL(value) _assert_is_null(value, __FILE__, __LINE__);
+
+void _assert_is_not_null(const void *value, char *file, int line);
+#define ASSERT_IS_NOT_NULL(value) _assert_is_not_null(value, __FILE__, __LINE__);
+
 TEST(_base_suite, _base_test){}
 
 #ifdef TEST_RUNNER
