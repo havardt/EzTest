@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 
 struct unit_test
 {
@@ -116,6 +117,13 @@ void _assert_are_same(const void *expected, const void *actual, char *file, int 
 
 void _assert_are_not_same(const void *unexpected, const void *actual, char *file, int line);
 #define ASSERT_ARE_NOT_SAME(unexpected, actual) _assert_are_not_same(unexpected, actual, __FILE__, __LINE__);
+
+#ifdef NAN
+
+void _assert_is_nan(float value, char *file, int line);
+#define ASSERT_IS_NAN(value) _assert_is_nan(value, __FILE__, __LINE__);
+
+#endif
 
 TEST(_base_suite, _base_test){}
 

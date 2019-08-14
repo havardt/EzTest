@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "options.h"
 #include "eztest.h"
 #include "../common/color.h"
@@ -105,6 +106,20 @@ void _assert_are_not_same(const void *unexpected, const void *actual, char *file
                current->test_suite, current->test_name);
     }
 }
+
+#ifdef NAN
+
+void _assert_is_nan(float value, char *file, int line)
+{
+    if(!isnan(value))
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert is NaN failed.\n" COLOR_NONE,
+                current->test_suite, current->test_name);
+    }
+}
+
+#endif
 
 //endregion asserts
 
