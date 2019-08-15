@@ -125,6 +125,50 @@ void _assert_is_nan(float value, char *file, int line);
 
 #endif
 
+void _assert_are_equal_ch  (char            expected, char            actual);
+void _assert_are_equal_sch (signed char     expected, signed char     actual);
+void _assert_are_equal_uch (unsigned char   expected, unsigned char   actual);
+void _assert_are_equal_int (intmax_t        expected, intmax_t        actual);
+void _assert_are_equal_uint(uintmax_t       expected, uintmax_t       actual);
+void _assert_are_equal_dbl (long double     expected, long double     actual);
+void _assert_are_equal_str (const char    * expected, const char    * actual);
+void _assert_are_equal_wstr(const wchar_t * expected, const wchar_t * actual);
+void _assert_are_equal     (void          * expected, void          * actual);
+/**
+ * Tests whether the two values are equal.
+ *
+ * @param expected The first value to compare. This is the value the tests expects.
+ * @param actual   The second value to compare. This is the value produced by the code under test.
+ */
+#define ASSERT_ARE_EQUAL(expected, actual) _Generic((expected, actual),\
+    signed char        : _assert_are_equal_sch,\
+    char               : _assert_are_equal_ch,\
+    short              : _assert_are_equal_int,\
+    int                : _assert_are_equal_int,\
+    long               : _assert_are_equal_int,\
+    long long          : _assert_are_equal_int,\
+    unsigned char      : _assert_are_equal_uch,\
+    unsigned short     : _assert_are_equal_uint,\
+    unsigned int       : _assert_are_equal_uint,\
+    unsigned long      : _assert_are_equal_uint,\
+    unsigned long long : _assert_are_equal_uint,\
+    float              : _assert_are_equal_dbl,\
+    double             : _assert_are_equal_dbl,\
+    long double        : _assert_are_equal_dbl,\
+    char *             : _assert_are_equal_str,\
+    wchar_t *          : _assert_are_equal_wstr,\
+    default            : _assert_are_equal)(expected, actual)
+
+void _assert_are_equal_t(const void *expected, const void *actual, size_t size);
+/**
+ * Checks for equality by comparing each byte.
+ *
+ * @param expected A pointer to the expected value.
+ * @param actual   A pointer to the actual value.
+ * @param size     The size of the passed types.
+ */
+#define ASSERT_ARE_EQUAL_T(expected, actual, size) _assert_are_equal_t(expected, actual, size)
+
 TEST(_base_suite, _base_test){}
 
 #ifdef TEST_RUNNER

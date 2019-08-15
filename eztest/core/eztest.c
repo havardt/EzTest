@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <wchar.h>
 #include <math.h>
 #include "options.h"
 #include "eztest.h"
@@ -44,6 +45,49 @@ const char *extract_file_name(char *path)
     path = strrchr(path, '/');
     return ++path;
 }
+
+//region printers
+
+/** Prints an overall report of the test results. */
+static void print_report(void)
+{
+    printf("\n-----------------------------------\n"
+           "|  " COLOR_GREEN  "PASSED"  COLOR_NONE "  |  "
+           COLOR_YELLOW "SKIPPED" COLOR_NONE "  |  "
+           COLOR_RED    "FAILED"  COLOR_NONE "  |\n"
+           "-----------------------------------\n"
+           "| " COLOR_GREEN  "%-8d" COLOR_NONE " | "
+           COLOR_YELLOW "%-9d" COLOR_NONE " | "
+           COLOR_RED    "%-8d" COLOR_NONE " |\n"
+           "-----------------------------------\n",
+           pass_count, skip_count, fail_count);
+}
+
+static void print_failed(const struct unit_test *test)
+{
+    printf("[%s : %s]" COLOR_RED  " FAILED \n\n" COLOR_NONE, test->test_suite, test->test_name);
+}
+
+static void print_passed(const struct unit_test *test)
+{
+    printf("[%s : %s]" COLOR_GREEN " PASSED \n\n" COLOR_NONE, test->test_suite, test->test_name);
+}
+
+static void print_skipped(const struct unit_test *test)
+{
+    printf("[%s : %s]" COLOR_YELLOW  " SKIPPED \n\n" COLOR_NONE, test->test_suite, test->test_name);
+}
+
+static void print_bytes(const void *ptr, size_t n)
+{
+    const unsigned char *bytes = (const unsigned char *)ptr;
+    for (; n > 0; --n, ++bytes)
+    {
+        printf("%02X ", *bytes);
+    }
+}
+
+//endregion printers
 
 //region asserts
 
@@ -121,43 +165,107 @@ void _assert_is_nan(float value, char *file, int line)
 
 #endif
 
+void _assert_are_equal_ch(char expected, char actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %c, but got %c.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_sch(signed char expected, signed char actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %c, but got %c.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_uch(unsigned char expected, unsigned char actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %c, but got %c.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_int(intmax_t expected, intmax_t actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %ld, but got %ld.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_uint(uintmax_t expected, uintmax_t actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %ld, but got %ld.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_dbl(long double expected, long double actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %Lf, but got %Lf.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+void _assert_are_equal_str(const char *expected, const char *actual)
+{
+    if(strcmp(expected, actual) != 0)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %s, but got %s.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual)
+{
+    if(wcscmp(expected, actual) != 0)
+    {
+        result = fail;
+        wprintf(L"[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %ls, but got %ls.\n" COLOR_NONE,
+                          current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal(void *expected, void *actual)
+{
+    result = fail;
+    printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: unsupported data type.\n" COLOR_NONE,
+           current->test_suite, current->test_name);
+}
+
+void _assert_are_equal_t(const void *expected, const void *actual, size_t size)
+{
+    if(memcmp(expected, actual, size) != 0)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected ",
+               current->test_suite, current->test_name);
+        print_bytes(expected, size);
+        printf("but got ");
+        print_bytes(actual, size);
+        printf("\n" COLOR_NONE);
+    }
+}
+
 //endregion asserts
-
-
-//region printers
-
-/** Prints an overall report of the test results. */
-static void print_report(void)
-{
-    printf("\n-----------------------------------\n"
-           "|  " COLOR_GREEN  "PASSED"  COLOR_NONE "  |  "
-                 COLOR_YELLOW "SKIPPED" COLOR_NONE "  |  "
-                 COLOR_RED    "FAILED"  COLOR_NONE "  |\n"
-           "-----------------------------------\n"
-           "| " COLOR_GREEN  "%-8d" COLOR_NONE " | "
-                COLOR_YELLOW "%-9d" COLOR_NONE " | "
-                COLOR_RED    "%-8d" COLOR_NONE " |\n"
-           "-----------------------------------\n",
-           pass_count, skip_count, fail_count);
-}
-
-static void print_failed(const struct unit_test *test)
-{
-    printf("[%s : %s]" COLOR_RED  " FAILED \n\n" COLOR_NONE, test->test_suite, test->test_name);
-}
-
-static void print_passed(const struct unit_test *test)
-{
-    printf("[%s : %s]" COLOR_GREEN " PASSED \n\n" COLOR_NONE, test->test_suite, test->test_name);
-}
-
-static void print_skipped(const struct unit_test *test)
-{
-    printf("[%s : %s]" COLOR_YELLOW  " SKIPPED \n\n" COLOR_NONE, test->test_suite, test->test_name);
-}
-
-//endregion printers
-
 
 //region runner
 
