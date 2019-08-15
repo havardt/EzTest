@@ -252,7 +252,7 @@ void _assert_are_equal()
            current->test_suite, current->test_name);
 }
 
-void _assert_are_equal_t(const void *expected, const void *actual, size_t size)
+void _assert_are_equal_mem(const void *expected, const void *actual, size_t size)
 {
     if(memcmp(expected, actual, size) != 0)
     {
