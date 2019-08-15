@@ -244,7 +244,8 @@ void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual)
     }
 }
 
-void _assert_are_equal(void *expected, void *actual)
+/** Triggered when attempting to compare using an unsupported data type. */
+void _assert_are_equal()
 {
     result = fail;
     printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: unsupported data type.\n" COLOR_NONE,

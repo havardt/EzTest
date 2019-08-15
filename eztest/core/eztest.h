@@ -133,7 +133,7 @@ void _assert_are_equal_uint(uintmax_t       expected, uintmax_t       actual);
 void _assert_are_equal_dbl (long double     expected, long double     actual);
 void _assert_are_equal_str (const char    * expected, const char    * actual);
 void _assert_are_equal_wstr(const wchar_t * expected, const wchar_t * actual);
-void _assert_are_equal     (void          * expected, void          * actual);
+void _assert_are_equal     (                                                );
 /**
  * Tests whether the two values are equal.
  *
