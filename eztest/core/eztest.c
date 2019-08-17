@@ -10,6 +10,7 @@
 #include <string.h>
 #include <wchar.h>
 #include <math.h>
+#include <stdarg.h>
 #include "options.h"
 #include "eztest.h"
 #include "../common/color.h"
@@ -171,97 +172,6 @@ void _assert_is_nan(float value, char *file, int line)
 
 #endif
 
-void _assert_are_equal_ch(char expected, char actual)
-{
-    if(expected != actual)
-    {
-        result = fail;
-        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %c, but got %c.\n" COLOR_NONE,
-               current->test_suite, current->test_name, expected, actual);
-    }
-}
-
-void _assert_are_equal_sch(signed char expected, signed char actual)
-{
-    if(expected != actual)
-    {
-        result = fail;
-        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %c, but got %c.\n" COLOR_NONE,
-               current->test_suite, current->test_name, expected, actual);
-    }
-}
-
-void _assert_are_equal_uch(unsigned char expected, unsigned char actual)
-{
-    if(expected != actual)
-    {
-        result = fail;
-        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %c, but got %c.\n" COLOR_NONE,
-               current->test_suite, current->test_name, expected, actual);
-    }
-}
-
-void _assert_are_equal_int(intmax_t expected, intmax_t actual)
-{
-    if(expected != actual)
-    {
-        result = fail;
-        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %ld, but got %ld.\n" COLOR_NONE,
-               current->test_suite, current->test_name, expected, actual);
-    }
-}
-
-void _assert_are_equal_uint(uintmax_t expected, uintmax_t actual)
-{
-    if(expected != actual)
-    {
-        result = fail;
-        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %ld, but got %ld.\n" COLOR_NONE,
-               current->test_suite, current->test_name, expected, actual);
-    }
-}
-
-void _assert_are_equal_dbl(long double expected, long double actual)
-{
-    if(expected != actual)
-    {
-        result = fail;
-        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %Lf, but got %Lf.\n" COLOR_NONE,
-               current->test_suite, current->test_name, expected, actual);
-    }
-}
-void _assert_are_equal_str(const char *expected, const char *actual)
-{
-    if((expected == NULL && actual != NULL) ||
-       (expected != NULL && actual == NULL) ||
-       (expected != NULL && strcmp(expected, actual) != 0))
-    {
-        result = fail;
-        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %s, but got %s.\n" COLOR_NONE,
-               current->test_suite, current->test_name, expected, actual);
-    }
-}
-
-void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual)
-{
-    if((expected == NULL && actual != NULL) ||
-       (expected != NULL && actual == NULL) ||
-       (expected != NULL && wcscmp(expected, actual) != 0))
-    {
-        result = fail;
-        wprintf(L"[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %ls, but got %ls.\n" COLOR_NONE,
-                          current->test_suite, current->test_name, expected, actual);
-    }
-}
-
-/** Triggered when attempting to compare using an unsupported data type. */
-void _assert_are_equal()
-{
-    result = fail;
-    printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: unsupported data type.\n" COLOR_NONE,
-           current->test_suite, current->test_name);
-}
-
 void _assert_equal_mem(const void *expected, const void *actual, size_t size)
 {
     if((expected == NULL && actual != NULL) ||
@@ -287,6 +197,195 @@ void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t si
         printf("[%s : %s]" COLOR_YELLOW " Assert not equal failed.\n" COLOR_NONE,
                current->test_suite, current->test_name);
     }
+}
+
+void _assert_are_equal_ch(char expected, char actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected '%c', but got '%c'.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_sch(signed char expected, signed char actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected '%c', but got '%c'.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_uch(unsigned char expected, unsigned char actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected '%c', but got '%c'.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_int(intmax_t expected, intmax_t actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected '%ld', but got '%ld'.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_uint(uintmax_t expected, uintmax_t actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected '%ld', but got '%ld'.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_dbl(long double expected, long double actual)
+{
+    if(expected != actual)
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected '%Lf', but got '%Lf'.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+void _assert_are_equal_str(const char *expected, const char *actual)
+{
+    if((expected == NULL && actual != NULL) ||
+       (expected != NULL && actual == NULL) ||
+       (expected != NULL && strcmp(expected, actual) != 0))
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected '%s', but got '%s'.\n" COLOR_NONE,
+               current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual)
+{
+    if((expected == NULL && actual != NULL) ||
+       (expected != NULL && actual == NULL) ||
+       (expected != NULL && wcscmp(expected, actual) != 0))
+    {
+        result = fail;
+        wprintf(L"[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected '%ls', but got '%ls'.\n" COLOR_NONE,
+                          current->test_suite, current->test_name, expected, actual);
+    }
+}
+
+/** Triggered when attempting to compare using an unsupported data type. */
+void _assert_are_equal()
+{
+    result = fail;
+    printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: unsupported data type.\n" COLOR_NONE,
+           current->test_suite, current->test_name);
+}
+
+void _assert_are_not_equal_ch(char unexpected, char actual)
+{
+    if(unexpected == actual)
+    {
+        result = fail;
+        printf("[%s : %s]"
+               COLOR_YELLOW " Assert not equal failed: unexpected(%c) and actual(%c) are equal.\n" COLOR_NONE,
+               current->test_suite, current->test_name, unexpected, actual);
+    }
+}
+
+void _assert_are_not_equal_sch(signed char unexpected, signed char actual)
+{
+    if(unexpected == actual)
+    {
+        result = fail;
+        printf("[%s : %s]"
+               COLOR_YELLOW " Assert not equal failed: unexpected(%c) and actual(%c) are equal.\n" COLOR_NONE,
+               current->test_suite, current->test_name, unexpected, actual);
+    }
+}
+
+void _assert_are_not_equal_uch(unsigned char unexpected, unsigned char actual)
+{
+    if(unexpected == actual)
+    {
+        result = fail;
+        printf("[%s : %s]"
+               COLOR_YELLOW " Assert not equal failed: unexpected(%c) and actual(%c) are equal.\n" COLOR_NONE,
+               current->test_suite, current->test_name, unexpected, actual);
+    }
+}
+
+void _assert_are_not_equal_int(intmax_t unexpected, intmax_t actual)
+{
+    if(unexpected == actual)
+    {
+        result = fail;
+        printf("[%s : %s]"
+               COLOR_YELLOW " Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.\n" COLOR_NONE,
+               current->test_suite, current->test_name, unexpected, actual);
+    }
+}
+
+void _assert_are_not_equal_uint(uintmax_t unexpected, uintmax_t actual)
+{
+    if(unexpected == actual)
+    {
+        result = fail;
+        printf("[%s : %s]"
+               COLOR_YELLOW " Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.\n" COLOR_NONE,
+               current->test_suite, current->test_name, unexpected, actual);
+    }
+}
+
+void _assert_are_not_equal_dbl(long double unexpected, long double actual)
+{
+    if(unexpected == actual)
+    {
+        result = fail;
+        printf("[%s : %s]"
+               COLOR_YELLOW " Assert not equal failed: unexpected(%Lf) and actual(%Lf) are equal.\n" COLOR_NONE,
+               current->test_suite, current->test_name, unexpected, actual);
+    }
+}
+
+void _assert_are_not_equal_str(const char *unexpected, const char *actual)
+{
+    if((unexpected == NULL && actual == NULL) ||
+       (unexpected != NULL && actual != NULL && strcmp(unexpected, actual) == 0))
+    {
+        result = fail;
+        printf("[%s : %s]"
+                COLOR_YELLOW " Assert not equal failed: unexpected(%s) and actual(%s) are equal.\n" COLOR_NONE,
+                current->test_suite, current->test_name, unexpected, actual);
+    }
+}
+
+void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual)
+{
+    if((unexpected == NULL && actual == NULL) ||
+       (unexpected != NULL && actual != NULL && wcscmp(unexpected, actual) == 0))
+    {
+        result = fail;
+        wprintf(L"[%s : %s]"
+                COLOR_YELLOW " Assert not equal failed: unexpected(%ls) and actual(%ls) are equal.\n" COLOR_NONE,
+                current->test_suite, current->test_name, unexpected, actual);
+    }
+}
+
+/** Triggered when attempting to compare using an unsupported data type. */
+void _assert_are_not_equal()
+{
+    result = fail;
+    printf("[%s : %s]" COLOR_YELLOW " Assert not equal failed: unsupported data type.\n" COLOR_NONE,
+           current->test_suite, current->test_name);
 }
 
 //endregion asserts

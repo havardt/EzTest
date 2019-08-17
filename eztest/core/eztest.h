@@ -159,6 +159,40 @@ void _assert_are_equal     (                                                );
     wchar_t *          : _assert_are_equal_wstr,\
     default            : _assert_are_equal)(expected, actual)
 
+void _assert_are_not_equal_ch  (char            expected, char            actual);
+void _assert_are_not_equal_sch (signed char     expected, signed char     actual);
+void _assert_are_not_equal_uch (unsigned char   expected, unsigned char   actual);
+void _assert_are_not_equal_int (intmax_t        expected, intmax_t        actual);
+void _assert_are_not_equal_uint(uintmax_t       expected, uintmax_t       actual);
+void _assert_are_not_equal_dbl (long double     expected, long double     actual);
+void _assert_are_not_equal_str (const char    * expected, const char    * actual);
+void _assert_are_not_equal_wstr(const wchar_t * expected, const wchar_t * actual);
+void _assert_are_not_equal     (                                                );
+/**
+ * Tests for inequality.
+ *
+ * @param unexpected The first value to compare. This is the value that should not occur.
+ * @param actual     The second value to compare. This is the value produced by the code under test.
+ */
+#define ASSERT_ARE_NOT_EQUAL(unexpected, actual) _Generic((unexpected, actual),\
+    signed char        : _assert_are_not_equal_sch,\
+    char               : _assert_are_not_equal_ch,\
+    short              : _assert_are_not_equal_int,\
+    int                : _assert_are_not_equal_int,\
+    long               : _assert_are_not_equal_int,\
+    long long          : _assert_are_not_equal_int,\
+    unsigned char      : _assert_are_not_equal_uch,\
+    unsigned short     : _assert_are_not_equal_uint,\
+    unsigned int       : _assert_are_not_equal_uint,\
+    unsigned long      : _assert_are_not_equal_uint,\
+    unsigned long long : _assert_are_not_equal_uint,\
+    float              : _assert_are_not_equal_dbl,\
+    double             : _assert_are_not_equal_dbl,\
+    long double        : _assert_are_not_equal_dbl,\
+    char *             : _assert_are_not_equal_str,\
+    wchar_t *          : _assert_are_not_equal_wstr,\
+    default            : _assert_are_not_equal)(unexpected, actual)
+
 void _assert_equal_mem(const void *expected, const void *actual, size_t size);
 /**
  * Checks for equality by comparing each byte at the given memory
