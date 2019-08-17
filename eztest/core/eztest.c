@@ -56,9 +56,9 @@ static void print_report(void)
            COLOR_YELLOW "SKIPPED" COLOR_NONE "  |  "
            COLOR_RED    "FAILED"  COLOR_NONE "  |\n"
            "-----------------------------------\n"
-           "| " COLOR_GREEN  "%-8d" COLOR_NONE " | "
-           COLOR_YELLOW "%-9d" COLOR_NONE " | "
-           COLOR_RED    "%-8d" COLOR_NONE " |\n"
+           "| " COLOR_GREEN  " %-7d" COLOR_NONE " | "
+           COLOR_YELLOW " %-8d" COLOR_NONE " | "
+           COLOR_RED    " %-7d" COLOR_NONE " |\n"
            "-----------------------------------\n",
            pass_count, skip_count, fail_count);
 }
@@ -78,6 +78,12 @@ static void print_skipped(const struct unit_test *test)
     printf("[%s : %s]" COLOR_YELLOW  " SKIPPED \n\n" COLOR_NONE, test->test_suite, test->test_name);
 }
 
+/**
+ * Prints the n first bytes at the memory location pointed to by the given pointer in hex.
+ *
+ * @param ptr Pointer to the memory location of which to start.
+ * @param n   The amount of bytes to print.
+ */
 static void print_bytes(const void *ptr, size_t n)
 {
     const unsigned char *bytes = (const unsigned char *)ptr;
@@ -226,7 +232,9 @@ void _assert_are_equal_dbl(long double expected, long double actual)
 }
 void _assert_are_equal_str(const char *expected, const char *actual)
 {
-    if(strcmp(expected, actual) != 0)
+    if((expected == NULL && actual != NULL) ||
+       (expected != NULL && actual == NULL) ||
+       (expected != NULL && strcmp(expected, actual) != 0))
     {
         result = fail;
         printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %s, but got %s.\n" COLOR_NONE,
@@ -236,7 +244,9 @@ void _assert_are_equal_str(const char *expected, const char *actual)
 
 void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual)
 {
-    if(wcscmp(expected, actual) != 0)
+    if((expected == NULL && actual != NULL) ||
+       (expected != NULL && actual == NULL) ||
+       (expected != NULL && wcscmp(expected, actual) != 0))
     {
         result = fail;
         wprintf(L"[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected %ls, but got %ls.\n" COLOR_NONE,
@@ -254,7 +264,9 @@ void _assert_are_equal()
 
 void _assert_are_equal_mem(const void *expected, const void *actual, size_t size)
 {
-    if(memcmp(expected, actual, size) != 0)
+    if((expected == NULL && actual != NULL) ||
+       (expected != NULL && actual == NULL) ||
+       (expected != NULL && memcmp(expected, actual, size) != 0))
     {
         result = fail;
         printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected ",

@@ -161,7 +161,8 @@ void _assert_are_equal     (                                                );
 
 void _assert_are_equal_mem(const void *expected, const void *actual, size_t size);
 /**
- * Checks for equality by comparing each byte.
+ * Checks for equality by comparing each byte at the given memory
+ * locations.
  *
  * @param expected A pointer to the expected value.
  * @param actual   A pointer to the actual value.
