@@ -173,6 +173,9 @@ void _assert_are_not_equal     (                                                
  *
  * @param unexpected The first value to compare. This is the value that should not occur.
  * @param actual     The second value to compare. This is the value produced by the code under test.
+ * @note The equality function for floating point numbers uses the epsilon macro from float.h
+ *       in its equality test. It is therefore often better to use assert_are_equal_precision()
+ *       and provide the application specific epsilon.
  */
 #define ASSERT_ARE_NOT_EQUAL(unexpected, actual) _Generic((unexpected, actual),\
     signed char        : _assert_are_not_equal_sch,\
