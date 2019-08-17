@@ -159,7 +159,7 @@ void _assert_are_equal     (                                                );
     wchar_t *          : _assert_are_equal_wstr,\
     default            : _assert_are_equal)(expected, actual)
 
-void _assert_are_equal_mem(const void *expected, const void *actual, size_t size);
+void _assert_equal_mem(const void *expected, const void *actual, size_t size);
 /**
  * Checks for equality by comparing each byte at the given memory
  * locations.
@@ -168,7 +168,18 @@ void _assert_are_equal_mem(const void *expected, const void *actual, size_t size
  * @param actual   A pointer to the actual value.
  * @param size     The size of the passed types.
  */
-#define ASSERT_ARE_EQUAL_MEM(expected, actual, size) _assert_are_equal_mem(expected, actual, size)
+#define ASSERT_EQUAL_MEM(expected, actual, size) _assert_equal_mem(expected, actual, size)
+
+void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size);
+/**
+ * Checks for inequality by comparing each byte at the given memory
+ * locations.
+ *
+ * @param unexpected A pointer to the unexpected value.
+ * @param actual     A pointer to the actual value.
+ * @param size       The size of the passed types.
+ */
+#define ASSERT_NOT_EQUAL_MEM(unexpected, actual, size) _assert_not_equal_mem(unexpected, actual, size)
 
 TEST(_base_suite, _base_test){}
 

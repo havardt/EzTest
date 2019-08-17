@@ -262,7 +262,7 @@ void _assert_are_equal()
            current->test_suite, current->test_name);
 }
 
-void _assert_are_equal_mem(const void *expected, const void *actual, size_t size)
+void _assert_equal_mem(const void *expected, const void *actual, size_t size)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
@@ -275,6 +275,17 @@ void _assert_are_equal_mem(const void *expected, const void *actual, size_t size
         printf("but got ");
         print_bytes(actual, size);
         printf("\n" COLOR_NONE);
+    }
+}
+
+void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size)
+{
+    if((unexpected == NULL && actual == NULL) ||
+       (unexpected != NULL && actual != NULL && memcmp(unexpected, actual, size) == 0))
+    {
+        result = fail;
+        printf("[%s : %s]" COLOR_YELLOW " Assert not equal failed.\n" COLOR_NONE,
+               current->test_suite, current->test_name);
     }
 }
 
