@@ -274,7 +274,7 @@ void _assert_are_equal_dbl(long double expected, long double actual)
 {
     if(fabsl(expected - actual) > LDBL_EPSILON)
     {
-        register_fail("Assert are equal failed: expected '%0.10Lf', but got '%0.10Lf'.", expected, actual);
+        register_fail("Assert are equal failed: expected '%0.8Lf', but got '%0.8Lf'.", expected, actual);
     }
 }
 void _assert_are_equal_str(const char *expected, const char *actual)
@@ -357,7 +357,7 @@ void _assert_are_not_equal_dbl(long double unexpected, long double actual)
 {
     if(fabsl(unexpected - actual) <= LDBL_EPSILON)
     {
-        register_fail("Assert not equal failed: unexpected(%0.10Lf) and actual(%0.10Lf) are equal.", unexpected, actual);
+        register_fail("Assert not equal failed: unexpected(%0.8Lf) and actual(%0.8Lf) are equal.", unexpected, actual);
     }
 }
 
@@ -383,6 +383,22 @@ void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual
 void _assert_are_not_equal()
 {
     register_fail("Assert not equal failed: unsupported data type.");
+}
+
+void _assert_are_equal_precision(long double expected, long double actual, long double epsilon)
+{
+    if(fabsl(expected - actual) > epsilon)
+    {
+        register_fail("Assert are equal failed: expected '%0.10Lf', but got '%0.10Lf'.", expected, actual);
+    }
+}
+
+void _assert_are_not_equal_precision(long double unexpected, long double actual, long double epsilon)
+{
+    if(fabsl(unexpected - actual) <= epsilon)
+    {
+        register_fail("Assert not equal failed: unexpected(%0.10Lf) and actual(%0.10Lf) are equal.", unexpected, actual);
+    }
 }
 
 //endregion asserts
