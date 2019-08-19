@@ -72,6 +72,22 @@ Run the executable to run your tests. The test runner can take multiple optional
 ## Asserts
 Each assert is a macro prefixed with ```ASSERT_```.
 
+| Macro | Description |
+| --- | --- |
+| ``` ASSERT_IS_NULL ``` | Tests whether the provided pointer is null. |
+| ``` ASSERT_IS_NOT_NULL ``` | Tests whether the provided pointer is non-null. |
+| ``` ASSERT_IS_TRUE ``` | Tests whether the condition is true. |
+| ``` ASSERT_IS_FALSE ``` | Tests whether the condition is false. |
+| ``` ASSERT_ARE_SAME ``` | Tests whether the two pointers refer to the same memory location. |
+| ``` ASSERT_ARE_NOT_SAME ``` | Tests whether the two pointers refer to different memory locations. |
+| ``` ASSERT_IS_NAN ``` | Tests whether the provided float is NaN. |
+| ``` ASSERT_ARE_EQUAL ``` | Tests whether the two values are equal. |
+| ``` ASSERT_ARE_NOT_EQUAL ``` | Tests whether the two values are different. |
+| ``` ASSERT_ARE_EQUAL_MEM ``` | Tests whether the two values are equal by comparing each byte at the given memory locations. |
+| ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | Tests whether the two values are different by comparing each byte at the given memory locations. |
+| ``` ASSERT_ARE_EQUAL_PRECISION ``` | Tests whether two floating point numbers are equal using a user provided epsilon. |
+| ``` ASSERT_ARE_NOT_EQUAL_PRECISION ``` | Tests whether two floating point numbers are different using a user provided epsilon. |
+
 ## Runner
 EzTest runs the created tests according to the provided application options.
 
