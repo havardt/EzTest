@@ -15,7 +15,7 @@ An easy to use unit testing framework written in, and created for, the C languag
 Here is an example of a simple unit test written using EzTest:
 
 ```C
-TEST(math_tests, adding_two_on_two_should_equal_four)
+TEST(MathTests, AddingTwoOnTwoShouldEqualFour)
 {
     const int expected = 4;
     const int actual = math_add(2, 2);
@@ -24,6 +24,27 @@ TEST(math_tests, adding_two_on_two_should_equal_four)
 }
 ```
 In this example we can see the power of the C11 macro ```_Generic```. The developer doesn't have to provide some prefix or postfix to represent the data type. The correct function for the passed data type, in this case interger, is chosen automagically leaving the developer to focus on the test itself.
+
+EzTest also provides the option of setup and teardown functions that run before/ after each test. Using the ```TEST_FULL(suite, test)```, ```SETUP(suite)``` and ```TEARDOWN(suite)``` macros the developer can create a more complex test suite. When using the ```TEST_FULL(suite, name)``` macro the developer *must* implement the ```SETUP()``` and ```TEARDOWN()``` macros.
+
+```C
+
+SETUP(MathTests)
+{
+    // Code to run before every test in the MathTests suite.
+}
+
+TEST_FULL(MathTests, AddingTwoOnTwoShouldEqualFour)
+{
+    // Test code placed here.
+}
+
+TEARDOWN(MathTests)
+{
+    // This code runs after every test in the MathTests suite.
+}
+
+```
 
 See the next section for information on how to get started with EzTest.
 
