@@ -49,10 +49,19 @@ static enum test_result result = undefined;
 const char *extract_file_name(char *path)
 {
     path = strrchr(path, '/');
+    if(path == NULL)
+    {
+        return "";
+    }
     return ++path;
 }
 
 //region printers
+
+void print_file_marker(char *file, const int line)
+{
+    printf(" (%s:%d)\n" COLOR_NONE, extract_file_name(file), line);
+}
 
 /**
  * Get the requested color if and only if the application options allow it.
@@ -76,7 +85,7 @@ static const char *color(const char *color)
 /** Prints an overall report of the test results. */
 static void print_report(void)
 {
-    printf("\n-----------------------------------\n"
+    printf("-----------------------------------\n"
            "|  "
            "%sPASSED"  COLOR_NONE "  |  "
            "%sSKIPPED" COLOR_NONE "  |  "
@@ -86,7 +95,7 @@ static void print_report(void)
            " %s%-7d" COLOR_NONE " | "
            " %s%-8d" COLOR_NONE " | "
            " %s%-7d" COLOR_NONE " |\n"
-           "-----------------------------------\n",
+           "-----------------------------------\n\n",
            color(COLOR_GREEN) ,
            color(COLOR_YELLOW),
            color(COLOR_RED)   ,
@@ -131,7 +140,7 @@ static void print_bytes(const void *ptr, size_t n)
  * @param msg The failure message to print.
  * @param ... Message arguments.
  */
-static void register_fail(const char *msg, ...)
+static void register_fail(char *file, const int line, const char *msg, ...)
 {
     va_list va;
     result = fail;
@@ -140,7 +149,7 @@ static void register_fail(const char *msg, ...)
     va_start(va, msg);
     vprintf(msg, va);
     va_end(va);
-    printf("\n" COLOR_NONE);
+    print_file_marker(file, line);
 }
 
 /**
@@ -149,7 +158,7 @@ static void register_fail(const char *msg, ...)
  * @param msg The failure message to print.
  * @param ... Message arguments.
  */
-static void register_fail_w(const wchar_t *msg, ...)
+static void register_fail_w(char *file, const int line, const wchar_t *msg, ...)
 {
     va_list va;
     result = fail;
@@ -158,74 +167,74 @@ static void register_fail_w(const wchar_t *msg, ...)
     va_start(va, msg);
     vwprintf(msg, va);
     va_end(va);
-    printf("\n" COLOR_NONE);
+    print_file_marker(file, line);
 }
 
 //endregion printers
 
 //region asserts
 
-void _assert_is_null(const void *value, char *file, int line)
+void _assert_is_null(const void *value, char *file, const int line)
 {
     if (value != NULL)
     {
-        register_fail("Assert is null failed: value is not null.");
+        register_fail(file, line, "Assert is null failed: value is not null.");
     }
 }
 
-void _assert_is_not_null(const void *value, char *file, int line)
+void _assert_is_not_null(const void *value, char *file, const int line)
 {
     if (value == NULL)
     {
-        register_fail("Assert is not null failed: value is null.");
+        register_fail(file, line, "Assert is not null failed: value is null.");
     }
 }
 
-void _assert_is_true(bool condition, char *file, int line)
+void _assert_is_true(bool condition, char *file, const int line)
 {
     if(condition != true)
     {
-        register_fail("Assert is true failed.");
+        register_fail(file, line, "Assert is true failed.");
     }
 }
 
-void _assert_is_false(bool condition, char *file, int line)
+void _assert_is_false(bool condition, char *file, const int line)
 {
     if(condition != false)
     {
-        register_fail("Assert is false failed.");
+        register_fail(file, line, "Assert is false failed.");
     }
 }
 
-void _assert_are_same(const void *expected, const void *actual, char *file, int line)
+void _assert_are_same(const void *expected, const void *actual, char *file, const int line)
 {
     if(expected != actual)
     {
-        register_fail("Assert are same failed: different memory location.");
+        register_fail(file, line, "Assert are same failed: different memory location.");
     }
 }
 
-void _assert_are_not_same(const void *unexpected, const void *actual, char *file, int line)
+void _assert_are_not_same(const void *unexpected, const void *actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
-        register_fail("Assert are not same failed: same memory location.");
+        register_fail(file, line, "Assert are not same failed: same memory location.");
     }
 }
 
 #ifdef NAN
 
-void _assert_is_nan(float value, char *file, int line)
+void _assert_is_nan(float value, char *file, const int line)
 {
     if(!isnan(value))
     {
-        register_fail("Assert is NaN failed.");
+        register_fail(file, line, "Assert is NaN failed.");
     }
 }
 
 #endif
 
-void _assert_equal_mem(const void *expected, const void *actual, size_t size)
+void _assert_equal_mem(const void *expected, const void *actual, size_t size, char *file, const int line)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
@@ -237,56 +246,56 @@ void _assert_equal_mem(const void *expected, const void *actual, size_t size)
         print_bytes(expected, size);
         printf("but got ");
         print_bytes(actual, size);
-        printf("\n" COLOR_NONE);
+        print_file_marker(file, line);
     }
 }
 
-void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size)
+void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size, char *file, const int line)
 {
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && memcmp(unexpected, actual, size) == 0))
     {
-        register_fail("Assert not equal failed.");
+        register_fail(file, line, "Assert not equal failed.");
     }
 }
 
-void _assert_are_equal_ch(char expected, char actual)
+void _assert_are_equal_ch(char expected, char actual, char *file, const int line)
 {
     if(expected != actual)
     {
-        register_fail("Assert are equal failed: expected '%c', but got '%c'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%c', but got '%c'.", expected, actual);
     }
 }
 
-void _assert_are_equal_sch(signed char expected, signed char actual)
+void _assert_are_equal_sch(signed char expected, signed char actual, char *file, const int line)
 {
     if(expected != actual)
     {
-        register_fail("Assert are equal failed: expected '%c', but got '%c'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%c', but got '%c'.", expected, actual);
     }
 }
 
-void _assert_are_equal_uch(unsigned char expected, unsigned char actual)
+void _assert_are_equal_uch(unsigned char expected, unsigned char actual, char *file, const int line)
 {
     if(expected != actual)
     {
-        register_fail("Assert are equal failed: expected '%c', but got '%c'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%c', but got '%c'.", expected, actual);
     }
 }
 
-void _assert_are_equal_int(intmax_t expected, intmax_t actual)
+void _assert_are_equal_int(intmax_t expected, intmax_t actual, char *file, const int line)
 {
     if(expected != actual)
     {
-        register_fail("Assert are equal failed: expected '%ld', but got '%ld'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%ld', but got '%ld'.", expected, actual);
     }
 }
 
-void _assert_are_equal_uint(uintmax_t expected, uintmax_t actual)
+void _assert_are_equal_uint(uintmax_t expected, uintmax_t actual, char *file, const int line)
 {
     if(expected != actual)
     {
-        register_fail("Assert are equal failed: expected '%ld', but got '%ld'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%ld', but got '%ld'.", expected, actual);
     }
 }
 
@@ -300,76 +309,76 @@ void _assert_are_equal_uint(uintmax_t expected, uintmax_t actual)
  *          in its equality test. It is therefore often better to use assert_are_equal_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_are_equal_dbl(long double expected, long double actual)
+void _assert_are_equal_dbl(long double expected, long double actual, char *file, const int line)
 {
     if(fabsl(expected - actual) > LDBL_EPSILON)
     {
-        register_fail("Assert are equal failed: expected '%0.8Lf', but got '%0.8Lf'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%0.8Lf', but got '%0.8Lf'.", expected, actual);
     }
 }
-void _assert_are_equal_str(const char *expected, const char *actual)
+void _assert_are_equal_str(const char *expected, const char *actual, char *file, const int line)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
        (expected != NULL && strcmp(expected, actual) != 0))
     {
-        register_fail("Assert are equal failed: expected '%s', but got '%s'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%s', but got '%s'.", expected, actual);
     }
 }
 
-void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual)
+void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual, char *file, const int line)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
        (expected != NULL && wcscmp(expected, actual) != 0))
     {
-            register_fail_w(L"Assert are equal failed: expected '%ls', but got '%ls'.", expected, actual);
+            register_fail_w(file, line, L"Assert are equal failed: expected '%ls', but got '%ls'.", expected, actual);
     }
 }
 
 /** Triggered when attempting to compare using an unsupported data type. */
-void _assert_are_equal()
+void _assert_are_equal(const void *expected, const void *actual, char *file, const int line)
 {
-    register_fail("Assert are equal failed: unsupported data type.");
+    register_fail(file, line, "Assert are equal failed: unsupported data type.");
 }
 
-void _assert_are_not_equal_ch(char unexpected, char actual)
+void _assert_are_not_equal_ch(char unexpected, char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
-        register_fail("Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
     }
 }
 
-void _assert_are_not_equal_sch(signed char unexpected, signed char actual)
+void _assert_are_not_equal_sch(signed char unexpected, signed char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
-        register_fail("Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
     }
 }
 
-void _assert_are_not_equal_uch(unsigned char unexpected, unsigned char actual)
+void _assert_are_not_equal_uch(unsigned char unexpected, unsigned char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
-        register_fail("Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
     }
 }
 
-void _assert_are_not_equal_int(intmax_t unexpected, intmax_t actual)
+void _assert_are_not_equal_int(intmax_t unexpected, intmax_t actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
-        register_fail("Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.", unexpected, actual);
     }
 }
 
-void _assert_are_not_equal_uint(uintmax_t unexpected, uintmax_t actual)
+void _assert_are_not_equal_uint(uintmax_t unexpected, uintmax_t actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
-        register_fail("Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.", unexpected, actual);
     }
 }
 
@@ -383,51 +392,51 @@ void _assert_are_not_equal_uint(uintmax_t unexpected, uintmax_t actual)
  *          in its equality test. It is therefore often better to use assert_are_equal_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_are_not_equal_dbl(long double unexpected, long double actual)
+void _assert_are_not_equal_dbl(long double unexpected, long double actual, char *file, const int line)
 {
     if(fabsl(unexpected - actual) <= LDBL_EPSILON)
     {
-        register_fail("Assert not equal failed: unexpected(%0.8Lf) and actual(%0.8Lf) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%0.8Lf) and actual(%0.8Lf) are equal.", unexpected, actual);
     }
 }
 
-void _assert_are_not_equal_str(const char *unexpected, const char *actual)
+void _assert_are_not_equal_str(const char *unexpected, const char *actual, char *file, const int line)
 {
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && strcmp(unexpected, actual) == 0))
     {
-        register_fail("Assert not equal failed: unexpected(%s) and actual(%s) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%s) and actual(%s) are equal.", unexpected, actual);
     }
 }
 
-void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual)
+void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual, char *file, const int line)
 {
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && wcscmp(unexpected, actual) == 0))
     {
-        register_fail_w(L"Assert not equal failed: unexpected(%ls) and actual(%ls) are equal.", unexpected, actual);
+        register_fail_w(file, line, L"Assert not equal failed: unexpected(%ls) and actual(%ls) are equal.", unexpected, actual);
     }
 }
 
 /** Triggered when attempting to compare using an unsupported data type. */
-void _assert_are_not_equal()
+void _assert_are_not_equal(const void *expected, const void *actual, char *file, const int line)
 {
-    register_fail("Assert not equal failed: unsupported data type.");
+    register_fail(file, line, "Assert not equal failed: unsupported data type.");
 }
 
-void _assert_are_equal_precision(long double expected, long double actual, long double epsilon)
+void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, const int line)
 {
     if(fabsl(expected - actual) > epsilon)
     {
-        register_fail("Assert are equal failed: expected '%0.10Lf', but got '%0.10Lf'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%0.10Lf', but got '%0.10Lf'.", expected, actual);
     }
 }
 
-void _assert_are_not_equal_precision(long double unexpected, long double actual, long double epsilon)
+void _assert_are_not_equal_precision(long double unexpected, long double actual, long double epsilon, char *file, const int line)
 {
     if(fabsl(unexpected - actual) <= epsilon)
     {
-        register_fail("Assert not equal failed: unexpected(%0.10Lf) and actual(%0.10Lf) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%0.10Lf) and actual(%0.10Lf) are equal.", unexpected, actual);
     }
 }
 

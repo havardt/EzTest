@@ -125,15 +125,15 @@ void _assert_is_nan(float value, char *file, int line);
 
 #endif
 
-void _assert_are_equal_ch  (char            expected, char            actual);
-void _assert_are_equal_sch (signed char     expected, signed char     actual);
-void _assert_are_equal_uch (unsigned char   expected, unsigned char   actual);
-void _assert_are_equal_int (intmax_t        expected, intmax_t        actual);
-void _assert_are_equal_uint(uintmax_t       expected, uintmax_t       actual);
-void _assert_are_equal_dbl (long double     expected, long double     actual);
-void _assert_are_equal_str (const char    * expected, const char    * actual);
-void _assert_are_equal_wstr(const wchar_t * expected, const wchar_t * actual);
-void _assert_are_equal     (                                                );
+void _assert_are_equal_ch  (char            expected, char            actual, char *file, int line);
+void _assert_are_equal_sch (signed char     expected, signed char     actual, char *file, int line);
+void _assert_are_equal_uch (unsigned char   expected, unsigned char   actual, char *file, int line);
+void _assert_are_equal_int (intmax_t        expected, intmax_t        actual, char *file, int line);
+void _assert_are_equal_uint(uintmax_t       expected, uintmax_t       actual, char *file, int line);
+void _assert_are_equal_dbl (long double     expected, long double     actual, char *file, int line);
+void _assert_are_equal_str (const char    * expected, const char    * actual, char *file, int line);
+void _assert_are_equal_wstr(const wchar_t * expected, const wchar_t * actual, char *file, int line);
+void _assert_are_equal     (const void    * expected, const void    * actual, char *file, int line);
 /**
  * Tests whether the two values are equal.
  *
@@ -157,17 +157,17 @@ void _assert_are_equal     (                                                );
     long double        : _assert_are_equal_dbl,\
     char *             : _assert_are_equal_str,\
     wchar_t *          : _assert_are_equal_wstr,\
-    default            : _assert_are_equal)(expected, actual)
+    default            : _assert_are_equal)(expected, actual, __FILE__, __LINE__)
 
-void _assert_are_not_equal_ch  (char            unexpected, char            actual);
-void _assert_are_not_equal_sch (signed char     unexpected, signed char     actual);
-void _assert_are_not_equal_uch (unsigned char   unexpected, unsigned char   actual);
-void _assert_are_not_equal_int (intmax_t        unexpected, intmax_t        actual);
-void _assert_are_not_equal_uint(uintmax_t       unexpected, uintmax_t       actual);
-void _assert_are_not_equal_dbl (long double     unexpected, long double     actual);
-void _assert_are_not_equal_str (const char    * unexpected, const char    * actual);
-void _assert_are_not_equal_wstr(const wchar_t * unexpected, const wchar_t * actual);
-void _assert_are_not_equal     (                                                );
+void _assert_are_not_equal_ch  (char            unexpected, char            actual, char *file, int line);
+void _assert_are_not_equal_sch (signed char     unexpected, signed char     actual, char *file, int line);
+void _assert_are_not_equal_uch (unsigned char   unexpected, unsigned char   actual, char *file, int line);
+void _assert_are_not_equal_int (intmax_t        unexpected, intmax_t        actual, char *file, int line);
+void _assert_are_not_equal_uint(uintmax_t       unexpected, uintmax_t       actual, char *file, int line);
+void _assert_are_not_equal_dbl (long double     unexpected, long double     actual, char *file, int line);
+void _assert_are_not_equal_str (const char    * unexpected, const char    * actual, char *file, int line);
+void _assert_are_not_equal_wstr(const wchar_t * unexpected, const wchar_t * actual, char *file, int line);
+void _assert_are_not_equal     (const void    * unexpected, const void    * actual, char *file, int line);
 /**
  * Tests for inequality.
  *
@@ -194,9 +194,9 @@ void _assert_are_not_equal     (                                                
     long double        : _assert_are_not_equal_dbl,\
     char *             : _assert_are_not_equal_str,\
     wchar_t *          : _assert_are_not_equal_wstr,\
-    default            : _assert_are_not_equal)(unexpected, actual)
+    default            : _assert_are_not_equal)(unexpected, actual, __FILE__, __LINE__)
 
-void _assert_equal_mem(const void *expected, const void *actual, size_t size);
+void _assert_equal_mem(const void *expected, const void *actual, size_t size, char *file, int line);
 /**
  * Checks for equality by comparing each byte at the given memory locations.
  *
@@ -204,9 +204,10 @@ void _assert_equal_mem(const void *expected, const void *actual, size_t size);
  * @param actual   A pointer to the actual value.
  * @param size     The size of the passed types.
  */
-#define ASSERT_EQUAL_MEM(expected, actual, size) _assert_equal_mem(expected, actual, size)
+#define ASSERT_EQUAL_MEM(expected, actual, size)\
+    _assert_equal_mem(expected, actual, size, __FILE__, __LINE__)
 
-void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size);
+void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size, char *file, int line);
 /**
  * Checks for inequality by comparing each byte at the given memory locations.
  *
@@ -214,9 +215,10 @@ void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t si
  * @param actual     A pointer to the actual value.
  * @param size       The size of the passed types.
  */
-#define ASSERT_NOT_EQUAL_MEM(unexpected, actual, size) _assert_not_equal_mem(unexpected, actual, size)
+#define ASSERT_NOT_EQUAL_MEM(unexpected, actual, size)\
+    _assert_not_equal_mem(unexpected, actual, size, __FILE__, __LINE__)
 
-void _assert_are_equal_precision(long double expected, long double actual, long double epsilon);
+void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, int line);
 /**
  * Tests for equality between two floating point numbers.
  *
@@ -230,9 +232,9 @@ void _assert_are_equal_precision(long double expected, long double actual, long 
  *                for equality.
  */
 #define ASSERT_ARE_EQUAL_PRECISION(expected, actual, epsilon)\
-    _assert_are_equal_precision(expected, actual, epsilon)
+    _assert_are_equal_precision(expected, actual, epsilon, __FILE__, __LINE__)
 
-void _assert_are_not_equal_precision(long double unexpected, long double actual, long double epsilon);
+void _assert_are_not_equal_precision(long double unexpected, long double actual, long double epsilon, char *file, int line);
 /**
  * Tests for inequality between two floating point numbers.
  *
@@ -245,7 +247,7 @@ void _assert_are_not_equal_precision(long double unexpected, long double actual,
  *                for equality.
  */
 #define ASSERT_ARE_NOT_EQUAL_PRECISION(unexpected, actual, epsilon)\
-    _assert_are_not_equal_precision(unexpected, actual, epsilon)
+    _assert_are_not_equal_precision(unexpected, actual, epsilon, __FILE__, __LINE__)
 
 TEST(_base_suite, _base_test){}
 
