@@ -12,6 +12,7 @@
 #include <math.h>
 #include <stdarg.h>
 #include <float.h>
+#include <assert.h>
 #include "options.h"
 #include "eztest.h"
 #include "../common/color.h"
@@ -32,6 +33,9 @@ static int skip_count = 0;
 /** The current test. */
 static struct unit_test *current = NULL;
 
+/** Application options */
+static struct options *options = NULL;
+
 /** The result of the current/ latest test. */
 static enum test_result result = undefined;
 
@@ -50,34 +54,60 @@ const char *extract_file_name(char *path)
 
 //region printers
 
+/**
+ * Get the requested color if and only if the application options allow it.
+ *
+ * @param color The color to request (not NULL).
+ * @return If 'no-color' has been set in the application options then
+ *         @code COLOR_NONE @endcode is returned; otherwise the requested
+ *         color is returned.
+ */
+static const char *color(const char *color)
+{
+    assert(color != NULL);
+
+    if(options->no_color)
+    {
+        return COLOR_NONE;
+    }
+    return color;
+}
+
 /** Prints an overall report of the test results. */
 static void print_report(void)
 {
     printf("\n-----------------------------------\n"
-           "|  " COLOR_GREEN  "PASSED"  COLOR_NONE "  |  "
-           COLOR_YELLOW "SKIPPED" COLOR_NONE "  |  "
-           COLOR_RED    "FAILED"  COLOR_NONE "  |\n"
+           "|  "
+           "%sPASSED"  COLOR_NONE "  |  "
+           "%sSKIPPED" COLOR_NONE "  |  "
+           "%sFAILED"  COLOR_NONE "  |\n"
            "-----------------------------------\n"
-           "| " COLOR_GREEN  " %-7d" COLOR_NONE " | "
-           COLOR_YELLOW " %-8d" COLOR_NONE " | "
-           COLOR_RED    " %-7d" COLOR_NONE " |\n"
+           "| "
+           " %s%-7d" COLOR_NONE " | "
+           " %s%-8d" COLOR_NONE " | "
+           " %s%-7d" COLOR_NONE " |\n"
            "-----------------------------------\n",
-           pass_count, skip_count, fail_count);
+           color(COLOR_GREEN) ,
+           color(COLOR_YELLOW),
+           color(COLOR_RED)   ,
+           color(COLOR_GREEN) , pass_count,
+           color(COLOR_YELLOW), skip_count,
+           color(COLOR_RED)   , fail_count);
 }
 
 static void print_failed(const struct unit_test *test)
 {
-    printf("[%s : %s]" COLOR_RED  " FAILED \n\n" COLOR_NONE, test->test_suite, test->test_name);
+    printf("[%s : %s]%s FAILED \n\n" COLOR_NONE, test->test_suite, test->test_name, color(COLOR_RED));
 }
 
 static void print_passed(const struct unit_test *test)
 {
-    printf("[%s : %s]" COLOR_GREEN " PASSED \n\n" COLOR_NONE, test->test_suite, test->test_name);
+    printf("[%s : %s]%s PASSED \n\n" COLOR_NONE, test->test_suite, test->test_name, color(COLOR_GREEN));
 }
 
 static void print_skipped(const struct unit_test *test)
 {
-    printf("[%s : %s]" COLOR_YELLOW  " SKIPPED \n\n" COLOR_NONE, test->test_suite, test->test_name);
+    printf("[%s : %s]%s SKIPPED \n\n" COLOR_NONE, test->test_suite, test->test_name, color(COLOR_YELLOW));
 }
 
 /**
@@ -106,7 +136,7 @@ static void register_fail(const char *msg, ...)
     va_list va;
     result = fail;
 
-    printf("[%s : %s] " COLOR_YELLOW, current->test_suite, current->test_name);
+    printf("[%s : %s] %s", current->test_suite, current->test_name, color(COLOR_YELLOW));
     va_start(va, msg);
     vprintf(msg, va);
     va_end(va);
@@ -124,7 +154,7 @@ static void register_fail_w(const wchar_t *msg, ...)
     va_list va;
     result = fail;
 
-    printf("[%s : %s] " COLOR_YELLOW, current->test_suite, current->test_name);
+    printf("[%s : %s] %s", current->test_suite, current->test_name, color(COLOR_YELLOW));
     va_start(va, msg);
     vwprintf(msg, va);
     va_end(va);
@@ -202,8 +232,8 @@ void _assert_equal_mem(const void *expected, const void *actual, size_t size)
        (expected != NULL && memcmp(expected, actual, size) != 0))
     {
         result = fail;
-        printf("[%s : %s]" COLOR_YELLOW " Assert are equal failed: expected ",
-               current->test_suite, current->test_name);
+        printf("[%s : %s]%s Assert are equal failed: expected ",
+               current->test_suite, current->test_name, color(COLOR_YELLOW));
         print_bytes(expected, size);
         printf("but got ");
         print_bytes(actual, size);
@@ -489,6 +519,9 @@ static void execute(const struct unit_test *test)
 /** See eztest.h */
 int eztest_run(struct options *opts)
 {
+    assert(opts != NULL);
+
+    options = opts;
     current = &_GET_STRUCT_NAME(_base_suite, _base_test);
     int count = discover(&current);
 

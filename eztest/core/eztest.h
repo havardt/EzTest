@@ -254,7 +254,7 @@ TEST(_base_suite, _base_test){}
 /**
  * Starts running tests.
  *
- * @param opts Application options.
+ * @param opts Application options (not NULL).
  * @return @code EXIT_SUCCESS @endcode if no tests failed; otherwise @code EXIT_FAILURE @endcode.
  */
 int eztest_run(struct options *opts);
