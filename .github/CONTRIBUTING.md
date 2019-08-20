@@ -19,7 +19,7 @@ Suggest a new feature by creating an issue marked with the <i>new feature</i> la
 
 ##### Developing a feature
 
-If you have developed a new feature please make sure you have followed the styleguides by doing a self review.     
+If you have developed a new feature please make sure you have followed the style guides by doing a self review.     
 All new features should be developed in response to an issue. A common process would then be to create an issue marked with the 
 <i>new feature</i> or <i>enhancement</i> label, develop the feature and then create a pull-request.
 
@@ -45,3 +45,7 @@ If the commit is in response to an issue, make sure to reference the issue in th
        * @return 
        */
   ```
+
+#### Integration
+
+To smooth integration, it is recommended that you develop on a branch specific for your feature. Once you have completed the feature please create a pull-request to get the code reviewed and merged.
