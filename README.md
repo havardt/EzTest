@@ -1,4 +1,5 @@
 # EzTest
+[![Release](https://img.shields.io/github/v/release/havardt/eztest?label=Release)](https://github.com/havardt/EzTest/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
 An easy to use unit testing framework written in, and created for, the C language.
