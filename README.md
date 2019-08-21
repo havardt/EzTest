@@ -112,7 +112,8 @@ EzTest runs the created tests according to the provided application options.
 | --- | --- | --- |
 | -v | --version | Prints the version number. |       
 | -h | --help | Prints help/ usage information. |           
-| -c | --no-color | Don't use any color when printing. |        
+| -c | --no-color | Don't use any color when printing. |  
+| -t | --timer | Display execution time for each test. |
 
 
 ## Contribute
