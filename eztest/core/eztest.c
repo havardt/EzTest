@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <float.h>
 #include <assert.h>
+#include <time.h>
 #include "options.h"
 #include "eztest.h"
 #include "../common/color.h"
@@ -104,19 +105,44 @@ static void print_report(void)
            color(COLOR_RED)   , fail_count);
 }
 
-static void print_failed(const struct unit_test *test)
+/**
+ * Prints the test result output.
+ *
+ * @param test The unit test to print result for.
+ * @param time The test execution time in ms.
+ * @param resstr The string representing the result (Eg. PASS, FAIL etc)
+ * @param c The requested color of the output result string.
+ */
+static void print_result(const struct unit_test *test,
+                         const unsigned int time,
+                         const char *restrict resstr,
+                         const char *restrict c)
 {
-    printf("[%s : %s]%s FAILED \n\n" COLOR_NONE, test->test_suite, test->test_name, color(COLOR_RED));
+    printf("[%s : %s]%s %s " COLOR_NONE, test->test_suite, test->test_name, color(c), resstr);
+    if(options->timer)
+    {
+        printf("(%dms)\n\n", time);
+    }
+    else
+    {
+        printf("\n\n");
+    }
+    fflush(stdout);
 }
 
-static void print_passed(const struct unit_test *test)
+static void print_failed(const struct unit_test *test, const unsigned int time)
 {
-    printf("[%s : %s]%s PASSED \n\n" COLOR_NONE, test->test_suite, test->test_name, color(COLOR_GREEN));
+    print_result(test, time, "FAILED", COLOR_RED);
 }
 
-static void print_skipped(const struct unit_test *test)
+static void print_passed(const struct unit_test *test, const unsigned int time)
 {
-    printf("[%s : %s]%s SKIPPED \n\n" COLOR_NONE, test->test_suite, test->test_name, color(COLOR_YELLOW));
+    print_result(test, time, "PASSED", COLOR_GREEN);
+}
+
+static void print_skipped(const struct unit_test *test, const unsigned int time)
+{
+    print_result(test, time, "SKIPPED", COLOR_YELLOW);
 }
 
 /**
@@ -469,22 +495,22 @@ static bool should_skip(struct unit_test *test)
  * Registers the current result by increasing the result counter
  * and printing the result message.
  */
-static void register_result(void)
+static void register_result(const unsigned int time)
 {
     if(result == fail)
     {
         fail_count++;
-        print_failed(current);
+        print_failed(current, time);
     }
     else if(result == skip)
     {
         skip_count++;
-        print_skipped(current);
+        print_skipped(current, time);
     }
     else
     {
         pass_count++;
-        print_passed(current);
+        print_passed(current, time);
     }
 }
 
@@ -493,9 +519,12 @@ static void register_result(void)
  * if they are not @code NULL @endcode
  *
  * @param test The test to run.
+ * @return The execution time in milliseconds.
  */
-static void execute(const struct unit_test *test)
+static unsigned int execute(const struct unit_test *test)
 {
+    clock_t t;
+    t = clock();
     if(test->setup_fn != NULL)
     {
         test->setup_fn();
@@ -505,6 +534,8 @@ static void execute(const struct unit_test *test)
     {
         test->teardown_fn();
     }
+    t = clock() - t;
+    return ((unsigned int)(((double)t) / CLOCKS_PER_SEC) * 1000);
 }
 
 /** See eztest.h */
@@ -515,19 +546,21 @@ int eztest_run(struct options *opts)
     options = opts;
     current = &_GET_STRUCT_NAME(_base_suite, _base_test);
     int count = discover(&current);
+    unsigned int t;
 
     for (int i = 0; i < count; i++, current++)
     {
         if(should_skip(current))
         {
             result = skip;
+            t = 0;
         }
         else
         {
             result = undefined; // Reset result before running new test.
-            execute(current);
+            t = execute(current);
         }
-        register_result();
+        register_result(t);
     }
     print_report();
 

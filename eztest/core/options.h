@@ -16,6 +16,8 @@ struct options
 {
     /** When set to @code true @endcode only default color is used when printing. */
     bool no_color;
+    /** When set to @code true @endcode the test execution time is displayed for each test */
+    bool timer;
 };
 
 #endif
