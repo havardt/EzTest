@@ -141,23 +141,33 @@ void _assert_are_equal     (const void    * expected, const void    * actual, ch
  * @param actual   The second value to compare. This is the value produced by the code under test.
  */
 #define ASSERT_ARE_EQUAL(expected, actual) _Generic((expected, actual),\
-    signed char        : _assert_are_equal_sch,\
-    char               : _assert_are_equal_ch,\
-    short              : _assert_are_equal_int,\
-    int                : _assert_are_equal_int,\
-    long               : _assert_are_equal_int,\
-    long long          : _assert_are_equal_int,\
-    unsigned char      : _assert_are_equal_uch,\
-    unsigned short     : _assert_are_equal_uint,\
-    unsigned int       : _assert_are_equal_uint,\
-    unsigned long      : _assert_are_equal_uint,\
-    unsigned long long : _assert_are_equal_uint,\
-    float              : _assert_are_equal_dbl,\
-    double             : _assert_are_equal_dbl,\
-    long double        : _assert_are_equal_dbl,\
-    char *             : _assert_are_equal_str,\
-    wchar_t *          : _assert_are_equal_wstr,\
-    default            : _assert_are_equal)(expected, actual, __FILE__, __LINE__)
+             char        : _assert_are_equal_ch,   \
+    signed   char        : _assert_are_equal_sch,  \
+    unsigned char        : _assert_are_equal_uch,  \
+                                                   \
+             short       : _assert_are_equal_int,  \
+    unsigned short       : _assert_are_equal_uint, \
+                                                   \
+             int         : _assert_are_equal_int,  \
+    unsigned int         : _assert_are_equal_uint, \
+                                                   \
+             long        : _assert_are_equal_int,  \
+    unsigned long        : _assert_are_equal_uint, \
+                                                   \
+             long long   : _assert_are_equal_int,  \
+    unsigned long long   : _assert_are_equal_uint, \
+                                                   \
+             float       : _assert_are_equal_dbl,  \
+             double      : _assert_are_equal_dbl,  \
+             long double : _assert_are_equal_dbl,  \
+                                                   \
+             char *      : _assert_are_equal_str,  \
+    const    char *      : _assert_are_equal_str,  \
+                                                   \
+             wchar_t *   : _assert_are_equal_wstr, \
+    const    wchar_t *   : _assert_are_equal_wstr, \
+                                                   \
+    default              : _assert_are_equal)(expected, actual, __FILE__, __LINE__)
 
 void _assert_are_not_equal_ch  (char            unexpected, char            actual, char *file, int line);
 void _assert_are_not_equal_sch (signed char     unexpected, signed char     actual, char *file, int line);
@@ -178,23 +188,33 @@ void _assert_are_not_equal     (const void    * unexpected, const void    * actu
  *       and provide the application specific epsilon.
  */
 #define ASSERT_ARE_NOT_EQUAL(unexpected, actual) _Generic((unexpected, actual),\
-    signed char        : _assert_are_not_equal_sch,\
-    char               : _assert_are_not_equal_ch,\
-    short              : _assert_are_not_equal_int,\
-    int                : _assert_are_not_equal_int,\
-    long               : _assert_are_not_equal_int,\
-    long long          : _assert_are_not_equal_int,\
-    unsigned char      : _assert_are_not_equal_uch,\
-    unsigned short     : _assert_are_not_equal_uint,\
-    unsigned int       : _assert_are_not_equal_uint,\
-    unsigned long      : _assert_are_not_equal_uint,\
-    unsigned long long : _assert_are_not_equal_uint,\
-    float              : _assert_are_not_equal_dbl,\
-    double             : _assert_are_not_equal_dbl,\
-    long double        : _assert_are_not_equal_dbl,\
-    char *             : _assert_are_not_equal_str,\
-    wchar_t *          : _assert_are_not_equal_wstr,\
-    default            : _assert_are_not_equal)(unexpected, actual, __FILE__, __LINE__)
+             char        : _assert_are_not_equal_ch,   \
+    signed   char        : _assert_are_not_equal_sch,  \
+    unsigned char        : _assert_are_not_equal_uch,  \
+                                                       \
+             short       : _assert_are_not_equal_int,  \
+    unsigned short       : _assert_are_not_equal_uint, \
+                                                       \
+             int         : _assert_are_not_equal_int,  \
+    unsigned int         : _assert_are_not_equal_uint, \
+                                                       \
+             long        : _assert_are_not_equal_int,  \
+    unsigned long        : _assert_are_not_equal_uint, \
+                                                       \
+             long long   : _assert_are_not_equal_int,  \
+    unsigned long long   : _assert_are_not_equal_uint, \
+                                                       \
+             float       : _assert_are_not_equal_dbl,  \
+             double      : _assert_are_not_equal_dbl,  \
+             long double : _assert_are_not_equal_dbl,  \
+                                                       \
+             char *      : _assert_are_not_equal_str,  \
+    const    char *      : _assert_are_not_equal_str,  \
+                                                       \
+             wchar_t *   : _assert_are_not_equal_wstr, \
+    const    wchar_t *   : _assert_are_not_equal_wstr, \
+                                                       \
+    default              : _assert_are_not_equal)(unexpected, actual, __FILE__, __LINE__)
 
 void _assert_equal_mem(const void *expected, const void *actual, size_t size, char *file, int line);
 /**

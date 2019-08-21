@@ -152,24 +152,6 @@ static void register_fail(char *file, const int line, const char *msg, ...)
     print_file_marker(file, line);
 }
 
-/**
- * Registers the current test as a failure and prints the given failure message.
- *
- * @param msg The failure message to print.
- * @param ... Message arguments.
- */
-static void register_fail_w(char *file, const int line, const wchar_t *msg, ...)
-{
-    va_list va;
-    result = fail;
-
-    printf("[%s : %s] %s", current->test_suite, current->test_name, color(COLOR_YELLOW));
-    va_start(va, msg);
-    vwprintf(msg, va);
-    va_end(va);
-    print_file_marker(file, line);
-}
-
 //endregion printers
 
 //region asserts
@@ -332,7 +314,7 @@ void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual, char
        (expected != NULL && actual == NULL) ||
        (expected != NULL && wcscmp(expected, actual) != 0))
     {
-            register_fail_w(file, line, L"Assert are equal failed: expected '%ls', but got '%ls'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%ls', but got '%ls'.", expected, actual);
     }
 }
 
@@ -414,7 +396,7 @@ void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && wcscmp(unexpected, actual) == 0))
     {
-        register_fail_w(file, line, L"Assert not equal failed: unexpected(%ls) and actual(%ls) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: unexpected(%ls) and actual(%ls) are equal.", unexpected, actual);
     }
 }
 

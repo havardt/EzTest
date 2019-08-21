@@ -14,6 +14,7 @@
 #include <getopt.h>
 #include <assert.h>
 #include <stdio.h>
+#include <locale.h>
 #include "options.h"
 #include "eztest.h"
 #include "about.h"
@@ -49,6 +50,8 @@ int main(int argc, char **argv)
     {
         return EXIT_FAILURE;
     }
+
+    setlocale(LC_ALL, ""); // Needed to print wide chars/ strings.
 
     eztest_run(&opts);
     
