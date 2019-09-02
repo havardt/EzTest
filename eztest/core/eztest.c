@@ -450,7 +450,7 @@ void _assert_are_not_equal_precision(long double unexpected, long double actual,
 
 void _assert_greater_ch(char greater, char lesser, char *file, const int line)
 {
-    if(greater < lesser)
+    if(greater <= lesser)
     {
         register_fail(file, line, "Assert greater failed: '%c' is not greater than '%c'.", greater, lesser);
     }
@@ -458,7 +458,7 @@ void _assert_greater_ch(char greater, char lesser, char *file, const int line)
 
 void _assert_greater_sch(signed char greater, signed char lesser, char *file, const int line)
 {
-    if(greater < lesser)
+    if(greater <= lesser)
     {
         register_fail(file, line, "Assert greater failed: '%c' is not greater than '%c'.", greater, lesser);
     }
@@ -466,7 +466,7 @@ void _assert_greater_sch(signed char greater, signed char lesser, char *file, co
 
 void _assert_greater_uch(unsigned char greater, unsigned char lesser, char *file, const int line)
 {
-    if(greater < lesser)
+    if(greater <= lesser)
     {
         register_fail(file, line, "Assert greater failed: '%c' is not greater than '%c'.", greater, lesser);
     }
@@ -474,7 +474,7 @@ void _assert_greater_uch(unsigned char greater, unsigned char lesser, char *file
 
 void _assert_greater_int(intmax_t greater, intmax_t lesser, char *file, const int line)
 {
-    if(greater < lesser)
+    if(greater <= lesser)
     {
         register_fail(file, line, "Assert greater failed: '%ld' is not greater than '%ld'.", greater, lesser);
     }
@@ -482,7 +482,7 @@ void _assert_greater_int(intmax_t greater, intmax_t lesser, char *file, const in
 
 void _assert_greater_uint(uintmax_t greater, uintmax_t lesser, char *file, const int line)
 {
-    if(greater < lesser)
+    if(greater <= lesser)
     {
         register_fail(file, line, "Assert greater failed: '%ld' is not greater than '%ld'.", greater, lesser);
     }
@@ -541,6 +541,86 @@ void _assert_greater_precision(const long double   greater,
     {
         register_fail(file, line, "Assert greater failed: '%0.8Lf' is not greater than '%0.8Lf'.", greater, lesser);
     }
+}
+
+void _assert_greater_equal_ch(const char ge, const char le, char *file, const int line)
+{
+    if(ge < le)
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%c' is lesser than '%c'.", ge, le);
+    }
+}
+
+void _assert_greater_equal_sch (const signed char ge, const signed char le, char *file, const int line)
+{
+    if(ge < le)
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%c' is lesser than '%c'.", ge, le);
+    }
+}
+
+void _assert_greater_equal_uch (const unsigned char ge, const unsigned char le, char *file, const int line)
+{
+    if(ge < le)
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%c' is lesser than '%c'.", ge, le);
+    }
+}
+
+void _assert_greater_equal_int (const intmax_t ge, const intmax_t le, char *file, const int line)
+{
+    if(ge < le)
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%ld' is lesser than '%ld'.", ge, le);
+    }
+}
+
+void _assert_greater_equal_uint(const uintmax_t ge, const uintmax_t le, char *file, const int line)
+{
+    if(ge < le)
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%ld' is lesser than '%ld'.", ge, le);
+    }
+}
+
+/**
+ * Tests the equality of two floating point numbers.
+ *
+ * @param ge The value that is expected to be greater or equal to the second value.
+ * @param le  The value that is expected to be less than or equal to the first value.
+ *
+ * @remarks It is important to known that this test uses the epsilon macro from float.h
+ *          in its equality test. It is therefore often better to use _assert_greater_equal_precision()
+ *          and provide the application specific epsilon.
+ */
+void _assert_greater_equal_dbl(const long double ge, const long double le, char *file, const int line)
+{
+    if(fabsl(ge - le) > LDBL_EPSILON && ge < le)
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%0.8Lf' is lesser than '%0.8Lf'.", ge, le);
+    }
+}
+
+void _assert_greater_equal_str(const char *ge, const char *le, char *file, const int line)
+{
+    if((ge == NULL && le != NULL) ||
+       (ge != NULL && le != NULL && strcmp(ge, le) < 0))
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%s' is lesser than '%s'.", ge, le);
+    }
+}
+
+void _assert_greater_equal_wstr(const wchar_t *ge, const wchar_t *le, char *file, const int line)
+{
+    if((ge == NULL && le != NULL) ||
+       (ge != NULL && le != NULL && wcscmp(ge, le) < 0))
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%ls' is lesser than '%ls'.", ge, le);
+    }
+}
+void _assert_greater_equal(const void *ge, const void *le, char *file, const int line)
+{
+    register_fail(file, line, "Assert greater or equal failed: unsupported data type.");
 }
 
 //endregion asserts
