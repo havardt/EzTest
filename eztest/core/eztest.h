@@ -429,6 +429,40 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
                                                  \
     default              : _assert_greater_equal)(ge, le, __FILE__, __LINE__)
 
+/**
+* @see ASSERT_GREATER_EQUAL(ge, le);
+*
+* @remarks This is just a short-hand for ASSERT_GREATER_EQUAL.
+*/
+#define ASSERT_GE(ge, le) _Generic((ge, le),\
+             char        : _assert_greater_equal_ch,   \
+    signed   char        : _assert_greater_equal_sch,  \
+    unsigned char        : _assert_greater_equal_uch,  \
+                                                 \
+             short       : _assert_greater_equal_int,  \
+    unsigned short       : _assert_greater_equal_uint, \
+                                                 \
+             int         : _assert_greater_equal_int,  \
+    unsigned int         : _assert_greater_equal_uint, \
+                                                 \
+             long        : _assert_greater_equal_int,  \
+    unsigned long        : _assert_greater_equal_uint, \
+                                                 \
+             long long   : _assert_greater_equal_int,  \
+    unsigned long long   : _assert_greater_equal_uint, \
+                                                 \
+             float       : _assert_greater_equal_dbl,  \
+             double      : _assert_greater_equal_dbl,  \
+             long double : _assert_greater_equal_dbl,  \
+                                                 \
+             char *      : _assert_greater_equal_str,  \
+    const    char *      : _assert_greater_equal_str,  \
+                                                 \
+             wchar_t *   : _assert_greater_equal_wstr, \
+    const    wchar_t *   : _assert_greater_equal_wstr, \
+                                                 \
+    default              : _assert_greater_equal)(ge, le, __FILE__, __LINE__)
+
 TEST(_base_suite, _base_test){}
 
 #ifdef TEST_RUNNER
