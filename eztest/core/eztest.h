@@ -254,7 +254,11 @@ void _assert_are_equal_precision(long double expected, long double actual, long 
 #define ASSERT_ARE_EQUAL_PRECISION(expected, actual, epsilon)\
     _assert_are_equal_precision(expected, actual, epsilon, __FILE__, __LINE__)
 
-void _assert_are_not_equal_precision(long double unexpected, long double actual, long double epsilon, char *file, int line);
+void _assert_are_not_equal_precision(long double   unexpected,
+                                     long double   actual,
+                                     long double   epsilon,
+                                     char        * file,
+                                     int           line);
 /**
  * Tests for inequality between two floating point numbers.
  *
@@ -283,6 +287,7 @@ void _assert_greater     (const void    * greater, const void    * lesser, char 
  *
  * @param greater The first value to compare. This is the value the user
  *                expects to be greater than the second value.
+ *
  * @param lesser  The second value to compare. This is the value the user
  *                expects to be lesser than the first value.
  */
@@ -316,15 +321,10 @@ void _assert_greater     (const void    * greater, const void    * lesser, char 
     default              : _assert_greater)(greater, lesser, __FILE__, __LINE__)
 
 /**
-* Tests whether the first value is greater than the second value.
-*
-* @param greater The first value to compare. This is the value the user
-*                expects to be greater than the second value.
-* @param lesser  The second value to compare. This is the value the user
-*                expects to be lesser than the first value.
-*
-* @remarks This is just a short-hand for ASSERT_GREATER.
-*/
+ * @see ASSERT_GREATER(greater, less);
+ *
+ * @remarks This is just a short-hand for ASSERT_GREATER.
+ */
 #define ASSERT_GT(greater, lesser) _Generic((greater, lesser),\
              char        : _assert_greater_ch,   \
     signed   char        : _assert_greater_sch,  \
@@ -353,6 +353,34 @@ void _assert_greater     (const void    * greater, const void    * lesser, char 
     const    wchar_t *   : _assert_greater_wstr, \
                                                  \
     default              : _assert_greater)(greater, lesser, __FILE__, __LINE__)
+
+void _assert_greater_precision(long double   greater,
+                               long double   lesser,
+                               long double   epsilon,
+                               char        * file,
+                               int           line);
+/**
+ * Tests whether the first value is greater than the second value.
+ *
+ * @param greater The first floating point value to compare. This is the value the user
+ *                expects to be greater than the second value.
+ *
+ * @param lesser  The second floating point value to compare. This is the value the user
+ *                expects to be lesser than the first value.
+ *
+ * @param epsilon A floating point representing the precision required when testing
+ *                for equality.
+ */
+#define ASSERT_GREATER_PRECISION(greater, less, epsilon)\
+    _assert_greater_precision(greater, less, epsilon, __FILE__, __LINE__)
+
+/**
+* @see ASSERT_GREATER_PRECISION(greater, less, epsilon);
+*
+* @remarks This is just a short-hand for ASSERT_GREATER_PRECISION.
+*/
+#define ASSERT_GT_PRECISION(greater, less, epsilon)\
+    _assert_greater_precision(greater, less, epsilon, __FILE__, __LINE__)
 
 TEST(_base_suite, _base_test){}
 

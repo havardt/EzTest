@@ -531,6 +531,18 @@ void _assert_greater(const void *greater, const void *lesser, char *file, const 
     register_fail(file, line, "Assert greater failed: unsupported data type.");
 }
 
+void _assert_greater_precision(const long double   greater,
+                               const long double   lesser,
+                               const long double   epsilon,
+                               char              * file,
+                               const int           line)
+{
+    if(fabsl(greater - lesser) <= epsilon || greater < lesser)
+    {
+        register_fail(file, line, "Assert greater failed: '%0.8Lf' is not greater than '%0.8Lf'.", greater, lesser);
+    }
+}
+
 //endregion asserts
 
 //region runner
