@@ -269,6 +269,52 @@ void _assert_are_not_equal_precision(long double unexpected, long double actual,
 #define ASSERT_ARE_NOT_EQUAL_PRECISION(unexpected, actual, epsilon)\
     _assert_are_not_equal_precision(unexpected, actual, epsilon, __FILE__, __LINE__)
 
+void _assert_greater_ch  (char            greater, char            lesser, char *file, int line);
+void _assert_greater_sch (signed char     greater, signed char     lesser, char *file, int line);
+void _assert_greater_uch (unsigned char   greater, unsigned char   lesser, char *file, int line);
+void _assert_greater_int (intmax_t        greater, intmax_t        lesser, char *file, int line);
+void _assert_greater_uint(uintmax_t       greater, uintmax_t       lesser, char *file, int line);
+void _assert_greater_dbl (long double     greater, long double     lesser, char *file, int line);
+void _assert_greater_str (const char    * greater, const char    * lesser, char *file, int line);
+void _assert_greater_wstr(const wchar_t * greater, const wchar_t * lesser, char *file, int line);
+void _assert_greater     (const void    * greater, const void    * lesser, char *file, int line);
+/**
+ * Tests whether the first value is greater than the second value.
+ *
+ * @param greater The first value to compare. This is the value the user
+ *                expects to be greater than the second value.
+ * @param lesser  The second value to compare. This is the value the user
+ *                expects to be lesser than the first value.
+ */
+#define ASSERT_GREATER(greater, lesser) _Generic((greater, lesser),\
+             char        : _assert_greater_ch,   \
+    signed   char        : _assert_greater_sch,  \
+    unsigned char        : _assert_greater_uch,  \
+                                                 \
+             short       : _assert_greater_int,  \
+    unsigned short       : _assert_greater_uint, \
+                                                 \
+             int         : _assert_greater_int,  \
+    unsigned int         : _assert_greater_uint, \
+                                                 \
+             long        : _assert_greater_int,  \
+    unsigned long        : _assert_greater_uint, \
+                                                 \
+             long long   : _assert_greater_int,  \
+    unsigned long long   : _assert_greater_uint, \
+                                                 \
+             float       : _assert_greater_dbl,  \
+             double      : _assert_greater_dbl,  \
+             long double : _assert_greater_dbl,  \
+                                                 \
+             char *      : _assert_greater_str,  \
+    const    char *      : _assert_greater_str,  \
+                                                 \
+             wchar_t *   : _assert_greater_wstr, \
+    const    wchar_t *   : _assert_greater_wstr, \
+                                                 \
+    default              : _assert_greater)(greater, lesser, __FILE__, __LINE__)
+
 TEST(_base_suite, _base_test){}
 
 #ifdef TEST_RUNNER

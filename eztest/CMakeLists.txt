@@ -4,7 +4,7 @@ project (eztest C)
 set (CMAKE_C_STANDARD 11)
 
 set (eztest_VERSION_MAJOR 1)
-set (eztest_VERSION_MINOR 1)
+set (eztest_VERSION_MINOR 2)
 set (eztest_VERSION_PATCH 0)
 
 set(EXECUTABLE_OUTPUT_PATH ..)
@@ -33,5 +33,5 @@ add_executable(eztest
     # Add your test files below using relative paths.
     # Example 1: ../my_test.c
     # Example 2: ../math_tests/addition_test.c
-
+        
     )
