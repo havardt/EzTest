@@ -40,6 +40,11 @@ static struct options *options = NULL;
 /** The result of the current/ latest test. */
 static enum test_result result = undefined;
 
+/** Create base/ reference test. */
+TEST(_base_suite, _base_test){}
+
+//region printers
+
 /**
  * Extracts the file name from the given path.
  * Note that the file name includes the file extension.
@@ -56,8 +61,6 @@ const char *extract_file_name(char *path)
     }
     return ++path;
 }
-
-//region printers
 
 void print_file_marker(char *file, const int line)
 {

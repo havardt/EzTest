@@ -463,8 +463,6 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
                                                        \
     default              : _assert_greater_equal)(ge, le, __FILE__, __LINE__)
 
-TEST(_base_suite, _base_test){}
-
 #ifdef TEST_RUNNER
 
 /**
