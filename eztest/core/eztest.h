@@ -58,9 +58,9 @@ struct unit_test
     static struct unit_test _GET_STRUCT_NAME(suite, name) __attribute__ ((used, section(".tests"), aligned(1))) = {\
         .test_name=#name,\
         .test_suite=#suite,\
-        .run_fn = _GET_RUN_FN_NAME(suite, name),\
         .setup_fn = NULL,\
         .teardown_fn = NULL,\
+        .run_fn = _GET_RUN_FN_NAME(suite, name),\
         .marker = ANSWER_TO_LIFE\
     }
 
@@ -68,9 +68,9 @@ struct unit_test
     static struct unit_test _GET_STRUCT_NAME(suite, name) __attribute__ ((used, section(".tests"), aligned(1))) = {\
         .test_name=#name,\
         .test_suite=#suite,\
-        .run_fn = _GET_RUN_FN_NAME(suite, name),\
         .setup_fn = _GET_SETUP_FN_NAME(suite),\
         .teardown_fn = _GET_TEARDOWN_FN_NAME(suite),\
+        .run_fn = _GET_RUN_FN_NAME(suite, name),\
         .marker = ANSWER_TO_LIFE\
     }
 
@@ -404,29 +404,29 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
              char        : _assert_greater_equal_ch,   \
     signed   char        : _assert_greater_equal_sch,  \
     unsigned char        : _assert_greater_equal_uch,  \
-                                                 \
+                                                       \
              short       : _assert_greater_equal_int,  \
     unsigned short       : _assert_greater_equal_uint, \
-                                                 \
+                                                       \
              int         : _assert_greater_equal_int,  \
     unsigned int         : _assert_greater_equal_uint, \
-                                                 \
+                                                       \
              long        : _assert_greater_equal_int,  \
     unsigned long        : _assert_greater_equal_uint, \
-                                                 \
+                                                       \
              long long   : _assert_greater_equal_int,  \
     unsigned long long   : _assert_greater_equal_uint, \
-                                                 \
+                                                       \
              float       : _assert_greater_equal_dbl,  \
              double      : _assert_greater_equal_dbl,  \
              long double : _assert_greater_equal_dbl,  \
-                                                 \
+                                                       \
              char *      : _assert_greater_equal_str,  \
     const    char *      : _assert_greater_equal_str,  \
-                                                 \
+                                                       \
              wchar_t *   : _assert_greater_equal_wstr, \
     const    wchar_t *   : _assert_greater_equal_wstr, \
-                                                 \
+                                                       \
     default              : _assert_greater_equal)(ge, le, __FILE__, __LINE__)
 
 /**
@@ -438,29 +438,29 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
              char        : _assert_greater_equal_ch,   \
     signed   char        : _assert_greater_equal_sch,  \
     unsigned char        : _assert_greater_equal_uch,  \
-                                                 \
+                                                       \
              short       : _assert_greater_equal_int,  \
     unsigned short       : _assert_greater_equal_uint, \
-                                                 \
+                                                       \
              int         : _assert_greater_equal_int,  \
     unsigned int         : _assert_greater_equal_uint, \
-                                                 \
+                                                       \
              long        : _assert_greater_equal_int,  \
     unsigned long        : _assert_greater_equal_uint, \
-                                                 \
+                                                       \
              long long   : _assert_greater_equal_int,  \
     unsigned long long   : _assert_greater_equal_uint, \
-                                                 \
+                                                       \
              float       : _assert_greater_equal_dbl,  \
              double      : _assert_greater_equal_dbl,  \
              long double : _assert_greater_equal_dbl,  \
-                                                 \
+                                                       \
              char *      : _assert_greater_equal_str,  \
     const    char *      : _assert_greater_equal_str,  \
-                                                 \
+                                                       \
              wchar_t *   : _assert_greater_equal_wstr, \
     const    wchar_t *   : _assert_greater_equal_wstr, \
-                                                 \
+                                                       \
     default              : _assert_greater_equal)(ge, le, __FILE__, __LINE__)
 
 TEST(_base_suite, _base_test){}

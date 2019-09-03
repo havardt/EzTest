@@ -198,7 +198,7 @@ void _assert_is_not_null(const void *value, char *file, const int line)
     }
 }
 
-void _assert_is_true(bool condition, char *file, const int line)
+void _assert_is_true(const bool condition, char *file, const int line)
 {
     if(condition != true)
     {
@@ -206,7 +206,7 @@ void _assert_is_true(bool condition, char *file, const int line)
     }
 }
 
-void _assert_is_false(bool condition, char *file, const int line)
+void _assert_is_false(const bool condition, char *file, const int line)
 {
     if(condition != false)
     {
@@ -232,7 +232,7 @@ void _assert_are_not_same(const void *unexpected, const void *actual, char *file
 
 #ifdef NAN
 
-void _assert_is_nan(float value, char *file, const int line)
+void _assert_is_nan(const float value, char *file, const int line)
 {
     if(!isnan(value))
     {
@@ -267,7 +267,7 @@ void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t si
     }
 }
 
-void _assert_are_equal_ch(char expected, char actual, char *file, const int line)
+void _assert_are_equal_ch(const char expected, const char actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -275,7 +275,7 @@ void _assert_are_equal_ch(char expected, char actual, char *file, const int line
     }
 }
 
-void _assert_are_equal_sch(signed char expected, signed char actual, char *file, const int line)
+void _assert_are_equal_sch(const signed char expected, const signed char actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -283,7 +283,7 @@ void _assert_are_equal_sch(signed char expected, signed char actual, char *file,
     }
 }
 
-void _assert_are_equal_uch(unsigned char expected, unsigned char actual, char *file, const int line)
+void _assert_are_equal_uch(const unsigned char expected, const unsigned char actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -291,7 +291,7 @@ void _assert_are_equal_uch(unsigned char expected, unsigned char actual, char *f
     }
 }
 
-void _assert_are_equal_int(intmax_t expected, intmax_t actual, char *file, const int line)
+void _assert_are_equal_int(const intmax_t expected, const intmax_t actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -299,7 +299,7 @@ void _assert_are_equal_int(intmax_t expected, intmax_t actual, char *file, const
     }
 }
 
-void _assert_are_equal_uint(uintmax_t expected, uintmax_t actual, char *file, const int line)
+void _assert_are_equal_uint(const uintmax_t expected, const uintmax_t actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -317,7 +317,7 @@ void _assert_are_equal_uint(uintmax_t expected, uintmax_t actual, char *file, co
  *          in its equality test. It is therefore often better to use assert_are_equal_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_are_equal_dbl(long double expected, long double actual, char *file, const int line)
+void _assert_are_equal_dbl(const long double expected, const long double actual, char *file, const int line)
 {
     if(fabsl(expected - actual) > LDBL_EPSILON)
     {
@@ -350,7 +350,7 @@ void _assert_are_equal(const void *expected, const void *actual, char *file, con
     register_fail(file, line, "Assert are equal failed: unsupported data type.");
 }
 
-void _assert_are_not_equal_ch(char unexpected, char actual, char *file, const int line)
+void _assert_are_not_equal_ch(const char unexpected, const char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -358,7 +358,7 @@ void _assert_are_not_equal_ch(char unexpected, char actual, char *file, const in
     }
 }
 
-void _assert_are_not_equal_sch(signed char unexpected, signed char actual, char *file, const int line)
+void _assert_are_not_equal_sch(const signed char unexpected, const signed char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -366,7 +366,7 @@ void _assert_are_not_equal_sch(signed char unexpected, signed char actual, char 
     }
 }
 
-void _assert_are_not_equal_uch(unsigned char unexpected, unsigned char actual, char *file, const int line)
+void _assert_are_not_equal_uch(const unsigned char unexpected, const unsigned char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -374,7 +374,7 @@ void _assert_are_not_equal_uch(unsigned char unexpected, unsigned char actual, c
     }
 }
 
-void _assert_are_not_equal_int(intmax_t unexpected, intmax_t actual, char *file, const int line)
+void _assert_are_not_equal_int(const intmax_t unexpected, const intmax_t actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -382,7 +382,7 @@ void _assert_are_not_equal_int(intmax_t unexpected, intmax_t actual, char *file,
     }
 }
 
-void _assert_are_not_equal_uint(uintmax_t unexpected, uintmax_t actual, char *file, const int line)
+void _assert_are_not_equal_uint(const uintmax_t unexpected, const uintmax_t actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -400,7 +400,7 @@ void _assert_are_not_equal_uint(uintmax_t unexpected, uintmax_t actual, char *fi
  *          in its equality test. It is therefore often better to use assert_are_equal_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_are_not_equal_dbl(long double unexpected, long double actual, char *file, const int line)
+void _assert_are_not_equal_dbl(const long double unexpected, const long double actual, char *file, const int line)
 {
     if(fabsl(unexpected - actual) <= LDBL_EPSILON)
     {
@@ -432,7 +432,11 @@ void _assert_are_not_equal(const void *expected, const void *actual, char *file,
     register_fail(file, line, "Assert not equal failed: unsupported data type.");
 }
 
-void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, const int line)
+void _assert_are_equal_precision(const long double  expected, 
+                                 const long double  actual, 
+                                 const long double  epsilon, 
+                                 char              *file, 
+                                 const int          line)
 {
     if(fabsl(expected - actual) > epsilon)
     {
@@ -440,7 +444,11 @@ void _assert_are_equal_precision(long double expected, long double actual, long 
     }
 }
 
-void _assert_are_not_equal_precision(long double unexpected, long double actual, long double epsilon, char *file, const int line)
+void _assert_are_not_equal_precision(const long double  unexpected, 
+                                     const long double  actual, 
+                                     const long double  epsilon, 
+                                     char              *file, 
+                                     const int          line)
 {
     if(fabsl(unexpected - actual) <= epsilon)
     {
@@ -448,7 +456,7 @@ void _assert_are_not_equal_precision(long double unexpected, long double actual,
     }
 }
 
-void _assert_greater_ch(char greater, char lesser, char *file, const int line)
+void _assert_greater_ch(const char greater, const char lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -456,7 +464,7 @@ void _assert_greater_ch(char greater, char lesser, char *file, const int line)
     }
 }
 
-void _assert_greater_sch(signed char greater, signed char lesser, char *file, const int line)
+void _assert_greater_sch(const signed char greater, const signed char lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -464,7 +472,7 @@ void _assert_greater_sch(signed char greater, signed char lesser, char *file, co
     }
 }
 
-void _assert_greater_uch(unsigned char greater, unsigned char lesser, char *file, const int line)
+void _assert_greater_uch(const unsigned char greater, const unsigned char lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -472,7 +480,7 @@ void _assert_greater_uch(unsigned char greater, unsigned char lesser, char *file
     }
 }
 
-void _assert_greater_int(intmax_t greater, intmax_t lesser, char *file, const int line)
+void _assert_greater_int(const intmax_t greater, const intmax_t lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -480,7 +488,7 @@ void _assert_greater_int(intmax_t greater, intmax_t lesser, char *file, const in
     }
 }
 
-void _assert_greater_uint(uintmax_t greater, uintmax_t lesser, char *file, const int line)
+void _assert_greater_uint(const uintmax_t greater, const uintmax_t lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -498,7 +506,7 @@ void _assert_greater_uint(uintmax_t greater, uintmax_t lesser, char *file, const
  *          in its equality test. It is therefore often better to use assert_greater_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_greater_dbl(long double greater, long double lesser, char *file, const int line)
+void _assert_greater_dbl(const long double greater, const long double lesser, char *file, const int line)
 {
     if(fabsl(greater - lesser) <= LDBL_EPSILON || greater < lesser)
     {
