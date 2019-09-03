@@ -742,6 +742,86 @@ void _assert_less_precision(const long double  lesser,
     }
 }
 
+void _assert_less_equal_ch(const char le, const char ge, char *file, const int line)
+{
+    if(le > ge)
+    {
+        register_fail(file, line, "Assert less or equal failed: '%c' is greater then '%c'.", le, ge);
+    }
+}
+
+void _assert_less_equal_sch (const signed char le, const signed char ge, char *file, const int line)
+{
+    if(le > ge)
+    {
+        register_fail(file, line, "Assert less or equal failed: '%c' is greater then '%c'.", le, ge);
+    }
+}
+
+void _assert_less_equal_uch (const unsigned char le, const unsigned char ge, char *file, const int line)
+{
+    if(le > ge)
+    {
+        register_fail(file, line, "Assert less or equal failed: '%c' is greater then '%c'.", le, ge);
+    }
+}
+
+void _assert_less_equal_int (const intmax_t le, const intmax_t ge, char *file, const int line)
+{
+    if(le > ge)
+    {
+        register_fail(file, line, "Assert less or equal failed: '%ld' is greater then '%ld'.", le, ge);
+    }
+}
+
+void _assert_less_equal_uint(const uintmax_t le, const uintmax_t ge, char *file, const int line)
+{
+    if(le > ge)
+    {
+        register_fail(file, line, "Assert less or equal failed: '%ld' is greater then '%ld'.", le, ge);
+    }
+}
+
+/**
+ * Tests the equality of two floating point numbers.
+ *
+ * @param le The value that is expected to be lesser or equal to the second value.
+ * @param ge The value that is expected to be greater than or equal to the first value.
+ *
+ * @remarks It is important to known that this test uses the epsilon macro from float.h
+ *          in its equality test. It is therefore often better to use _assert_greater_equal_precision()
+ *          and provide the application specific epsilon.
+ */
+void _assert_less_equal_dbl(const long double le, const long double ge, char *file, const int line)
+{
+    if(fabsl(ge - le) > LDBL_EPSILON && le > ge)
+    {
+        register_fail(file, line, "Assert less or equal failed: '%0.8Lf' is greater then '%0.8Lf'.", le, ge);
+    }
+}
+
+void _assert_less_equal_str(const char *le, const char *ge, char *file, const int line)
+{
+    if((ge == NULL && le != NULL) ||
+       (ge != NULL && le != NULL && strcmp(le, ge) > 0))
+    {
+        register_fail(file, line, "Assert less or equal failed: '%s' is greater then '%s'.", le, ge);
+    }
+}
+
+void _assert_less_equal_wstr(const wchar_t *le, const wchar_t *ge, char *file, const int line)
+{
+    if((ge == NULL && le != NULL) ||
+       (ge != NULL && le != NULL && wcscmp(le, ge) > 0))
+    {
+        register_fail(file, line, "Assert less or equal failed: '%ls' is greater then '%ls'.", le, ge);
+    }
+}
+void _assert_less_equal(const void *le, const void *ge, char *file, const int line)
+{
+    register_fail(file, line, "Assert less or equal failed: unsupported data type.");
+}
+
 void _assert_less_equal_precision(const long double  le,
                                   const long double  ge,
                                   const long double  epsilon,

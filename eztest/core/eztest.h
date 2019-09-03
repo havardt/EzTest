@@ -522,8 +522,59 @@ void _assert_less_precision(long double  lesser,
 #define ASSERT_LT_PRECISION(lesser, greater, epsilon)\
     _assert_less_precision(lesser, greater, epsilon, __FILE__, __LINE__)
 
+void _assert_less_equal_ch  (char           le, char           ge, char *file, int line);
+void _assert_less_equal_sch (signed char    le, signed char    ge, char *file, int line);
+void _assert_less_equal_uch (unsigned char  le, unsigned char  ge, char *file, int line);
+void _assert_less_equal_int (intmax_t       le, intmax_t       ge, char *file, int line);
+void _assert_less_equal_uint(uintmax_t      le, uintmax_t      ge, char *file, int line);
+void _assert_less_equal_dbl (long double    le, long double    ge, char *file, int line);
+void _assert_less_equal_str (const char    *le, const char    *ge, char *file, int line);
+void _assert_less_equal_wstr(const wchar_t *le, const wchar_t *ge, char *file, int line);
+void _assert_less_equal     (const void    *le, const void    *ge, char *file, int line);
+/**
+ * Tests whether the first value is lesser than or equal to the second value.
+ *
+ * @param le The first value to compare. This is the value the user
+ *           expects to be lesser than or equal to the second value.
+ *
+ * @param ge The second value to compare. This is the value the user
+ *           expects to be greater than or equal to the first value.
+ */
+#define ASSERT_LESS_EQUAL(le, ge) _Generic((le, ge),\
+             char        : _assert_less_equal_ch,   \
+    signed   char        : _assert_less_equal_sch,  \
+    unsigned char        : _assert_less_equal_uch,  \
+                                                    \
+             short       : _assert_less_equal_int,  \
+    unsigned short       : _assert_less_equal_uint, \
+                                                    \
+             int         : _assert_less_equal_int,  \
+    unsigned int         : _assert_less_equal_uint, \
+                                                    \
+             long        : _assert_less_equal_int,  \
+    unsigned long        : _assert_less_equal_uint, \
+                                                    \
+             long long   : _assert_less_equal_int,  \
+    unsigned long long   : _assert_less_equal_uint, \
+                                                    \
+             float       : _assert_less_equal_dbl,  \
+             double      : _assert_less_equal_dbl,  \
+             long double : _assert_less_equal_dbl,  \
+                                                    \
+             char *      : _assert_less_equal_str,  \
+    const    char *      : _assert_less_equal_str,  \
+                                                    \
+             wchar_t *   : _assert_less_equal_wstr, \
+    const    wchar_t *   : _assert_less_equal_wstr, \
+                                                    \
+    default              : _assert_less_equal)(le, ge, __FILE__, __LINE__)
 
-// TODO: Add ASSERT_LE
+/**
+ * @see ASSERT_LESS_EQUAL(le, ge);
+ *
+ * @remarks This is just a short-hand for ASSERT_LESS_EQUAL.
+ */
+#define ASSERT_LE(le, ge) ASSERT_LESS_EQUAL(le, ge)
 
 void _assert_less_equal_precision(long double  le,
                                   long double  ge,
