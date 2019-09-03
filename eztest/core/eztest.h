@@ -410,6 +410,35 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
 */
 #define ASSERT_GE(ge, le) ASSERT_GREATER_EQUAL(ge, le)
 
+void _assert_greater_equal_precision(long double  ge,
+                                     long double  le,
+                                     long double  epsilon,
+                                     char        *file,
+                                     int          line);
+
+/**
+ * Tests whether the first value is greater than or equal to the second value.
+ *
+ * @param ge The first floating point value to compare. This is the value the user
+ *           expects to be greater than or equal to the second value.
+ *
+ * @param le The second floating point value to compare. This is the value the user
+ *           expects to be lesser than or equal to the first value.
+ *
+ * @param epsilon A floating point representing the precision required when testing
+ *                for equality.
+ */
+#define ASSERT_GREATER_EQUAL_PRECISION(ge, le, epsilon)\
+    _assert_greater_equal_precision(ge, le, epsilon, __FILE__, __LINE__)
+
+/**
+* @see ASSERT_GREATER_EQUAL_PRECISION(ge, le, epsilon);
+*
+* @remarks This is just a short-hand for ASSERT_GREATER_EQUAL_PRECISION.
+*/
+#define ASSERT_GE_PRECISION(ge, le, epsilon)\
+    _assert_greater_equal_precision(ge, le, epsilon, __FILE__, __LINE__)
+
 void _assert_less_ch  (char           lesser, char           greater, char *file, int line);
 void _assert_less_sch (signed char    lesser, signed char    greater, char *file, int line);
 void _assert_less_uch (unsigned char  lesser, unsigned char  greater, char *file, int line);

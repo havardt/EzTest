@@ -634,6 +634,19 @@ void _assert_greater_equal(const void *ge, const void *le, char *file, const int
     register_fail(file, line, "Assert greater or equal failed: unsupported data type.");
 }
 
+void _assert_greater_equal_precision(long double  ge,
+                                     long double  le,
+                                     long double  epsilon,
+                                     char        *file,
+                                     int          line)
+{
+    if(fabsl(ge - le) > epsilon && ge < le)
+    {
+        register_fail(file, line, "Assert greater or equal failed: '%0.8Lf' is lesser than '%0.8Lf'.", ge, le);
+    }
+}
+
+
 void _assert_less_ch(const char lesser, const char greater, char *file, const int line)
 {
     if(lesser >= greater)
