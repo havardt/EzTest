@@ -325,40 +325,14 @@ void _assert_greater     (const void    * greater, const void    * lesser, char 
  *
  * @remarks This is just a short-hand for ASSERT_GREATER.
  */
-#define ASSERT_GT(greater, lesser) _Generic((greater, lesser),\
-             char        : _assert_greater_ch,   \
-    signed   char        : _assert_greater_sch,  \
-    unsigned char        : _assert_greater_uch,  \
-                                                 \
-             short       : _assert_greater_int,  \
-    unsigned short       : _assert_greater_uint, \
-                                                 \
-             int         : _assert_greater_int,  \
-    unsigned int         : _assert_greater_uint, \
-                                                 \
-             long        : _assert_greater_int,  \
-    unsigned long        : _assert_greater_uint, \
-                                                 \
-             long long   : _assert_greater_int,  \
-    unsigned long long   : _assert_greater_uint, \
-                                                 \
-             float       : _assert_greater_dbl,  \
-             double      : _assert_greater_dbl,  \
-             long double : _assert_greater_dbl,  \
-                                                 \
-             char *      : _assert_greater_str,  \
-    const    char *      : _assert_greater_str,  \
-                                                 \
-             wchar_t *   : _assert_greater_wstr, \
-    const    wchar_t *   : _assert_greater_wstr, \
-                                                 \
-    default              : _assert_greater)(greater, lesser, __FILE__, __LINE__)
+#define ASSERT_GT(greater, lesser) ASSERT_GREATER(greater, lesser)
 
 void _assert_greater_precision(long double   greater,
                                long double   lesser,
                                long double   epsilon,
                                char        * file,
                                int           line);
+
 /**
  * Tests whether the first value is greater than the second value.
  *
