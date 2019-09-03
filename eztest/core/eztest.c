@@ -646,7 +646,6 @@ void _assert_greater_equal_precision(long double  ge,
     }
 }
 
-
 void _assert_less_ch(const char lesser, const char greater, char *file, const int line)
 {
     if(lesser >= greater)
@@ -729,6 +728,18 @@ void _assert_less_wstr(const wchar_t *lesser, const wchar_t *greater, char *file
 void _assert_less(const void *lesser, const void *greater, char *file, const int line)
 {
     register_fail(file, line, "Assert less failed: unsupported data type.");
+}
+
+void _assert_less_precision(long double  lesser,
+                            long double  greater,
+                            long double  epsilon,
+                            char        *file,
+                            int          line)
+{
+    if(fabsl(lesser - greater) <= epsilon || lesser > greater)
+    {
+        register_fail(file, line, "Assert less failed: '%0.8Lf' is not lesser then '%0.8Lf'.", lesser, greater);
+    }
 }
 
 //endregion asserts

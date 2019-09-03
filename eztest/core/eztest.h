@@ -493,6 +493,36 @@ void _assert_less     (const void    *lesser, const void    *greater, char *file
  */
 #define ASSERT_LT(lesser, greater) ASSERT_LESS(lesser, greater)
 
+void _assert_less_precision(long double  lesser,
+                            long double  greater,
+                            long double  epsilon,
+                            char        *file,
+                            int          line);
+
+/**
+ * Tests whether the first value is lesser than the second value.
+ *
+ * @param lesser The first floating point value to compare. This is the value the user
+ *                expects to be lesser than the second value.
+ *
+ * @param greater The second floating point value to compare. This is the value the user
+ *                expects to be greater than the first value.
+ *
+ * @param epsilon A floating point representing the precision required when testing
+ *                for equality.
+ */
+#define ASSERT_LESS_PRECISION(lesser, greater, epsilon)\
+    _assert_less_precision(lesser, greater, epsilon, __FILE__, __LINE__)
+
+/**
+* @see ASSERT_LESS_PRECISION(lesser, greater, epsilon);
+*
+* @remarks This is just a short-hand for ASSERT_LESS_PRECISION.
+*/
+#define ASSERT_LT_PRECISION(lesser, greater, epsilon)\
+    _assert_less_precision(lesser, greater, epsilon, __FILE__, __LINE__)
+
+
 #ifdef TEST_RUNNER
 
 /**
