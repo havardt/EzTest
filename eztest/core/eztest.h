@@ -502,7 +502,7 @@ void _assert_less_precision(long double  lesser,
 /**
  * Tests whether the first value is lesser than the second value.
  *
- * @param lesser The first floating point value to compare. This is the value the user
+ * @param lesser  The first floating point value to compare. This is the value the user
  *                expects to be lesser than the second value.
  *
  * @param greater The second floating point value to compare. This is the value the user
@@ -521,6 +521,38 @@ void _assert_less_precision(long double  lesser,
 */
 #define ASSERT_LT_PRECISION(lesser, greater, epsilon)\
     _assert_less_precision(lesser, greater, epsilon, __FILE__, __LINE__)
+
+
+// TODO: Add ASSERT_LE
+
+void _assert_less_equal_precision(long double  le,
+                                  long double  ge,
+                                  long double  epsilon,
+                                  char        *file,
+                                  int          line);
+
+/**
+ * Tests whether the first value is lesser than or equal to the second value.
+ *
+ * @param le The first floating point value to compare. This is the value the user
+ *           expects to be lesser than or equal to the second value.
+ *
+ * @param ge The second floating point value to compare. This is the value the user
+ *           expects to be greater than or equal to the first value.
+ *
+ * @param epsilon A floating point representing the precision required when testing
+ *                for equality.
+ */
+#define ASSERT_LESS_EQUAL_PRECISION(le, ge, epsilon)\
+    _assert_less_equal_precision(le, ge, epsilon, __FILE__, __LINE__)
+
+/**
+* @see ASSERT_LESS_EQUAL_PRECISION(le, ge, epsilon);
+*
+* @remarks This is just a short-hand for ASSERT_LESS_EQUAL_PRECISION.
+*/
+#define ASSERT_LE_PRECISION(le, ge, epsilon)\
+    _assert_less_equal_precision(le, ge, epsilon, __FILE__, __LINE__)
 
 
 #ifdef TEST_RUNNER
