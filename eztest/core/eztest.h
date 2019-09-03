@@ -510,6 +510,12 @@ void _assert_less     (const void    *lesser, const void    *greater, char *file
                                               \
     default              : _assert_less)(lesser, greater, __FILE__, __LINE__)
 
+/**
+ * @see ASSERT_LESS(lesser, greater);
+ *
+ * @remarks This is just a short-hand for ASSERT_LESS.
+ */
+#define ASSERT_LT(lesser, greater) ASSERT_LESS(lesser, greater)
 
 #ifdef TEST_RUNNER
 
