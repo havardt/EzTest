@@ -169,6 +169,13 @@ void _assert_are_equal     (const void    * expected, const void    * actual, ch
                                                    \
     default              : _assert_are_equal)(expected, actual, __FILE__, __LINE__)
 
+/**
+ * @see ASSERT_ARE_EQUAL(expected, actual);
+ *
+ * @remarks This is a short-hand for ASSERT_ARE_EQUAL.
+ */
+#define ASSERT_EQ(expected, actual) ASSERT_ARE_EQUAL(expected, actual)
+
 void _assert_are_not_equal_ch  (char            unexpected, char            actual, char *file, int line);
 void _assert_are_not_equal_sch (signed char     unexpected, signed char     actual, char *file, int line);
 void _assert_are_not_equal_uch (unsigned char   unexpected, unsigned char   actual, char *file, int line);
