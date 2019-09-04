@@ -78,7 +78,9 @@ project
     │   
     └───eztest
 ```
-Using the example above the developer would need to add ```mytest.c``` and ```mytest2.c``` to the eztest CMakeLists.txt file using relative paths. The test files here would also need to include the eztest header which would look like this: ```#include "eztest/core/eztest.h"```.
+Using the example above the developer would need to add ```mytest.c``` and ```mytest2.c``` to the eztest CMakeLists.txt file using relative paths. The test files here would also need to include the eztest header which would look like this: ```#include "eztest/core/eztest.h"```.       
+An easy way to get the EzTest source files into your project is to use following command:        
+```git clone --depth 1 https://github.com/havardt/EzTest.git <your-project-path>```
 
 #### 2. Build     
 EzTest uses CMake as its build system. Therefore it is important that you add your test files to the CMakeLists.txt file before building. To build the program we have provided a build script written in BASH. The build script leaves a single executable 'eztest', this is the test runner. Optionally build manually like any other CMake program.  
