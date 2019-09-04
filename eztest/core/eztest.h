@@ -241,6 +241,14 @@ void _assert_equal_mem(const void *expected, const void *actual, size_t size, ch
 #define ASSERT_EQUAL_MEM(expected, actual, size)\
     _assert_equal_mem(expected, actual, size, __FILE__, __LINE__)
 
+/**
+ * @see ASSERT_EQUAL_MEM(expected, actual, size);
+ *
+ * @remarks This is a short-hand for ASSERT_EQUAL_MEM.
+ */
+#define ASSERT_EQ_MEM(expected, actual, size) ASSERT_EQUAL_MEM(expected, actual, size)
+
+
 void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size, char *file, int line);
 /**
  * Checks for inequality by comparing each byte at the given memory locations.
