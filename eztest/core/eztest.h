@@ -223,6 +223,13 @@ void _assert_are_not_equal     (const void    * unexpected, const void    * actu
                                                        \
     default              : _assert_are_not_equal)(unexpected, actual, __FILE__, __LINE__)
 
+/**
+ * @see ASSERT_ARE_NOT_EQUAL(unexpected, actual);
+ *
+ * @remarks This is a short-hand for ASSERT_ARE_NOT_EQUAL.
+ */
+#define ASSERT_NE(unexpected, actual) ASSERT_ARE_NOT_EQUAL(unexpected, actual)
+
 void _assert_equal_mem(const void *expected, const void *actual, size_t size, char *file, int line);
 /**
  * Checks for equality by comparing each byte at the given memory locations.
