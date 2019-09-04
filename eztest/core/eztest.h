@@ -310,6 +310,13 @@ void _assert_are_not_equal_precision(long double   unexpected,
 #define ASSERT_ARE_NOT_EQUAL_PRECISION(unexpected, actual, epsilon)\
     _assert_are_not_equal_precision(unexpected, actual, epsilon, __FILE__, __LINE__)
 
+/**
+ * @see ASSERT_ARE_NOT_EQUAL_PRECISION(unexpected, actual, epsilon);
+ *
+ * @remarks This is a short-hand for ASSERT_ARE_NOT_EQUAL_PRECISION.
+ */
+#define ASSERT_NE_PRECISION(unexpected, actual, epsilon) ASSERT_ARE_NOT_EQUAL_PRECISION(unexpected, actual, epsilon)
+
 void _assert_greater_ch  (char            greater, char            lesser, char *file, int line);
 void _assert_greater_sch (signed char     greater, signed char     lesser, char *file, int line);
 void _assert_greater_uch (unsigned char   greater, unsigned char   lesser, char *file, int line);
