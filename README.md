@@ -21,7 +21,7 @@ TEST(MathTests, AddingTwoOnTwoShouldEqualFour)
     const int expected = 4;
     const int actual = math_add(2, 2);
     
-    ASSERT_ARE_EQUAL(expected, actual);
+    ASSERT_ARE_EQUAL(expected, actual); // or ASSERT_EQ(expected, actual); using the shorthand.
 }
 ```
 In this example we can see the power of the C11 macro ```_Generic```. The developer doesn't have to provide some prefix or postfix to represent the data type. The correct function for the passed data type, in this case interger, is chosen automagically leaving the developer to focus on the test itself.
@@ -89,21 +89,29 @@ Run the executable to run your tests. The test runner can take multiple optional
 ## Asserts
 Each assert is a macro prefixed with ```ASSERT_```.
 
-| Macro | Description |
-| --- | --- |
-| ``` ASSERT_IS_NULL ``` | Tests whether the provided pointer is null. |
-| ``` ASSERT_IS_NOT_NULL ``` | Tests whether the provided pointer is non-null. |
-| ``` ASSERT_IS_TRUE ``` | Tests whether the condition is true. |
-| ``` ASSERT_IS_FALSE ``` | Tests whether the condition is false. |
-| ``` ASSERT_ARE_SAME ``` | Tests whether the two pointers refer to the same memory location. |
-| ``` ASSERT_ARE_NOT_SAME ``` | Tests whether the two pointers refer to different memory locations. |
-| ``` ASSERT_IS_NAN ``` | Tests whether the provided float is NaN. |
-| ``` ASSERT_ARE_EQUAL ``` | Tests whether the two values are equal. |
-| ``` ASSERT_ARE_NOT_EQUAL ``` | Tests whether the two values are different. |
-| ``` ASSERT_ARE_EQUAL_MEM ``` | Tests whether the two values are equal by comparing each byte at the given memory locations. |
-| ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | Tests whether the two values are different by comparing each byte at the given memory locations. |
-| ``` ASSERT_ARE_EQUAL_PRECISION ``` | Tests whether two floating point numbers are equal using a user provided epsilon. |
-| ``` ASSERT_ARE_NOT_EQUAL_PRECISION ``` | Tests whether two floating point numbers are different using a user provided epsilon. |
+| Macro | Shorthand | Description |
+| --- | --- | --- |
+| ``` ASSERT_IS_NULL ``` | | Tests whether the provided pointer is null. |
+| ``` ASSERT_IS_NOT_NULL ``` | | Tests whether the provided pointer is non-null. |
+| ``` ASSERT_IS_TRUE ``` | | Tests whether the condition is true. |
+| ``` ASSERT_IS_FALSE ``` | | Tests whether the condition is false. |
+| ``` ASSERT_ARE_SAME ``` | | Tests whether the two pointers refer to the same memory location. |
+| ``` ASSERT_ARE_NOT_SAME ``` | | Tests whether the two pointers refer to different memory locations. |
+| ``` ASSERT_IS_NAN ``` | | Tests whether the provided float is NaN. |
+| ``` ASSERT_ARE_EQUAL ``` | ``` ASSERT_EQ ``` | Tests whether the two values are equal. |
+| ``` ASSERT_ARE_EQUAL_PRECISION ``` | ```ASSERT_EQ_PRECISION```| Tests whether two floating point numbers are equal using a user provided epsilon. |
+| ``` ASSERT_ARE_NOT_EQUAL ``` |``` ASSERT_NE ``` | Tests whether the two values are different. |
+| ``` ASSERT_ARE_NOT_EQUAL_PRECISION ``` | ```ASSERT_NE_PRECISION``` | Tests whether two floating point numbers are different using a user provided epsilon. |
+| ``` ASSERT_GREATER ``` | ``` ASSERT_GT ``` | Tests whether the first value is greater than the second value. |
+| ``` ASSERT_GREATER_PRECISION ``` | ``` ASSERT_GT_PRECISION ``` | Tests whether the first floating point value is greater than the second floating point value using a user provided epsilon. |
+| ``` ASSERT_GREATER_EQUAL ``` | ```ASSERT_GE``` | Tests whether the first value is greater than or equal to the second value. |
+| ``` ASSERT_GREATER_EQUAL_PRECISION ``` | ```ASSERT_GE_PRECISION``` | Tests whether the first floating point value is greater than or equal to the second floating point value using a user provided epsilon. |
+| ``` ASSERT_LESS ``` | ``` ASSERT_LT ``` | Tests whether the first value is lesser than the second value. |
+| ``` ASSERT_LESS_PRECISION ``` | ``` ASSERT_LT_PRECISION ``` | Tests whether the first floating point value is lesser than the second floating point value using a user provided epsilon. |
+| ``` ASSERT_LESS_EQUAL ``` | ``` ASSERT_LE ``` | Tests whether the first value is lesser than or equal to the second value. |
+| ``` ASSERT_LESS_EQUAL_PRECISION ``` | ``` ASSERT_LE_PRECISION ``` | Tests whether the first floating point value is lesser than or equal to the second floating point value using a user provided epsilon. |
+| ``` ASSERT_ARE_EQUAL_MEM ``` | ``` ASSERT_EQ_MEM ``` | Tests whether the two values are equal by comparing each byte at the given memory locations. |
+| ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | ```ASSERT_NE_MEM``` | Tests whether the two values are different by comparing each byte at the given memory locations. |
 
 ## Runner
 EzTest runs the created tests according to the provided application options.
