@@ -260,6 +260,14 @@ void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t si
 #define ASSERT_NOT_EQUAL_MEM(unexpected, actual, size)\
     _assert_not_equal_mem(unexpected, actual, size, __FILE__, __LINE__)
 
+/**
+ * @see ASSERT_NOT_EQUAL_MEM(unexpected, actual, size);
+ *
+ * @remarks This is a short-hand for ASSERT_NOT_EQUAL_MEM.
+ */
+#define ASSERT_NE_MEM(unexpected, actual, size) ASSERT_NOT_EQUAL_MEM(unexpected, actual, size)
+
+
 void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, int line);
 /**
  * Tests for equality between two floating point numbers.
