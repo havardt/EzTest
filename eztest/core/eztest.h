@@ -284,6 +284,13 @@ void _assert_are_equal_precision(long double expected, long double actual, long 
 #define ASSERT_ARE_EQUAL_PRECISION(expected, actual, epsilon)\
     _assert_are_equal_precision(expected, actual, epsilon, __FILE__, __LINE__)
 
+/**
+ * @see ASSERT_ARE_EQUAL_PRECISION(expected, actual, epsilon);
+ *
+ * @remarks This is a short-hand for ASSERT_ARE_EQUAL_PRECISION.
+ */
+#define ASSERT_EQ_PRECISION(expected, actual, epsilon) ASSERT_ARE_EQUAL_PRECISION(expected, actual, epsilon)
+
 void _assert_are_not_equal_precision(long double   unexpected,
                                      long double   actual,
                                      long double   epsilon,
