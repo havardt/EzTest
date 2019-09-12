@@ -14,8 +14,8 @@ if (CMAKE_COMPILER_IS_GNUCC)
 endif()
 
 add_executable(eztest
-    
-    main.c
+
+    runner.c
     eztest.h
 
     # Add your test files below using relative paths.
