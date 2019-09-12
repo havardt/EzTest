@@ -53,7 +53,7 @@ See the next section for information on how to get started with EzTest.
 EzTest was created to make unit testing quick and easy in C. Therefore there are only three steps to test your code:
 
 #### 1. Write tests using the test macros    
-Before having access to the test macros you need to include the eztest header file: ```#include "core/eztest.h"```.
+Before having access to the test macros you need to include the eztest header file: ```#include "eztest.h"```.
 There are two macros for creating tests: ```TEST(suite, test)``` and ```TEST_FULL(suite, test)```.
 The first is for simple unit tests while the second is for tests with a setup and teardown function. Both of these macros take the same arguments.
 
@@ -65,25 +65,15 @@ This is the name of the test. The name must follow the rules for variable names 
 
 Example usage of both ```TEST(suite, test)``` and ```TEST_FULL(suite, test)``` can be found in the [usage section](#usage).     
 
-An example project structure while using EzTest could be as following:    
-```
-project 
-│
-└───src
-|  
-|
-└───test
-    │   mytest.c
-    |   mytest2.c
-    │   
-    └───eztest
-```
-Using the example above the developer would need to add ```mytest.c``` and ```mytest2.c``` to the eztest CMakeLists.txt file using relative paths. The test files here would also need to include the eztest header which would look like this: ```#include "eztest/core/eztest.h"```.       
-An easy way to get the EzTest source files into your project is to use following command:        
-```git clone --depth 1 https://github.com/havardt/EzTest.git <your-project-path>```
 
-#### 2. Build     
-EzTest uses CMake as its build system. Therefore it is important that you add your test files to the CMakeLists.txt file before building. To build the program we have provided a build script written in BASH. The build script leaves a single executable 'eztest', this is the test runner. Optionally build manually like any other CMake program.  
+#### 2. Build/ Compile
+
+###### Option 1
+To build the EzTest runner, compile using a C11 compatible C compiler by providing the ```runner.c``` source file along with your test files.    
+Example compile: ```$ gcc -o ezrunner runner.c <test-files>```     
+
+###### Option 2
+Another option is to use the provided [CMake files and BASH build script](build). Before running the build script it is important that you add your test files to the CMakeLists.txt file. The build script leaves a single executable 'eztest', this is the test runner.
 
 #### 3. Run
 Run the executable to run your tests. The test runner can take multiple optional arguments to customize your test experience. Learn more about the test runner [here](#runner).
