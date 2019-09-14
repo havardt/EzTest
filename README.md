@@ -5,12 +5,20 @@
 An easy to use unit testing framework written in, and created for, the C language.
 
 ## :scroll: Table of contents :scroll:
+* [Why use EzTest?](#Why-use-EzTest?)
 * [Usage](#usage)
 * [Getting started](#getting-started)
 * [Asserts](#asserts)
 * [Runner](#runner)
 * [How to contribute](#contribute)
 * [License info](#license)
+
+## Why use EzTest?
+
+- Simple: single header and runner file.
+- No writing main functions or add-test functions.
+- No recompilation to change runner settings/ options.
+- Wide list of asserts.
 
 ## Usage
 Here is an example of a simple unit test written using EzTest:
