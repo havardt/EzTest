@@ -5,7 +5,7 @@
 An easy to use unit testing framework written in, and created for, the C language.
 
 ## :scroll: Table of contents :scroll:
-* [Why use EzTest?](#Why-use-EzTest?)
+* [Why use EzTest?](#Why-use-EzTest-)
 * [Usage](#usage)
 * [Getting started](#getting-started)
 * [Asserts](#asserts)
