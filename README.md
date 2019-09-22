@@ -114,7 +114,12 @@ Each assert is a macro prefixed with ```ASSERT_```.
 | ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | ```ASSERT_NE_MEM``` | Tests whether the two values are different by comparing each byte at the given memory locations. |
 
 ## Runner
-EzTest runs the created tests according to the provided application options.
+The runner is the program that executes the tests.
+
+#### Exit code
+The exit code is EXIT_SUCCESS (0) if all tests passed and EXIT_FAILURE (non-zero) if one or more tests failed.
+
+#### Options
 
 | Short | Long | Description |    
 | --- | --- | --- |
@@ -122,6 +127,7 @@ EzTest runs the created tests according to the provided application options.
 | -h | --help | Prints help/ usage information. |           
 | -c | --no-color | Don't use any color when printing. |  
 | -t | --timer | Display execution time for each test. |
+| -q | --quiet | No output. |
 
 
 ## Contribute
