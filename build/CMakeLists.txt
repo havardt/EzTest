@@ -3,8 +3,8 @@ project (eztest C)
 
 set (CMAKE_C_STANDARD 11)
 
-set (eztest_VERSION_MAJOR 1)
-set (eztest_VERSION_MINOR 2)
+set (eztest_VERSION_MAJOR 2)
+set (eztest_VERSION_MINOR 0)
 set (eztest_VERSION_PATCH 0)
 
 set(EXECUTABLE_OUTPUT_PATH ..)
