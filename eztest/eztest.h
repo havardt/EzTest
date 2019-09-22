@@ -1108,7 +1108,7 @@ void _assert_are_equal_precision(const long double  expected,
 {
     if(fabsl(expected - actual) > epsilon)
     {
-        register_fail(file, line, "Assert are equal failed: expected '%0.10Lf', but got '%0.10Lf'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%0.8Lf', but got '%0.8Lf'.", expected, actual);
     }
 }
 
@@ -1120,7 +1120,7 @@ void _assert_are_not_equal_precision(const long double  unexpected,
 {
     if(fabsl(unexpected - actual) <= epsilon)
     {
-        register_fail(file, line, "Assert not equal failed: '%0.10Lf' and '%0.10Lf' are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%0.8Lf' and '%0.8Lf' are equal.", unexpected, actual);
     }
 }
 
