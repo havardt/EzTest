@@ -21,6 +21,8 @@ struct options
     bool no_color;
     /** When set to @code true @endcode the test execution time is displayed for each test */
     bool timer;
+    /** When set to @code true @endcode EzTest will not print anything. */
+    bool quiet;
 };
 
 struct unit_test
@@ -753,6 +755,8 @@ static const char *color(const char *color)
 /** Prints an overall report of the test results. */
 static void print_report(void)
 {
+    if(options->quiet) return;
+
     printf("-----------------------------------\n"
            "|  "
            "%sPASSED"  COLOR_NONE "  |  "
@@ -773,7 +777,7 @@ static void print_report(void)
 }
 
 /**
- * Prints the test result output.
+ * Prints the test result output if and only if the quiet option has not been set.
  *
  * @param test The unit test to print result for.
  * @param time The test execution time in ms.
@@ -785,6 +789,8 @@ static void print_result(const struct unit_test *test,
                          const char *restrict resstr,
                          const char *restrict c)
 {
+    if(options->quiet) return;
+    
     printf("[%s : %s]%s %s " COLOR_NONE, test->test_suite, test->test_name, color(c), resstr);
     if(options->timer)
     {
@@ -835,9 +841,14 @@ static void print_bytes(const void *ptr, size_t n)
  */
 static void register_fail(char *file, const int line, const char *msg, ...)
 {
-    va_list va;
     result = fail;
+    
+    if(options->quiet)
+    {
+        return;
+    }
 
+    va_list va;
     printf("[%s : %s] %s", current->test_suite, current->test_name, color(COLOR_YELLOW));
     va_start(va, msg);
     vprintf(msg, va);
@@ -916,6 +927,12 @@ void _assert_equal_mem(const void *expected, const void *actual, const size_t si
        (expected != NULL && memcmp(expected, actual, size) != 0))
     {
         result = fail;
+        
+        if(options->quiet)
+        {
+            return;
+        }   
+
         printf("[%s : %s]%s Assert are equal failed: expected '0x",
                 current->test_suite, current->test_name, color(COLOR_YELLOW));
         print_bytes(expected, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
@@ -1533,7 +1550,10 @@ static int discover(struct unit_test **base_test)
             break;
         }
     }
-    printf("Test discovery finished, found %d tests.\n\n", count);
+    if(!options->quiet)
+    {
+        printf("Test discovery finished, found %d tests.\n\n", count);
+    }
     return count;
 }
 
@@ -1594,7 +1614,7 @@ static unsigned int execute(const struct unit_test *test)
  * Starts running tests.
  *
  * @param opts Application options (not NULL).
- * @return @code EXIT_SUCCESS @endcode if no tests failed; otherwise @code EXIT_FAILURE @endcode.
+ * @return The amount of failed tests. 
  */
 int eztest_run(struct options *opts)
 {
@@ -1621,7 +1641,7 @@ int eztest_run(struct options *opts)
     }
     print_report();
 
-    return RESULT_OK;
+    return fail_count;
 }
 
 //endregion runner
