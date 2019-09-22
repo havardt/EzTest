@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 
     setlocale(LC_ALL, ""); // Needed to print wide chars/ strings.
 
-    return eztest_run(&opts);
+    return (eztest_run(&opts) == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /** 
