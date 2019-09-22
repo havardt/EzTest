@@ -1022,7 +1022,7 @@ void _assert_are_not_equal_ch(const char unexpected, const char actual, char *fi
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%c' and '%c' are equal.", unexpected, actual);
     }
 }
 
@@ -1030,7 +1030,7 @@ void _assert_are_not_equal_sch(const signed char unexpected, const signed char a
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%c' and '%c' are equal.", unexpected, actual);
     }
 }
 
@@ -1038,7 +1038,7 @@ void _assert_are_not_equal_uch(const unsigned char unexpected, const unsigned ch
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%c' and '%c' are equal.", unexpected, actual);
     }
 }
 
@@ -1046,7 +1046,7 @@ void _assert_are_not_equal_int(const intmax_t unexpected, const intmax_t actual,
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%ld' and '%ld' are equal.", unexpected, actual);
     }
 }
 
@@ -1054,7 +1054,7 @@ void _assert_are_not_equal_uint(const uintmax_t unexpected, const uintmax_t actu
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%ld' and '%ld' are equal.", unexpected, actual);
     }
 }
 
@@ -1072,7 +1072,7 @@ void _assert_are_not_equal_dbl(const long double unexpected, const long double a
 {
     if(fabsl(unexpected - actual) <= LDBL_EPSILON)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%0.8Lf) and actual(%0.8Lf) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%0.8Lf' and '%0.8Lf' are equal.", unexpected, actual);
     }
 }
 
@@ -1081,7 +1081,7 @@ void _assert_are_not_equal_str(const char *unexpected, const char *actual, char 
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && strcmp(unexpected, actual) == 0))
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%s) and actual(%s) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%s' and '%s' are equal.", unexpected, actual);
     }
 }
 
@@ -1090,7 +1090,7 @@ void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && wcscmp(unexpected, actual) == 0))
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%ls) and actual(%ls) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%ls' and '%ls' are equal.", unexpected, actual);
     }
 }
 
@@ -1120,7 +1120,7 @@ void _assert_are_not_equal_precision(const long double  unexpected,
 {
     if(fabsl(unexpected - actual) <= epsilon)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%0.10Lf) and actual(%0.10Lf) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%0.10Lf' and '%0.10Lf' are equal.", unexpected, actual);
     }
 }
 
