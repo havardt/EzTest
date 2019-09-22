@@ -41,6 +41,9 @@ struct unit_test
 /** Represents the standard error/ fail result value for non-pointer return types. */
 #define RESULT_ERR -1
 
+/** The max amount of bytes to print when printing value without type. */
+#define MAX_PRINTABLE_LEN 16
+
 #define ANSWER_TO_LIFE 4242424242424242
 
 #define _BASE_TEST_NAME "_base_test"
@@ -820,7 +823,7 @@ static void print_bytes(const void *ptr, size_t n)
     const unsigned char *bytes = (const unsigned char *)ptr;
     for (; n > 0; --n, ++bytes)
     {
-        printf("%02X ", *bytes);
+        printf("%x", *bytes);
     }
 }
 
@@ -906,18 +909,19 @@ void _assert_is_nan(const float value, char *file, const int line)
 
 #endif
 
-void _assert_equal_mem(const void *expected, const void *actual, size_t size, char *file, const int line)
+void _assert_equal_mem(const void *expected, const void *actual, const size_t size, char *file, const int line)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
        (expected != NULL && memcmp(expected, actual, size) != 0))
     {
         result = fail;
-        printf("[%s : %s]%s Assert are equal failed: expected ",
-               current->test_suite, current->test_name, color(COLOR_YELLOW));
-        print_bytes(expected, size);
-        printf("but got ");
-        print_bytes(actual, size);
+        printf("[%s : %s]%s Assert are equal failed: expected '0x",
+                current->test_suite, current->test_name, color(COLOR_YELLOW));
+        print_bytes(expected, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
+        printf("%s', but got '0x", (size > MAX_PRINTABLE_LEN ? "..." : ""));
+        print_bytes(actual, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
+        printf((size > MAX_PRINTABLE_LEN ? "...'." : "'."));
         print_file_marker(file, line);
     }
 }
