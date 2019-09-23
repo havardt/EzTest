@@ -14,17 +14,6 @@
 #include <stdbool.h>
 #include <math.h>
 
-/** Represents the application options for EzTest. */
-struct options
-{
-    /** When set to @code true @endcode only default color is used when printing. */
-    bool no_color;
-    /** When set to @code true @endcode the test execution time is displayed for each test */
-    bool timer;
-    /** When set to @code true @endcode EzTest will not print anything. */
-    bool quiet;
-};
-
 struct unit_test
 {
     char *test_name;
@@ -41,7 +30,7 @@ struct unit_test
 #define RESULT_OK 0
 
 /** Represents the standard error/ fail result value for non-pointer return types. */
-#define RESULT_ERR -1
+#define RESULT_ERR (-1)
 
 /** The max amount of bytes to print when printing value without type. */
 #define MAX_PRINTABLE_LEN 16
@@ -684,6 +673,17 @@ void _assert_less_equal_precision(long double  le,
 #define COLOR_YELLOW "\033[0;33m"
 #define COLOR_GREEN  "\033[0;32m"
 #define COLOR_NONE   "\033[0m"
+
+/** Represents the application options for EzTest. */
+struct options
+{
+    /** When set to @code true @endcode only default color is used when printing. */
+    bool no_color;
+    /** When set to @code true @endcode the test execution time is displayed for each test */
+    bool timer;
+    /** When set to @code true @endcode EzTest will not print anything. */
+    bool quiet;
+};
 
 enum test_result
 {
