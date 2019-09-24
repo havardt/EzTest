@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 # Build script: see README.md for more usage. 
 
 # Make sure we are in the correct directory so the script can be called from anywhere.
