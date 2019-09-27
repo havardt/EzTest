@@ -1,2 +1,5 @@
-# Ignore executable
-eztest/eztest
+*.o
+*.obj
+*.exe
+*.out
+
