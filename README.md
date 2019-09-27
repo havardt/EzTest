@@ -32,7 +32,7 @@ TEST(MathTests, AddingTwoOnTwoShouldEqualFour)
     ASSERT_ARE_EQUAL(expected, actual); // or ASSERT_EQ(expected, actual); using the shorthand.
 }
 ```
-In this example we can see the power of the C11 macro ```_Generic```. The developer doesn't have to provide some prefix or postfix to represent the data type. The correct function for the passed data type, in this case interger, is chosen automagically leaving the developer to focus on the test itself.
+The [asserts](#asserts) are created using the power of the C11 macro ```_Generic```. The user doesn't have to provide some prefix or postfix to represent the data type. 
 
 EzTest also provides the option of setup and teardown functions that run before/ after each test. Using the ```TEST_FULL(suite, test)```, ```SETUP(suite)``` and ```TEARDOWN(suite)``` macros the developer can create a more complex test suite. When using the ```TEST_FULL(suite, name)``` macro the developer *must* implement the ```SETUP()``` and ```TEARDOWN()``` macros.
 
