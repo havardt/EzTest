@@ -683,6 +683,8 @@ struct options
     bool timer;
     /** When set to @code true @endcode EzTest will not print anything. */
     bool quiet;
+    /** When set to @code true @endcode the skip list will be checked. */
+    bool skip;
 };
 
 enum test_result
@@ -692,6 +694,12 @@ enum test_result
     fail,
     skip
 };
+
+/** Used to separate items in the skip list. */
+const char *separator = ",";
+
+/** A list of test suit names to skip separated by @see separator.*/
+char *skip_list = NULL;
 
 static int pass_count = 0;
 static int fail_count = 0;
@@ -1557,9 +1565,27 @@ static int discover(struct unit_test **base_test)
     return count;
 }
 
-static bool should_skip(struct unit_test *test)
+static bool should_skip(const struct unit_test *test)
 {
-    // TODO check skip criteria.
+    if(!options->skip || skip_list == NULL)
+    {
+        return false;
+    }
+    char *skip_list_cp = malloc((strlen(skip_list) + 1) * sizeof(char));
+    strcpy(skip_list_cp, skip_list);
+ 
+    char *token;
+    token = strtok(skip_list_cp, separator);
+    while(token != NULL)
+    {
+        if(strcmp(token, test->test_suite) == 0)
+        {
+            return true;
+        }
+        token = strtok(NULL, separator);
+    }
+    free(skip_list_cp);
+
     return false;
 }
 
