@@ -37,12 +37,12 @@ int  handle_opts ( struct  options *, int, char ** );
 /* Globals */
 
 const struct option long_opts[] = {
-    {"help"     , 0, NULL, 'h'},
-    {"version"  , 0, NULL, 'v'},
-    {"no-color" , 0, NULL, 'c'},
-    {"timer"    , 0, NULL, 't'},
-    {"quiet"    , 0, NULL, 'q'},
-    {"skip"     , 0, NULL, 's'},
+    {"help"    , no_argument      , NULL, 'h'},
+    {"version" , no_argument      , NULL, 'v'},
+    {"no-color", no_argument      , NULL, 'c'},
+    {"timer"   , no_argument      , NULL, 't'},
+    {"quiet"   , no_argument      , NULL, 'q'},
+    {"skip"    , required_argument, NULL, 's'},
     {0}
 };
 
