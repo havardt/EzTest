@@ -149,7 +149,7 @@ void _assert_are_equal     (const void    * expected, const void    * actual, ch
  * @param expected The first value to compare. This is the value the tests expects.
  * @param actual   The second value to compare. This is the value produced by the code under test.
  */
-#define ASSERT_ARE_EQUAL(expected, actual) _Generic((expected, actual),\
+#define ASSERT_ARE_EQUAL(expected, actual) _Generic((expected),\
              char        : _assert_are_equal_ch,   \
     signed   char        : _assert_are_equal_sch,  \
     unsigned char        : _assert_are_equal_uch,  \
@@ -203,7 +203,7 @@ void _assert_are_not_equal     (const void    * unexpected, const void    * actu
  *       in its equality test. It is therefore often better to use assert_are_equal_precision()
  *       and provide the application specific epsilon.
  */
-#define ASSERT_ARE_NOT_EQUAL(unexpected, actual) _Generic((unexpected, actual),\
+#define ASSERT_ARE_NOT_EQUAL(unexpected, actual) _Generic((unexpected),\
              char        : _assert_are_not_equal_ch,   \
     signed   char        : _assert_are_not_equal_sch,  \
     unsigned char        : _assert_are_not_equal_uch,  \
@@ -344,7 +344,7 @@ void _assert_greater     (const void    * greater, const void    * lesser, char 
  * @param lesser  The second value to compare. This is the value the user
  *                expects to be lesser than the first value.
  */
-#define ASSERT_GREATER(greater, lesser) _Generic((greater, lesser),\
+#define ASSERT_GREATER(greater, lesser) _Generic((greater),\
              char        : _assert_greater_ch,   \
     signed   char        : _assert_greater_sch,  \
     unsigned char        : _assert_greater_uch,  \
@@ -427,7 +427,7 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
  * @param lesser  The second value to compare. This is the value the user
  *                expects to be lesser than or equal to the first value.
  */
-#define ASSERT_GREATER_EQUAL(ge, le) _Generic((ge, le),\
+#define ASSERT_GREATER_EQUAL(ge, le) _Generic((ge),\
              char        : _assert_greater_equal_ch,   \
     signed   char        : _assert_greater_equal_sch,  \
     unsigned char        : _assert_greater_equal_uch,  \
@@ -510,7 +510,7 @@ void _assert_less     (const void    *lesser, const void    *greater, char *file
  * @param greater The second value to compare. This is the value the user
  *                expects to be greater than the first value.
  */
-#define ASSERT_LESS(lesser, greater) _Generic((lesser, greater),\
+#define ASSERT_LESS(lesser, greater) _Generic((lesser),\
              char        : _assert_less_ch,   \
     signed   char        : _assert_less_sch,  \
     unsigned char        : _assert_less_uch,  \
@@ -593,7 +593,7 @@ void _assert_less_equal     (const void    *le, const void    *ge, char *file, i
  * @param ge The second value to compare. This is the value the user
  *           expects to be greater than or equal to the first value.
  */
-#define ASSERT_LESS_EQUAL(le, ge) _Generic((le, ge),\
+#define ASSERT_LESS_EQUAL(le, ge) _Generic((le),\
              char        : _assert_less_equal_ch,   \
     signed   char        : _assert_less_equal_sch,  \
     unsigned char        : _assert_less_equal_uch,  \
