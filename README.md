@@ -15,10 +15,12 @@ An easy to use unit testing framework written in, and created for, the C languag
 
 ## Why use EzTest?
 
-- Simple: single header and runner file.
-- No writing main functions or add-test functions.
-- No recompilation to change runner settings/ options.
-- Wide list of asserts.
+:heavy_check_mark: Easy to use: single header and runner file.    
+:heavy_check_mark: No writing main functions or add-test functions.    
+:heavy_check_mark: Skip tests without altering test code.    
+:heavy_check_mark: No recompilation to change runner settings/ options.    
+:heavy_check_mark: Wide list of asserts.    
+:heavy_check_mark: No type prefix or suffix.    
 
 ## Usage
 Here is an example of a simple unit test written using EzTest:
@@ -32,7 +34,7 @@ TEST(MathTests, AddingTwoOnTwoShouldEqualFour)
     ASSERT_ARE_EQUAL(expected, actual); // or ASSERT_EQ(expected, actual); using the shorthand.
 }
 ```
-In this example we can see the power of the C11 macro ```_Generic```. The developer doesn't have to provide some prefix or postfix to represent the data type. The correct function for the passed data type, in this case interger, is chosen automagically leaving the developer to focus on the test itself.
+The [asserts](#asserts) are created using the power of the C11 macro ```_Generic```. The user doesn't have to provide some prefix or postfix to represent the data type. 
 
 EzTest also provides the option of setup and teardown functions that run before/ after each test. Using the ```TEST_FULL(suite, test)```, ```SETUP(suite)``` and ```TEARDOWN(suite)``` macros the developer can create a more complex test suite. When using the ```TEST_FULL(suite, name)``` macro the developer *must* implement the ```SETUP()``` and ```TEARDOWN()``` macros.
 
@@ -114,7 +116,12 @@ Each assert is a macro prefixed with ```ASSERT_```.
 | ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | ```ASSERT_NE_MEM``` | Tests whether the two values are different by comparing each byte at the given memory locations. |
 
 ## Runner
-EzTest runs the created tests according to the provided application options.
+The runner is the program that executes the tests.
+
+#### Exit code
+The exit code is EXIT_SUCCESS (0) if all tests passed and EXIT_FAILURE (non-zero) if one or more tests failed.
+
+#### Options
 
 | Short | Long | Description |    
 | --- | --- | --- |
@@ -122,6 +129,8 @@ EzTest runs the created tests according to the provided application options.
 | -h | --help | Prints help/ usage information. |           
 | -c | --no-color | Don't use any color when printing. |  
 | -t | --timer | Display execution time for each test. |
+| -q | --quiet | No output. |
+| -s | --skip | Skips all tests in the passed list of test suits. The argument for this option should be a case sensitive, comma separated list of test suit names that you want to skip. |
 
 
 ## Contribute

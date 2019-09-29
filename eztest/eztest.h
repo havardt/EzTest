@@ -14,15 +14,6 @@
 #include <stdbool.h>
 #include <math.h>
 
-/** Represents the application options for EzTest. */
-struct options
-{
-    /** When set to @code true @endcode only default color is used when printing. */
-    bool no_color;
-    /** When set to @code true @endcode the test execution time is displayed for each test */
-    bool timer;
-};
-
 struct unit_test
 {
     char *test_name;
@@ -39,7 +30,10 @@ struct unit_test
 #define RESULT_OK 0
 
 /** Represents the standard error/ fail result value for non-pointer return types. */
-#define RESULT_ERR -1
+#define RESULT_ERR (-1)
+
+/** The max amount of bytes to print when printing value without type. */
+#define MAX_PRINTABLE_LEN 16
 
 #define ANSWER_TO_LIFE 4242424242424242
 
@@ -155,7 +149,7 @@ void _assert_are_equal     (const void    * expected, const void    * actual, ch
  * @param expected The first value to compare. This is the value the tests expects.
  * @param actual   The second value to compare. This is the value produced by the code under test.
  */
-#define ASSERT_ARE_EQUAL(expected, actual) _Generic((expected, actual),\
+#define ASSERT_ARE_EQUAL(expected, actual) _Generic((expected),\
              char        : _assert_are_equal_ch,   \
     signed   char        : _assert_are_equal_sch,  \
     unsigned char        : _assert_are_equal_uch,  \
@@ -209,7 +203,7 @@ void _assert_are_not_equal     (const void    * unexpected, const void    * actu
  *       in its equality test. It is therefore often better to use assert_are_equal_precision()
  *       and provide the application specific epsilon.
  */
-#define ASSERT_ARE_NOT_EQUAL(unexpected, actual) _Generic((unexpected, actual),\
+#define ASSERT_ARE_NOT_EQUAL(unexpected, actual) _Generic((unexpected),\
              char        : _assert_are_not_equal_ch,   \
     signed   char        : _assert_are_not_equal_sch,  \
     unsigned char        : _assert_are_not_equal_uch,  \
@@ -350,7 +344,7 @@ void _assert_greater     (const void    * greater, const void    * lesser, char 
  * @param lesser  The second value to compare. This is the value the user
  *                expects to be lesser than the first value.
  */
-#define ASSERT_GREATER(greater, lesser) _Generic((greater, lesser),\
+#define ASSERT_GREATER(greater, lesser) _Generic((greater),\
              char        : _assert_greater_ch,   \
     signed   char        : _assert_greater_sch,  \
     unsigned char        : _assert_greater_uch,  \
@@ -433,7 +427,7 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
  * @param lesser  The second value to compare. This is the value the user
  *                expects to be lesser than or equal to the first value.
  */
-#define ASSERT_GREATER_EQUAL(ge, le) _Generic((ge, le),\
+#define ASSERT_GREATER_EQUAL(ge, le) _Generic((ge),\
              char        : _assert_greater_equal_ch,   \
     signed   char        : _assert_greater_equal_sch,  \
     unsigned char        : _assert_greater_equal_uch,  \
@@ -516,7 +510,7 @@ void _assert_less     (const void    *lesser, const void    *greater, char *file
  * @param greater The second value to compare. This is the value the user
  *                expects to be greater than the first value.
  */
-#define ASSERT_LESS(lesser, greater) _Generic((lesser, greater),\
+#define ASSERT_LESS(lesser, greater) _Generic((lesser),\
              char        : _assert_less_ch,   \
     signed   char        : _assert_less_sch,  \
     unsigned char        : _assert_less_uch,  \
@@ -599,7 +593,7 @@ void _assert_less_equal     (const void    *le, const void    *ge, char *file, i
  * @param ge The second value to compare. This is the value the user
  *           expects to be greater than or equal to the first value.
  */
-#define ASSERT_LESS_EQUAL(le, ge) _Generic((le, ge),\
+#define ASSERT_LESS_EQUAL(le, ge) _Generic((le),\
              char        : _assert_less_equal_ch,   \
     signed   char        : _assert_less_equal_sch,  \
     unsigned char        : _assert_less_equal_uch,  \
@@ -680,6 +674,19 @@ void _assert_less_equal_precision(long double  le,
 #define COLOR_GREEN  "\033[0;32m"
 #define COLOR_NONE   "\033[0m"
 
+/** Represents the application options for EzTest. */
+struct options
+{
+    /** When set to @code true @endcode only default color is used when printing. */
+    bool no_color;
+    /** When set to @code true @endcode the test execution time is displayed for each test */
+    bool timer;
+    /** When set to @code true @endcode EzTest will not print anything. */
+    bool quiet;
+    /** When set to @code true @endcode the skip list will be checked. */
+    bool skip;
+};
+
 enum test_result
 {
     undefined,
@@ -687,6 +694,12 @@ enum test_result
     fail,
     skip
 };
+
+/** Used to separate items in the skip list. */
+const char *separator = ",";
+
+/** A list of test suit names to skip separated by @see separator.*/
+char *skip_list = NULL;
 
 static int pass_count = 0;
 static int fail_count = 0;
@@ -750,6 +763,8 @@ static const char *color(const char *color)
 /** Prints an overall report of the test results. */
 static void print_report(void)
 {
+    if(options->quiet) return;
+
     printf("-----------------------------------\n"
            "|  "
            "%sPASSED"  COLOR_NONE "  |  "
@@ -770,7 +785,7 @@ static void print_report(void)
 }
 
 /**
- * Prints the test result output.
+ * Prints the test result output if and only if the quiet option has not been set.
  *
  * @param test The unit test to print result for.
  * @param time The test execution time in ms.
@@ -782,6 +797,8 @@ static void print_result(const struct unit_test *test,
                          const char *restrict resstr,
                          const char *restrict c)
 {
+    if(options->quiet) return;
+    
     printf("[%s : %s]%s %s " COLOR_NONE, test->test_suite, test->test_name, color(c), resstr);
     if(options->timer)
     {
@@ -820,7 +837,7 @@ static void print_bytes(const void *ptr, size_t n)
     const unsigned char *bytes = (const unsigned char *)ptr;
     for (; n > 0; --n, ++bytes)
     {
-        printf("%02X ", *bytes);
+        printf("%x", *bytes);
     }
 }
 
@@ -832,9 +849,14 @@ static void print_bytes(const void *ptr, size_t n)
  */
 static void register_fail(char *file, const int line, const char *msg, ...)
 {
-    va_list va;
     result = fail;
+    
+    if(options->quiet)
+    {
+        return;
+    }
 
+    va_list va;
     printf("[%s : %s] %s", current->test_suite, current->test_name, color(COLOR_YELLOW));
     va_start(va, msg);
     vprintf(msg, va);
@@ -906,18 +928,25 @@ void _assert_is_nan(const float value, char *file, const int line)
 
 #endif
 
-void _assert_equal_mem(const void *expected, const void *actual, size_t size, char *file, const int line)
+void _assert_equal_mem(const void *expected, const void *actual, const size_t size, char *file, const int line)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
        (expected != NULL && memcmp(expected, actual, size) != 0))
     {
         result = fail;
-        printf("[%s : %s]%s Assert are equal failed: expected ",
-               current->test_suite, current->test_name, color(COLOR_YELLOW));
-        print_bytes(expected, size);
-        printf("but got ");
-        print_bytes(actual, size);
+        
+        if(options->quiet)
+        {
+            return;
+        }   
+
+        printf("[%s : %s]%s Assert are equal failed: expected '0x",
+                current->test_suite, current->test_name, color(COLOR_YELLOW));
+        print_bytes(expected, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
+        printf("%s', but got '0x", (size > MAX_PRINTABLE_LEN ? "..." : ""));
+        print_bytes(actual, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
+        printf((size > MAX_PRINTABLE_LEN ? "...'." : "'."));
         print_file_marker(file, line);
     }
 }
@@ -1018,7 +1047,7 @@ void _assert_are_not_equal_ch(const char unexpected, const char actual, char *fi
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%c' and '%c' are equal.", unexpected, actual);
     }
 }
 
@@ -1026,7 +1055,7 @@ void _assert_are_not_equal_sch(const signed char unexpected, const signed char a
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%c' and '%c' are equal.", unexpected, actual);
     }
 }
 
@@ -1034,7 +1063,7 @@ void _assert_are_not_equal_uch(const unsigned char unexpected, const unsigned ch
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%c) and actual(%c) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%c' and '%c' are equal.", unexpected, actual);
     }
 }
 
@@ -1042,7 +1071,7 @@ void _assert_are_not_equal_int(const intmax_t unexpected, const intmax_t actual,
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%ld' and '%ld' are equal.", unexpected, actual);
     }
 }
 
@@ -1050,7 +1079,7 @@ void _assert_are_not_equal_uint(const uintmax_t unexpected, const uintmax_t actu
 {
     if(unexpected == actual)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%ld) and actual(%ld) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%ld' and '%ld' are equal.", unexpected, actual);
     }
 }
 
@@ -1068,7 +1097,7 @@ void _assert_are_not_equal_dbl(const long double unexpected, const long double a
 {
     if(fabsl(unexpected - actual) <= LDBL_EPSILON)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%0.8Lf) and actual(%0.8Lf) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%0.8Lf' and '%0.8Lf' are equal.", unexpected, actual);
     }
 }
 
@@ -1077,7 +1106,7 @@ void _assert_are_not_equal_str(const char *unexpected, const char *actual, char 
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && strcmp(unexpected, actual) == 0))
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%s) and actual(%s) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%s' and '%s' are equal.", unexpected, actual);
     }
 }
 
@@ -1086,7 +1115,7 @@ void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && wcscmp(unexpected, actual) == 0))
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%ls) and actual(%ls) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%ls' and '%ls' are equal.", unexpected, actual);
     }
 }
 
@@ -1104,7 +1133,7 @@ void _assert_are_equal_precision(const long double  expected,
 {
     if(fabsl(expected - actual) > epsilon)
     {
-        register_fail(file, line, "Assert are equal failed: expected '%0.10Lf', but got '%0.10Lf'.", expected, actual);
+        register_fail(file, line, "Assert are equal failed: expected '%0.8Lf', but got '%0.8Lf'.", expected, actual);
     }
 }
 
@@ -1116,7 +1145,7 @@ void _assert_are_not_equal_precision(const long double  unexpected,
 {
     if(fabsl(unexpected - actual) <= epsilon)
     {
-        register_fail(file, line, "Assert not equal failed: unexpected(%0.10Lf) and actual(%0.10Lf) are equal.", unexpected, actual);
+        register_fail(file, line, "Assert not equal failed: '%0.8Lf' and '%0.8Lf' are equal.", unexpected, actual);
     }
 }
 
@@ -1529,13 +1558,34 @@ static int discover(struct unit_test **base_test)
             break;
         }
     }
-    printf("Test discovery finished, found %d tests.\n\n", count);
+    if(!options->quiet)
+    {
+        printf("Test discovery finished, found %d tests.\n\n", count);
+    }
     return count;
 }
 
-static bool should_skip(struct unit_test *test)
+static bool should_skip(const struct unit_test *test)
 {
-    // TODO check skip criteria.
+    if(!options->skip || skip_list == NULL)
+    {
+        return false;
+    }
+    char *skip_list_cp = malloc((strlen(skip_list) + 1) * sizeof(char));
+    strcpy(skip_list_cp, skip_list);
+ 
+    char *token;
+    token = strtok(skip_list_cp, separator);
+    while(token != NULL)
+    {
+        if(strcmp(token, test->test_suite) == 0)
+        {
+            return true;
+        }
+        token = strtok(NULL, separator);
+    }
+    free(skip_list_cp);
+
     return false;
 }
 
@@ -1590,7 +1640,7 @@ static unsigned int execute(const struct unit_test *test)
  * Starts running tests.
  *
  * @param opts Application options (not NULL).
- * @return @code EXIT_SUCCESS @endcode if no tests failed; otherwise @code EXIT_FAILURE @endcode.
+ * @return The amount of failed tests. 
  */
 int eztest_run(struct options *opts)
 {
@@ -1617,7 +1667,7 @@ int eztest_run(struct options *opts)
     }
     print_report();
 
-    return RESULT_OK;
+    return fail_count;
 }
 
 //endregion runner
