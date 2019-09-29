@@ -15,10 +15,12 @@ An easy to use unit testing framework written in, and created for, the C languag
 
 ## Why use EzTest?
 
-- Simple: single header and runner file.
-- No writing main functions or add-test functions.
-- No recompilation to change runner settings/ options.
-- Wide list of asserts.
+:heavy_check_mark: Easy to use: single header and runner file.    
+:heavy_check_mark: No writing main functions or add-test functions.    
+:heavy_check_mark: Skip tests without altering test code.    
+:heavy_check_mark: No recompilation to change runner settings/ options.    
+:heavy_check_mark: Wide list of asserts.    
+:heavy_check_mark: No type prefix or suffix.    
 
 ## Usage
 Here is an example of a simple unit test written using EzTest:
