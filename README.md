@@ -128,6 +128,7 @@ The exit code is EXIT_SUCCESS (0) if all tests passed and EXIT_FAILURE (non-zero
 | -c | --no-color | Don't use any color when printing. |  
 | -t | --timer | Display execution time for each test. |
 | -q | --quiet | No output. |
+| -s | --skip | Skips all tests in the passed list of test suits. The argument for this option should be a case sensitive, comma separated list of test suit names that you want to skip. |
 
 
 ## Contribute
