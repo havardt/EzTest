@@ -1572,6 +1572,10 @@ static bool should_skip(const struct unit_test *test)
         return false;
     }
     char *skip_list_cp = malloc((strlen(skip_list) + 1) * sizeof(char));
+    if(skip_list_cp == NULL)
+    {
+        return false;
+    }
     strcpy(skip_list_cp, skip_list);
  
     char *token;
@@ -1580,6 +1584,7 @@ static bool should_skip(const struct unit_test *test)
     {
         if(strcmp(token, test->test_suite) == 0)
         {
+            free(skip_list_cp);
             return true;
         }
         token = strtok(NULL, separator);
