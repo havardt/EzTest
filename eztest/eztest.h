@@ -276,6 +276,22 @@ void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t si
  */
 #define ASSERT_NE_MEM(unexpected, actual, size) ASSERT_NOT_EQUAL_MEM(unexpected, actual, size)
 
+void _assert_greater_mem(const void *greater, const void *lesser, size_t size, char *file, int line);
+/**
+ * Tests whether the first value is greater than the second value by comparing
+ * the bytes at the memory location.
+ *
+ * @param greater The first value to compare. This is the value the user
+ *                expects to be greater than the second value.
+ *
+ * @param lesser  The second value to compare. This is the value the user
+ *                expects to be lesser than the first value.
+ */
+#define ASSERT_GREATER_MEM(greater, lesser, size)\
+    _assert_greater_mem(greater, lesser, size, __FILE__, __LINE__)
+
+#define ASSERT_GT_MEM(greater, lesser, size)\
+    _assert_greater_mem(greater, lesser, size, __FILE__, __LINE__)
 
 void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, int line);
 /**
@@ -928,12 +944,9 @@ void _assert_is_nan(const float value, char *file, const int line)
 
 #endif
 
-void _assert_equal_mem(const void *expected, const void *actual, const size_t size, char *file, const int line)
+void mem_test_failed(const void *ptr1, const void *ptr2, const size_t  size, char *file, 
+                     const int   line, const char *msg1, const char   *msg2)
 {
-    if((expected == NULL && actual != NULL) ||
-       (expected != NULL && actual == NULL) ||
-       (expected != NULL && memcmp(expected, actual, size) != 0))
-    {
         result = fail;
         
         if(options->quiet)
@@ -941,22 +954,44 @@ void _assert_equal_mem(const void *expected, const void *actual, const size_t si
             return;
         }   
 
-        printf("[%s : %s]%s Assert are equal failed: expected '0x",
-                current->test_suite, current->test_name, color(COLOR_YELLOW));
-        print_bytes(expected, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
-        printf("%s', but got '0x", (size > MAX_PRINTABLE_LEN ? "..." : ""));
-        print_bytes(actual, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
+        printf("[%s : %s]%s %s '0x",
+                current->test_suite, current->test_name, color(COLOR_YELLOW), msg1);
+        print_bytes(ptr1, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
+        printf("%s' %s '0x", (size > MAX_PRINTABLE_LEN ? "..." : ""), msg2);
+        print_bytes(ptr2, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
         printf((size > MAX_PRINTABLE_LEN ? "...'." : "'."));
         print_file_marker(file, line);
+ 
+}
+
+void _assert_equal_mem(const void *expected, const void *actual, const size_t size, char *file, const int line)
+{
+    if((expected == NULL && actual != NULL) ||
+       (expected != NULL && actual == NULL) ||
+       (expected != NULL && memcmp(expected, actual, size) != 0))
+    {
+        mem_test_failed(expected, actual, size, file, line, "Assert are equal failed: expected", ", but got");
     }
 }
 
-void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size, char *file, const int line)
+void _assert_not_equal_mem(const void *unexpected, const void *actual, const size_t size, char *file, const int line)
 {
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && memcmp(unexpected, actual, size) == 0))
     {
-        register_fail(file, line, "Assert not equal failed.");
+        mem_test_failed(unexpected, actual, size, file, line, "Assert not equal failed:", "is equal to");
+    }
+}
+
+
+
+void _assert_greater_mem(const void *greater, const void *lesser, const size_t size, char *file, const int line)
+{
+    if((greater == NULL && lesser != NULL) ||
+       (greater == NULL && lesser == NULL) ||
+       (greater != NULL && lesser != NULL && memcmp(greater, lesser, size) < 1))
+    {
+        mem_test_failed(greater, lesser, size, file, line, "Assert greater failed:", "is lesser than");
     }
 }
 
