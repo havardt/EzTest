@@ -102,18 +102,22 @@ Each assert is a macro prefixed with ```ASSERT_```.
 | ``` ASSERT_IS_NAN ``` | | Tests whether the provided float is NaN. |
 | ``` ASSERT_ARE_EQUAL ``` | ``` ASSERT_EQ ``` | Tests whether the two values are equal. |
 | ``` ASSERT_ARE_EQUAL_PRECISION ``` | ```ASSERT_EQ_PRECISION```| Tests whether two floating point numbers are equal using a user provided epsilon. |
+| ``` ASSERT_ARE_EQUAL_MEM ``` | ``` ASSERT_EQ_MEM ``` | Tests whether the two values are equal by comparing each byte at the given memory locations. |
 | ``` ASSERT_ARE_NOT_EQUAL ``` |``` ASSERT_NE ``` | Tests whether the two values are different. |
 | ``` ASSERT_ARE_NOT_EQUAL_PRECISION ``` | ```ASSERT_NE_PRECISION``` | Tests whether two floating point numbers are different using a user provided epsilon. |
+| ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | ```ASSERT_NE_MEM``` | Tests whether the two values are different by comparing each byte at the given memory locations. |
 | ``` ASSERT_GREATER ``` | ``` ASSERT_GT ``` | Tests whether the first value is greater than the second value. |
 | ``` ASSERT_GREATER_PRECISION ``` | ``` ASSERT_GT_PRECISION ``` | Tests whether the first floating point value is greater than the second floating point value using a user provided epsilon. |
+| ``` ASSERT_GREATER_MEM ``` | ```ASSERT_GT_MEM``` | Tests whether the first n bytes at the first memory location is greater than the n first bytes at the second memory location. |
 | ``` ASSERT_GREATER_EQUAL ``` | ```ASSERT_GE``` | Tests whether the first value is greater than or equal to the second value. |
 | ``` ASSERT_GREATER_EQUAL_PRECISION ``` | ```ASSERT_GE_PRECISION``` | Tests whether the first floating point value is greater than or equal to the second floating point value using a user provided epsilon. |
+| ``` ASSERT_GREATER_EQUAL_MEM ``` | ```ASSERT_GE_MEM``` | Tests whether the first n bytes at the first memory location is greater than or equal to the n first bytes at the second memory location. |
 | ``` ASSERT_LESS ``` | ``` ASSERT_LT ``` | Tests whether the first value is lesser than the second value. |
 | ``` ASSERT_LESS_PRECISION ``` | ``` ASSERT_LT_PRECISION ``` | Tests whether the first floating point value is lesser than the second floating point value using a user provided epsilon. |
+| ``` ASSERT_LESS_MEM ``` | ```ASSERT_LT_MEM``` | Tests whether the first n bytes at the first memory location is lesser than the n first bytes at the second memory location. |
 | ``` ASSERT_LESS_EQUAL ``` | ``` ASSERT_LE ``` | Tests whether the first value is lesser than or equal to the second value. |
 | ``` ASSERT_LESS_EQUAL_PRECISION ``` | ``` ASSERT_LE_PRECISION ``` | Tests whether the first floating point value is lesser than or equal to the second floating point value using a user provided epsilon. |
-| ``` ASSERT_ARE_EQUAL_MEM ``` | ``` ASSERT_EQ_MEM ``` | Tests whether the two values are equal by comparing each byte at the given memory locations. |
-| ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | ```ASSERT_NE_MEM``` | Tests whether the two values are different by comparing each byte at the given memory locations. |
+| ``` ASSERT_LESS_EQUAL_MEM ``` | ```ASSERT_LE_MEM``` | Tests whether the first n bytes at the first memory location is lesser than or equal to the n first bytes at the second memory location. |
 
 ## Runner
 The runner is the program that executes the tests.
