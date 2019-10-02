@@ -293,6 +293,23 @@ void _assert_greater_mem(const void *greater, const void *lesser, size_t size, c
 #define ASSERT_GT_MEM(greater, lesser, size)\
     _assert_greater_mem(greater, lesser, size, __FILE__, __LINE__)
 
+void _assert_greater_equal_mem(const void *ge, const void *le, size_t size, char *file, int line);
+/**
+ * Tests whether the first value is greater than or equal to the second value
+ * by comparing the bytes at the memory location.
+ *
+ * @param ge The first value to compare. This is the value the user
+ *           expects to be greater than or equal to the second value.
+ *
+ * @param le The second value to compare. This is the value the user
+ *           expects to be lesser than or equal to the first value.
+ */
+#define ASSERT_GREATER_EQUAL_MEM(ge, le, size)\
+    _assert_greater_mem(ge, le, size, __FILE__, __LINE__)
+
+#define ASSERT_GE_MEM(ge, le, size)\
+    _assert_greater_equal_mem(ge, le, size, __FILE__, __LINE__)
+
 void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, int line);
 /**
  * Tests for equality between two floating point numbers.
@@ -991,7 +1008,16 @@ void _assert_greater_mem(const void *greater, const void *lesser, const size_t s
        (greater == NULL && lesser == NULL) ||
        (greater != NULL && lesser != NULL && memcmp(greater, lesser, size) < 1))
     {
-        mem_test_failed(greater, lesser, size, file, line, "Assert greater failed:", "is lesser than");
+        mem_test_failed(greater, lesser, size, file, line, "Assert greater failed:", "is lesser than or equal to");
+    }
+}
+
+void _assert_greater_equal_mem(const void *ge, const void *le, const size_t size, char *file, const int line)
+{
+    if((ge == NULL && le != NULL) ||
+       (ge != NULL && le != NULL && memcmp(ge, le, size) < 0))
+    {
+        mem_test_failed(ge, le, size, file, line, "Assert greater equal failed:", "is lesser than");
     }
 }
 
