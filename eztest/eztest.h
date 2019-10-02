@@ -257,7 +257,6 @@ void _assert_equal_mem(const void *expected, const void *actual, size_t size, ch
  */
 #define ASSERT_EQ_MEM(expected, actual, size) ASSERT_EQUAL_MEM(expected, actual, size)
 
-
 void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size, char *file, int line);
 /**
  * Checks for inequality by comparing each byte at the given memory locations.
@@ -309,6 +308,23 @@ void _assert_greater_equal_mem(const void *ge, const void *le, size_t size, char
 
 #define ASSERT_GE_MEM(ge, le, size)\
     _assert_greater_equal_mem(ge, le, size, __FILE__, __LINE__)
+
+void _assert_less_mem(const void *lesser, const void *greater, size_t size, char *file, int line);
+/**
+ * Tests whether the first value is less than the second value by comparing
+ * the bytes at the memory location.
+ *
+ * @param lesser The first value to compare. This is the value the user
+ *               expects to be lesser than the second value.
+ *
+ * @param greater The second value to compare. This is the value the user
+ *                expects to be greater than the first value.
+ */
+#define ASSERT_LESS_MEM(lesser, greater, size)\
+    _assert_less_mem(lesser, greater, size, __FILE__, __LINE__)
+
+#define ASSERT_LT_MEM(lesser, greater, size)\
+    _assert_less_mem(lesser, greater, size, __FILE__, __LINE__)
 
 void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, int line);
 /**
@@ -1018,6 +1034,16 @@ void _assert_greater_equal_mem(const void *ge, const void *le, const size_t size
        (ge != NULL && le != NULL && memcmp(ge, le, size) < 0))
     {
         mem_test_failed(ge, le, size, file, line, "Assert greater equal failed:", "is lesser than");
+    }
+}
+
+void _assert_less_mem(const void *lesser, const void *greater, const size_t size, char *file, const int line)
+{
+    if((lesser != NULL && greater == NULL) ||
+       (lesser == NULL && greater == NULL) ||
+       (lesser != NULL && greater != NULL && memcmp(lesser, greater, size) >= 0))
+    {
+        mem_test_failed(lesser, greater, size, file, line, "Assert lesser failed:", "is greater than or equal to");
     }
 }
 
