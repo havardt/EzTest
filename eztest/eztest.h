@@ -413,6 +413,31 @@ void _assert_greater_cmp(const void *greater,
 #define ASSERT_GT_CMP(greater, lesser, cmp_fn)\
     ASSERT_GREATER_CMP(greater, lesser, cmp_fn)
 
+void _assert_greater_equal_cmp(const void *ge, 
+                               const void *le, 
+                               int(*cmp_fn)(const void *ptr1, const void *ptr2),
+                               char *file,
+                               int line);
+/**
+ * Tests whether the first value is greater than or equal to the second 
+ * value using the passed comparator.
+ *
+ * @param ge The first value to compare. This is the value the user
+ *           expects to be greater than or equal to the second value.
+ *
+ * @param le The second value to compare. This is the value that is
+ *           expected to be lesser than or equal to the first value.
+ */
+#define ASSERT_GREATER_EQUAL_CMP(ge, le, cmp_fn)\
+    _assert_greater_equal_cmp(ge, le, cmp_fn, __FILE__, __LINE__)
+
+/**
+ * @see ASSERT_GREATER_EQUAL_CMP(ge, le, cmp_fn);
+ *
+ * @remarks This is a short-hand for ASSERT_GREATER_EQUAL_CMP.
+ */
+#define ASSERT_GE_CMP(ge, le, cmp_fn)\
+    ASSERT_GREATER_EQUAL_CMP(ge, le, cmp_fn)
 
 /**
  * @see ASSERT_ARE_NOT_EQUAL_CMP(unexpected, actual, cmp_fn);
@@ -1184,6 +1209,18 @@ void _assert_greater_cmp(const void *greater,
     if(cmp_fn(greater, lesser) < 1)
     {
         register_fail(file, line, "Assert greater failed.");
+    }
+}
+
+void _assert_greater_equal_cmp(const void *ge, 
+                               const void *le, 
+                               int(*cmp_fn)(const void *ptr1, const void *ptr2),
+                               char *file,
+                               int line)
+{
+    if(cmp_fn(ge, le) < 0)
+    {
+        register_fail(file, line, "Assert greater or equal failed.");
     }
 }
 
