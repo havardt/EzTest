@@ -10,7 +10,7 @@ set (eztest_VERSION_PATCH 0)
 set(EXECUTABLE_OUTPUT_PATH ..)
 
 if (CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
 endif()
 
 add_executable(eztest
