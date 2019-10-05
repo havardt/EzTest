@@ -343,6 +343,18 @@ void _assert_less_equal_mem(const void *le, const void *ge, size_t size, char *f
 #define ASSERT_LE_MEM(le, ge, size)\
     _assert_less_equal_mem(le, ge, size, __FILE__, __LINE__)
 
+
+void _assert_are_equal_cmp(const void *expected, 
+                           const void *actual, 
+                           int(*cmp_fn)(const void *ptr1, const void *ptr2),
+                           char *file,
+                           int line);
+
+#define ASSERT_ARE_EQUAL_CMP(expected, actual, cmp_fn)\
+    _assert_are_equal_cmp(expected, actual, cmp_fn, __FILE__, __LINE__)
+
+#define ASSERT_EQ_CMP(expected, actual, cmp_fn) ASSERT_ARE_EQUAL_CMP(expected, actual, cmp_fn)
+
 void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, int line);
 /**
  * Tests for equality between two floating point numbers.
@@ -1070,6 +1082,18 @@ void _assert_less_equal_mem(const void *le, const void *ge, const size_t size, c
        (le != NULL && ge != NULL && memcmp(le, ge, size) > 0))
     {
         mem_test_failed(le, ge, size, file, line, "Assert less or equal failed:", "is greater than");
+    }
+}
+
+void _assert_are_equal_cmp(const void *expected, 
+                           const void *actual, 
+                           int(*cmp_fn)(const void *ptr1, const void *ptr2),
+                           char *file,
+                           const int line)
+{
+    if(cmp_fn(expected, actual) != 0)
+    {
+        register_fail(file, line, "Assert are equal failed.");
     }
 }
 
