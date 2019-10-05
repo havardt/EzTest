@@ -461,6 +461,39 @@ void _assert_less_cmp(const void *lesser,
 #define ASSERT_LT_CMP(lesser, greater, cmp_fn)\
     ASSERT_LESS_CMP(lesser, greater, cmp_fn)
 
+void _assert_less_equal_cmp(const void *le,
+                            const void *ge,
+                            int(*cmp_fn)(const void *ptr1, const void *ptr2),
+                            char *file,
+                            int line);
+/**
+ * Tests whether the first value is lesser or equal to the second value
+ * using the passed comparator.
+ *
+ * @param le The first value to compare. This is the value the user expects 
+ *           to be lesser than or equal to the second value. This value is 
+ *           placed as the first parameter of the custom comparator.
+ *
+ * @param ge The second value to compare. This is the value that is expected 
+ *           to be greater than or equal to the first value. This value is 
+ *           placed as the second parameter of the custom comparator.
+ *
+ * @param cmp_fn  The comparator to use. This should return a negative value
+ *                if the first parameter is less than the second parameter,
+ *                0 (zero) if the values are equal and a positive value if
+ *                the first value is greater than the second value.
+ */
+#define ASSERT_LESS_EQUAL_CMP(le, ge, cmp_fn)\
+    _assert_less_equal_cmp(le, ge, cmp_fn, __FILE__, __LINE__)
+
+/**
+ * @see ASSERT_LESS_EQUAL_CMP(le, ge, cmp_fn);
+ *
+ * @remarks This is a short-hand for ASSERT_LESS_EQUAL_CMP.
+ */
+#define ASSERT_LE_CMP(le, ge, cmp_fn)\
+    ASSERT_LESS_EQUAL_CMP(le, ge, cmp_fn)
+
 void _assert_greater_equal_cmp(const void *ge, 
                                const void *le, 
                                int(*cmp_fn)(const void *ptr1, const void *ptr2),
@@ -1283,6 +1316,20 @@ void _assert_less_cmp(const void *lesser,
         register_fail(file, line, "Assert less failed.");
     }
 }
+
+
+void _assert_less_equal_cmp(const void *le,
+                            const void *ge,
+                            int(*cmp_fn)(const void *ptr1, const void *ptr2),
+                            char *file,
+                            const int line)
+{
+    if(cmp_fn(le, ge) > 0)
+    {
+        register_fail(file, line, "Assert less or equal failed.");
+    }
+}
+
 void _assert_are_equal_ch(const char expected, const char actual, char *file, const int line)
 {
     if(expected != actual)
