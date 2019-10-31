@@ -89,12 +89,11 @@ Another option is to use the provided [CMake files and BASH build script](build)
 Run the executable to run your tests. The test runner can take multiple optional arguments to customize your test experience. Learn more about the test runner [here](#runner).
 
 ## Asserts
-Each assert is a macro prefixed with ```ASSERT_```.
 
-| Macro | Shorthand | Description |
-| --- | --- | --- |
-| ``` ASSERT_IS_NULL ``` | | Tests whether the provided pointer is null. |
-| ``` ASSERT_IS_NOT_NULL ``` | | Tests whether the provided pointer is non-null. |
+| Macro | Shorthand | Description | Details |
+| --- | --- | --- | --- |
+| ``` ASSERT_IS_NULL ``` | | Tests whether the provided pointer is null. | [Documentation](doc/asserts.md#Assert-NULL) |
+| ``` ASSERT_IS_NOT_NULL ``` | | Tests whether the provided pointer is non-null. | [Documentation](doc/asserts.md#Assert-not-NULL) |
 | ``` ASSERT_IS_TRUE ``` | | Tests whether the condition is true. |
 | ``` ASSERT_IS_FALSE ``` | | Tests whether the condition is false. |
 | ``` ASSERT_ARE_SAME ``` | | Tests whether the two pointers refer to the same memory location. |
