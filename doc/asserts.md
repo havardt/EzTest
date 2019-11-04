@@ -39,3 +39,15 @@ ASSERT_IS_TRUE(const bool condition);
 <i>condition</i> The boolean condition to test. 
 
 ---
+
+### Assert false
+Tests whether the passed condition is ```false```. This test uses the boolean definitions in ```stdbool.h```.
+
+##### Declaration
+```C
+ASSERT_IS_FALSE(const bool condition);
+```
+##### Parameters
+<i>condition</i> The boolean condition to test. 
+
+---
