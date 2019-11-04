@@ -27,3 +27,15 @@ ASSERT_IS_NOT_NULL(const void *value);
 <i>value</i> The pointer to test for NULL. 
 
 ---
+
+### Assert true
+Tests whether the passed condition is ```true```. This test uses the boolean definitions in ```stdbool.h```.
+
+##### Declaration
+```C
+ASSERT_IS_TRUE(const bool condition);
+```
+##### Parameters
+<i>condition</i> The boolean condition to test. 
+
+---
