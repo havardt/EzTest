@@ -64,3 +64,16 @@ ASSERT_ARE_SAME(const void *expected, const void *actual);
 <i>actual</i> This is the value produced by the code under test.
 
 ---
+
+### Assert not same
+Tests whether the two pointers refer to different memory locations.
+
+##### Declaration
+```C
+ASSERT_ARE_NOT_SAME(const void *unexpected, const void *actual);
+```
+##### Parameters
+<i>unexpected</i> This is the value that should not occur.
+<i>actual</i> This is the value produced by the code under test.
+
+---
