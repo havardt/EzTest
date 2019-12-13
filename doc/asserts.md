@@ -120,3 +120,20 @@ ASSERT_EQ_PRECISION(long double expected, long double actual, long double  epsil
 <i>epsilon</i> A floating point representing the precision required when testing for equality.
 
 ---
+
+### Assert equal memory
+Tests whether the two values are equal by comparing each byte at the given memory locations.
+
+##### Declaration
+```C
+ASSERT_EQUAL_MEM(const void *expected, const void *actual, size_t size);
+
+ASSERT_EQ_MEM(const void *expected, const void *actual, size_t size);
+```
+##### Parameters 
+
+<i>expected</i> A pointer to the expected value.    
+<i>actual</i> A pointer to the actual value.  
+<i>size</i> The size of the passed types.  
+
+---
