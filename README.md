@@ -106,7 +106,7 @@ Run the executable to run your tests. The test runner can take multiple optional
 | ``` ASSERT_ARE_NOT_EQUAL ``` |``` ASSERT_NE ``` | Tests whether the two values are different. | [Documentation](doc/asserts.md#Assert-not-equal) |
 | ``` ASSERT_ARE_NOT_EQUAL_PRECISION ``` | ```ASSERT_NE_PRECISION``` | Tests whether two floating point numbers are different using a user provided epsilon. | [Documentation](doc/asserts.md#Assert-not-equal-precision) |
 | ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | ```ASSERT_NE_MEM``` | Tests whether the two values are different by comparing each byte at the given memory locations. | [Documentation](doc/asserts.md#Assert-not-equal-mem) |
-| ``` ASSERT_ARE_NOT_EQUAL_CMP ``` | ``` ASSERT_NE_CMP ``` | Tests whether the two values are different by using the passed comparator function. |
+| ``` ASSERT_ARE_NOT_EQUAL_CMP ``` | ``` ASSERT_NE_CMP ``` | Tests whether the two values are different by using the passed comparator function. | [Documentation](doc/asserts.md#Assert-not-equal-cmp) |
 | ``` ASSERT_GREATER ``` | ``` ASSERT_GT ``` | Tests whether the first value is greater than the second value. |
 | ``` ASSERT_GREATER_PRECISION ``` | ``` ASSERT_GT_PRECISION ``` | Tests whether the first floating point value is greater than the second floating point value using a user provided epsilon. |
 | ``` ASSERT_GREATER_MEM ``` | ```ASSERT_GT_MEM``` | Tests whether the first n bytes at the first memory location is greater than the n first bytes at the second memory location. |
