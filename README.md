@@ -99,7 +99,7 @@ Run the executable to run your tests. The test runner can take multiple optional
 | ``` ASSERT_ARE_SAME ``` | | Tests whether the two pointers refer to the same memory location. | [Documentation](doc/asserts.md#Assert-same) |
 | ``` ASSERT_ARE_NOT_SAME ``` | | Tests whether the two pointers refer to different memory locations. | [Documentation](doc/asserts.md#Assert-not-same) |
 | ``` ASSERT_IS_NAN ``` | | Tests whether the provided float is NaN. | [Documentation](doc/asserts.md#Assert-NaN) |
-| ``` ASSERT_ARE_EQUAL ``` | ``` ASSERT_EQ ``` | Tests whether the two values are equal. |
+| ``` ASSERT_ARE_EQUAL ``` | ``` ASSERT_EQ ``` | Tests whether the two values are equal. | [Documentation](doc/asserts.md#Assert-equal) |
 | ``` ASSERT_ARE_EQUAL_PRECISION ``` | ```ASSERT_EQ_PRECISION```| Tests whether two floating point numbers are equal using a user provided epsilon. |
 | ``` ASSERT_ARE_EQUAL_MEM ``` | ``` ASSERT_EQ_MEM ``` | Tests whether the two values are equal by comparing each byte at the given memory locations. |
 | ``` ASSERT_ARE_EQUAL_CMP ``` | ``` ASSERT_EQ_CMP ``` | Tests whether the two values are equal by using the passed comparator function. |

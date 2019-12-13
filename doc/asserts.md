@@ -89,3 +89,18 @@ ASSERT_IS_NAN(float value);
 <i>value</i> The floating point value to check.
 
 ---
+
+### Assert equal
+Tests whether the two values are equal.
+
+##### Declaration
+```C
+ASSERT_ARE_EQUAL(T expected, T actual);
+
+ASSERT_EQ(T expected, T actual);
+```
+##### Parameters 
+<i>unexpected</i> This is the value that should not occur.    
+<i>actual</i> This is the value produced by the code under test.
+
+---
