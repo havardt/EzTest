@@ -189,3 +189,21 @@ ASSERT_NE(T unexpected, T actual);
 
 ---
 
+### Assert not equal precision
+Tests whether two floating point numbers are different using a user provided epsilon.
+
+##### Declaration
+```C
+ASSERT_ARE_NOT_EQUAL_PRECISION(long double unexpected, long double actual, long double epsilon)
+
+ASSERT_NE_PRECISION(T unexpected, T actual);
+```
+##### Parameters 
+
+<i>unexpected</i> This is the value that should not occur.  
+
+<i>actual</i> This is the value produced by the code under test.
+
+<i>epsilon</i> A floating point representing the precision required when testing for equality.
+
+---
