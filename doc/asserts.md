@@ -194,7 +194,7 @@ Tests whether two floating point numbers are different using a user provided eps
 
 ##### Declaration
 ```C
-ASSERT_ARE_NOT_EQUAL_PRECISION(long double unexpected, long double actual, long double epsilon)
+ASSERT_ARE_NOT_EQUAL_PRECISION(long double unexpected, long double actual, long double epsilon);
 
 ASSERT_NE_PRECISION(T unexpected, T actual);
 ```
@@ -205,5 +205,24 @@ ASSERT_NE_PRECISION(T unexpected, T actual);
 <i>actual</i> This is the value produced by the code under test.
 
 <i>epsilon</i> A floating point representing the precision required when testing for equality.
+
+---
+
+### Assert not equal mem
+Tests whether the two values are different by comparing each byte at the given memory locations.
+
+##### Declaration
+```C
+ASSERT_NOT_EQUAL_MEM(const void *unexpected, const void *actual, size_t size);
+
+ASSERT_NE_MEM(const void *unexpected, const void *actual, size_t size);
+```
+##### Parameters 
+
+<i>unexpected</i> A pointer to the unexpected value. 
+
+<i>actual</i> A pointer to the actual value.
+
+<i>size</i> The size of the passed types.
 
 ---
