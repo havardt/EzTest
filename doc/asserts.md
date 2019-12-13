@@ -95,6 +95,8 @@ ASSERT_IS_NAN(float value);
 ### Assert equal
 Tests whether the two values are equal.
 
+> The equality function for floating point numbers uses the epsilon macro from ```float.h``` in its equality test. It is therefore often better to use [ASSERT EQUAL PRECISION](#assert-equal-precision) when comparing floating point numbers (allowing application specific epsilon).
+
 ##### Declaration
 ```C
 ASSERT_ARE_EQUAL(T expected, T actual);
@@ -167,3 +169,23 @@ ASSERT_ARE_EQ_CMP(const void *expected,
 <i>cmp_fn</i> The comparator to use. This should return a negative value if the first parameter is less than the second parameter, 0 (zero) if the values are equal and a positive value if the first value is greater than the second value. 
 
 ---
+
+### Assert not equal
+Tests whether the two values are different.
+
+> The equality function for floating point numbers uses the epsilon macro from ```float.h``` in its equality test. It is therefore often better to use [ASSERT NOT EQUAL PRECISION](#assert-not-equal-precision) when comparing floating point numbers (allowing application specific epsilon).
+
+##### Declaration
+```C
+ASSERT_ARE_NOT_EQUAL(T unexpected, T actual);
+
+ASSERT_NE(T unexpected, T actual);
+```
+##### Parameters 
+
+<i>unexpected</i> This is the value that should not occur.  
+
+<i>actual</i> This is the value produced by the code under test.
+
+---
+

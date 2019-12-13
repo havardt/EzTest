@@ -103,7 +103,7 @@ Run the executable to run your tests. The test runner can take multiple optional
 | ``` ASSERT_ARE_EQUAL_PRECISION ``` | ```ASSERT_EQ_PRECISION```| Tests whether two floating point numbers are equal using a user provided epsilon. | [Documentation](doc/asserts.md#Assert-equal-precision) |
 | ``` ASSERT_ARE_EQUAL_MEM ``` | ``` ASSERT_EQ_MEM ``` | Tests whether the two values are equal by comparing each byte at the given memory locations. | [Documentation](doc/asserts.md#Assert-equal-memory) |
 | ``` ASSERT_ARE_EQUAL_CMP ``` | ``` ASSERT_EQ_CMP ``` | Tests whether the two values are equal by using the passed comparator function. | [Documentation](doc/asserts.md#Assert-equal-cmp) |
-| ``` ASSERT_ARE_NOT_EQUAL ``` |``` ASSERT_NE ``` | Tests whether the two values are different. |
+| ``` ASSERT_ARE_NOT_EQUAL ``` |``` ASSERT_NE ``` | Tests whether the two values are different. | [Documentation](doc/asserts.md#Assert-not-equal) |
 | ``` ASSERT_ARE_NOT_EQUAL_PRECISION ``` | ```ASSERT_NE_PRECISION``` | Tests whether two floating point numbers are different using a user provided epsilon. |
 | ``` ASSERT_ARE_NOT_EQUAL_MEM ``` | ```ASSERT_NE_MEM``` | Tests whether the two values are different by comparing each byte at the given memory locations. |
 | ``` ASSERT_ARE_NOT_EQUAL_CMP ``` | ``` ASSERT_NE_CMP ``` | Tests whether the two values are different by using the passed comparator function. |
