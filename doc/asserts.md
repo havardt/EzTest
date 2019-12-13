@@ -60,7 +60,7 @@ Tests whether the two pointers refer to the same memory location.
 ASSERT_ARE_SAME(const void *expected, const void *actual);
 ```
 ##### Parameters
-<i>expected</i> This is the value the tests expects.
+<i>expected</i> This is the value the tests expects.    
 <i>actual</i> This is the value produced by the code under test.
 
 ---
@@ -73,7 +73,19 @@ Tests whether the two pointers refer to different memory locations.
 ASSERT_ARE_NOT_SAME(const void *unexpected, const void *actual);
 ```
 ##### Parameters
-<i>unexpected</i> This is the value that should not occur.
+<i>unexpected</i> This is the value that should not occur.    
 <i>actual</i> This is the value produced by the code under test.
+
+---
+
+### Assert NaN
+Tests whether the passed value is NaN.
+
+##### Declaration
+```C
+ASSERT_IS_NAN(float value);
+```
+##### Parameters
+<i>value</i> The floating point value to check.
 
 ---
