@@ -51,3 +51,16 @@ ASSERT_IS_FALSE(const bool condition);
 <i>condition</i> The boolean condition to test. 
 
 ---
+
+### Assert same
+Tests whether the two pointers refer to the same memory location.
+
+##### Declaration
+```C
+ASSERT_ARE_SAME(const void *expected, const void *actual);
+```
+##### Parameters
+<i>expected</i> This is the value the tests expects.
+<i>actual</i> This is the value produced by the code under test.
+
+---

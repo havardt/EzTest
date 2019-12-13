@@ -96,7 +96,7 @@ Run the executable to run your tests. The test runner can take multiple optional
 | ``` ASSERT_IS_NOT_NULL ``` | | Tests whether the provided pointer is non-null. | [Documentation](doc/asserts.md#Assert-not-NULL) |
 | ``` ASSERT_IS_TRUE ``` | | Tests whether the condition is true. | [Documentation](doc/asserts.md#Assert-true) |
 | ``` ASSERT_IS_FALSE ``` | | Tests whether the condition is false. | [Documentation](doc/asserts.md#Assert-false) |
-| ``` ASSERT_ARE_SAME ``` | | Tests whether the two pointers refer to the same memory location. |
+| ``` ASSERT_ARE_SAME ``` | | Tests whether the two pointers refer to the same memory location. | [Documentation](doc/asserts.md#Assert-same) |
 | ``` ASSERT_ARE_NOT_SAME ``` | | Tests whether the two pointers refer to different memory locations. |
 | ``` ASSERT_IS_NAN ``` | | Tests whether the provided float is NaN. |
 | ``` ASSERT_ARE_EQUAL ``` | ``` ASSERT_EQ ``` | Tests whether the two values are equal. |
