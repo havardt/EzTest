@@ -20,11 +20,11 @@
 /* Macros */
 
 #define __PROGRAM_NAME__ "EzTest"
-#define __PROGRAM_VERSION__ "2.1.0"
+#define __PROGRAM_VERSION__ "2.2.0"
 #define __PROGRAM_AUTHOR__ "havardt"
 #define __PROGRAM_WEBSITE__ "https://github.com/havardt/EzTest"
 
-#define DEFAULT_OPTIONS { .no_color = false, .timer = false, .quiet = false, .skip = false }
+#define DEFAULT_OPTIONS { .no_color = false, .timer = false, .quiet = false, .skip = false, .sigsegv = false }
 
 
 /* Prototypes */
@@ -43,6 +43,7 @@ const struct option long_opts[] = {
     {"timer"   , no_argument      , NULL, 't'},
     {"quiet"   , no_argument      , NULL, 'q'},
     {"skip"    , required_argument, NULL, 's'},
+    {"SIGSEGV" , no_argument      , NULL, 'f'},
     {0}
 };
 
@@ -77,7 +78,8 @@ void print_usage(FILE *fd)
                 " -c  --no-color  Only use default color when printing to screen.\n"
                 " -t  --timer     Display execution time for each test.\n"
                 " -q  --quiet     No output.\n"
-                " -s  --skip      Skips all tests in the passed list of test suits.\n\n",
+                " -s  --skip      Skips all tests in the passed list of test suits.\n"
+                " -f  --SIGSEGV   Segmentation fault is displayed like other test failures.\n\n",
                 __PROGRAM_NAME__);
 }
 
@@ -117,6 +119,10 @@ int parse_opt(struct options *opts, const int opt)
             skip_list = optarg;
             break;
 
+        case 'f':
+            opts->sigsegv = true;
+            break;
+
         default:
             return RESULT_ERR;
     }
@@ -136,7 +142,7 @@ int parse_opt(struct options *opts, const int opt)
 int handle_opts(struct options *opts, const int argc, char **argv)
 {
     int opt, opt_index;
-    while((opt = getopt_long(argc, argv, "vhctqs:", long_opts, &opt_index)) != -1)
+    while((opt = getopt_long(argc, argv, "vhctqfs:", long_opts, &opt_index)) != -1)
     {
         if(parse_opt(opts, opt) != RESULT_OK)
         {

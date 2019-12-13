@@ -918,6 +918,8 @@ void _assert_less_equal_precision(long double  le,
 #include <float.h>
 #include <assert.h>
 #include <time.h>
+#include <signal.h>
+#include <unistd.h>
 
 #define COLOR_RED    "\033[0;31m"
 #define COLOR_YELLOW "\033[0;33m"
@@ -935,6 +937,8 @@ struct options
     bool quiet;
     /** When set to @code true @endcode the skip list will be checked. */
     bool skip;
+    /** Handles segfault. */
+    bool sigsegv;
 };
 
 enum test_result
@@ -978,11 +982,12 @@ TEST(_base_suite, _base_test){}
  */
 static const char *extract_file_name(char *path)
 {
-    path = strrchr(path, '/');
-    if(path == NULL)
+    char *tmp = strrchr(path, '/');
+    if(tmp == NULL)
     {
-        return "";
+        return path;
     }
+    path = tmp;
     return ++path;
 }
 
@@ -2011,6 +2016,16 @@ static unsigned int execute(const struct unit_test *test)
     return ((unsigned int)(((double)t) / CLOCKS_PER_SEC) * 1000);
 }
 
+/** To be executed on signal: SIGSEGV */
+void onSegfault(int signum)
+{
+    register_fail("SIGNAL", signum, "Segmentation fault encountered.");
+    register_result(0);
+
+    signal(signum, SIG_DFL);
+    kill(getpid(), signum);
+}
+
 /**
  * Starts running tests.
  *
@@ -2023,6 +2038,12 @@ int eztest_run(struct options *opts)
 
     options = opts;
     current = &_GET_STRUCT_NAME(_base_suite, _base_test);
+    
+    if(options->sigsegv)
+    {
+        signal(SIGSEGV, onSegfault);
+    }
+
     int count = discover(&current);
     unsigned int t;
 
