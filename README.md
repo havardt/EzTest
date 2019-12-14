@@ -140,6 +140,7 @@ The exit code is EXIT_SUCCESS (0) if all tests passed and EXIT_FAILURE (non-zero
 | -t | --timer | Display execution time for each test. |
 | -q | --quiet | No output. |
 | -s | --skip | Skips all tests in the passed list of test suits. The argument for this option should be a comma separated list of case-sensitive test suit names that you want to skip. |
+| -f | --SIGSEGV | Segmentation fault is handled like other test failures. |
 
 
 ## Contribute
