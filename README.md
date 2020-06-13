@@ -60,7 +60,7 @@ TEARDOWN(MathTests)
 See the next section for information on how to get started with EzTest.
 
 ## Getting started
-EzTest was created to make unit testing quick and easy in C. Therefore there are only three steps to test your code:
+EzTest was created to make unit testing quick and easy in C. The fastest way to get started with EzTest is by using the [template](https://github.com/havardt/EzTest-Template). The template provides a default project layout for C projects using EzTest. After getting the template or creating your own project structure, you are ready to start.
 
 #### 1. Write tests using the test macros    
 Before having access to the test macros you need to include the eztest header file: ```#include "eztest.h"```.
@@ -78,12 +78,16 @@ Example usage of both ```TEST(suite, test)``` and ```TEST_FULL(suite, test)``` c
 
 #### 2. Build/ Compile
 
-###### Option 1
+###### Option 1: Template
+If you are using the template, then follow the build instructions given [here](https://github.com/havardt/EzTest-Template#hammer_and_wrench-build).
+
+###### Option 2: CMake
+Another option is to use the provided [CMake files and BASH build script](build). Before running the build script it is important that you add your test files to the CMakeLists.txt file. The build script leaves a single executable 'eztest', this is the test runner.
+
+###### Option 3: Manual build
 To build the EzTest runner, compile using a C11 compatible C compiler by providing the ```runner.c``` source file along with your test files.    
 Example compile: ```$ gcc -o ezrunner runner.c <test-files>```     
 
-###### Option 2
-Another option is to use the provided [CMake files and BASH build script](build). Before running the build script it is important that you add your test files to the CMakeLists.txt file. The build script leaves a single executable 'eztest', this is the test runner.
 
 #### 3. Run
 Run the executable to run your tests. The test runner can take multiple optional arguments to customize your test experience. Learn more about the test runner [here](#runner).
