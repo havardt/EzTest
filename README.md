@@ -6,7 +6,7 @@ An easy to use unit testing framework written in, and created for, the C languag
 
 ## :scroll: Table of contents :scroll:
 * [Why use EzTest?](#Why-use-EzTest)
-* [Usage](#usage)
+* [Usage](#introduction)
 * [Getting started](#getting-started)
 * [Asserts](#asserts)
 * [Runner](#runner)
@@ -22,7 +22,10 @@ An easy to use unit testing framework written in, and created for, the C languag
 :heavy_check_mark: Wide list of asserts.    
 :heavy_check_mark: No type prefix or suffix.    
 
-## Usage
+## Introduction 
+
+<img src=".github/assets/example_output.png"/>
+
 Here is an example of a simple unit test written using EzTest:
 
 ```C
