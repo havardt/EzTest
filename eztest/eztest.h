@@ -64,7 +64,7 @@ struct unit_test
 #define TEARDOWN(suite) static void _GET_TEARDOWN_FN_NAME(suite)(void)
 
 #define _NEW_UNIT_TEST_STRUCT(suite, name)\
-    static struct unit_test _GET_STRUCT_NAME(suite, name) __attribute__ ((used, section(".tests"), aligned(1))) = {\
+    static struct unit_test _GET_STRUCT_NAME(suite, name) __attribute__ ((used, section(".eztest"), aligned(1))) = {\
         .test_name=#name,\
         .test_suite=#suite,\
         .setup_fn = NULL,\
@@ -74,7 +74,7 @@ struct unit_test
     }
 
 #define _NEW_FULL_UNIT_TEST_STRUCT(suite, name)\
-    static struct unit_test _GET_STRUCT_NAME(suite, name) __attribute__ ((used, section(".tests"), aligned(1))) = {\
+    static struct unit_test _GET_STRUCT_NAME(suite, name) __attribute__ ((used, section(".eztest"), aligned(1))) = {\
         .test_name=#name,\
         .test_suite=#suite,\
         .setup_fn = _GET_SETUP_FN_NAME(suite),\
