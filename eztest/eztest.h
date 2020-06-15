@@ -921,6 +921,14 @@ void _assert_less_equal_precision(long double  le,
 #include <signal.h>
 #include <unistd.h>
 
+/** 
+ *  This is the value returned when the runner encounters an error
+ *  and has to exit. The value is positive (rather than the conventional -1)
+ *  because the return value is the amount of failed tests. This is also why
+ *  the value is set so high.
+ */
+#define EZTEST_EXIT_FAILURE 99999
+
 #define COLOR_RED    "\033[0;31m"
 #define COLOR_YELLOW "\033[0;33m"
 #define COLOR_GREEN  "\033[0;32m"
@@ -954,6 +962,22 @@ const char *separator = ",";
 
 /** A list of test suit names to skip separated by @see separator.*/
 char *skip_list = NULL;
+
+const size_t ASSERT_BUFFER_SIZE = 512;
+
+/** 
+ * Holds the output of asserts for the current test.
+ *
+ * @remarks It should be "cleared" between each test.
+ */
+char *assert_buffer = NULL;
+
+/** 
+ * The current length of the assert buffer. 
+ * 
+ * @remarks This exists to remove some strlen calls.
+ */
+int assert_buffer_len = 0;
 
 static int pass_count = 0;
 static int fail_count = 0;
@@ -991,11 +1015,6 @@ static const char *extract_file_name(char *path)
     return ++path;
 }
 
-static void print_file_marker(char *file, const int line)
-{
-    printf(" (%s:%d)\n" COLOR_NONE, extract_file_name(file), line);
-}
-
 /**
  * Get the requested color if and only if the application options allow it.
  *
@@ -1013,6 +1032,14 @@ static const char *color(const char *color)
         return COLOR_NONE;
     }
     return color;
+}
+
+static void register_file_marker(char *file, const int line)
+{
+    assert_buffer_len += snprintf(
+            assert_buffer + assert_buffer_len,
+            ASSERT_BUFFER_SIZE - assert_buffer_len,
+            "\n%s└──%s See file %s line %d %s", COLOR_NONE, color(COLOR_YELLOW), extract_file_name(file), line, COLOR_NONE);
 }
 
 /** Prints an overall report of the test results. */
@@ -1054,15 +1081,26 @@ static void print_result(const struct unit_test *test,
 {
     if(options->quiet) return;
     
-    printf("[%s : %s]%s %s " COLOR_NONE, test->test_suite, test->test_name, color(c), resstr);
+    printf("|%s %s %s] %s : %s " COLOR_NONE, 
+            // Print result with the given color.
+            color(c), resstr, COLOR_NONE, 
+            // Print test suite and name
+            test->test_suite, test->test_name);
+
     if(options->timer)
     {
-        printf("(%dms)\n\n", time);
+        printf("(%dms)\n", time);
     }
     else
     {
-        printf("\n\n");
+        printf("\n");
     }
+    
+    if(assert_buffer_len > 0)
+    {
+        puts(assert_buffer);
+    }
+    printf("\n");
     fflush(stdout);
 }
 
@@ -1082,17 +1120,18 @@ static void print_skipped(const struct unit_test *test, const unsigned int time)
 }
 
 /**
- * Prints the n first bytes at the memory location pointed to by the given pointer in hex.
- *
- * @param ptr Pointer to the memory location of which to start.
- * @param n   The amount of bytes to print.
+ * Store the n first bytes at the memory location pointed to by the given pointer in hex.
+ * 
+ * @param buffer Location of which the bytes will be written to.
+ * @param ptr    Pointer to the memory location of which to start.
+ * @param n      The amount of bytes to print.
  */
-static void print_bytes(const void *ptr, size_t n)
+static void register_bytes(char *buffer, const void *ptr, size_t n)
 {
     const unsigned char *bytes = (const unsigned char *)ptr;
     for (; n > 0; --n, ++bytes)
     {
-        printf("%x", *bytes);
+        snprintf(buffer + strlen(buffer), 128 - strlen(buffer), "%x", *bytes);
     }
 }
 
@@ -1110,13 +1149,13 @@ static void register_fail(char *file, const int line, const char *msg, ...)
     {
         return;
     }
-
+    
+    assert_buffer_len += snprintf(assert_buffer + assert_buffer_len, ASSERT_BUFFER_SIZE - assert_buffer_len, "%s├── %s", COLOR_NONE, color(COLOR_YELLOW));
     va_list va;
-    printf("[%s : %s] %s", current->test_suite, current->test_name, color(COLOR_YELLOW));
     va_start(va, msg);
-    vprintf(msg, va);
+    assert_buffer_len += vsnprintf(assert_buffer + assert_buffer_len, ASSERT_BUFFER_SIZE - assert_buffer_len, msg, va);
     va_end(va);
-    print_file_marker(file, line);
+    register_file_marker(file, line);
 }
 
 //endregion printers
@@ -1186,21 +1225,23 @@ void _assert_is_nan(const float value, char *file, const int line)
 void mem_test_failed(const void *ptr1, const void *ptr2, const size_t  size, char *file, 
                      const int   line, const char *msg1, const char   *msg2)
 {
-        result = fail;
+    result = fail;
         
-        if(options->quiet)
-        {
-            return;
-        }   
+    if(options->quiet)
+    {
+        return;
+    }   
 
-        printf("[%s : %s]%s %s '0x",
-                current->test_suite, current->test_name, color(COLOR_YELLOW), msg1);
-        print_bytes(ptr1, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
-        printf("%s' %s '0x", (size > MAX_PRINTABLE_LEN ? "..." : ""), msg2);
-        print_bytes(ptr2, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
-        printf((size > MAX_PRINTABLE_LEN ? "...'." : "'."));
-        print_file_marker(file, line);
- 
+    char buf[128];
+    buf[0] = '\0';
+
+    snprintf(buf, 128, "%s '0x", msg1);
+    register_bytes(buf, ptr1, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
+    snprintf(buf + strlen(buf), 128 - strlen(buf), "%s'%s '0x", (size > MAX_PRINTABLE_LEN ? "..." : ""), msg2);
+    register_bytes(buf, ptr2, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
+    snprintf(buf + strlen(buf), 128 - strlen(buf), "%s", (size > MAX_PRINTABLE_LEN ? "...'." : "'."));
+
+    register_fail(file, line, buf);
 }
 
 void _assert_equal_mem(const void *expected, const void *actual, const size_t size, char *file, const int line)
@@ -2030,12 +2071,13 @@ void onSegfault(int signum)
  * Starts running tests.
  *
  * @param opts Application options (not NULL).
- * @return The amount of failed tests. 
+ * @return The amount of failed tests. If the runner encounters an error,
+ *         then EZTEST_EXIT_FAILURE is returned.
  */
 int eztest_run(struct options *opts)
 {
     assert(opts != NULL);
-
+    
     options = opts;
     current = &_GET_STRUCT_NAME(_base_suite, _base_test);
     
@@ -2044,7 +2086,14 @@ int eztest_run(struct options *opts)
         signal(SIGSEGV, onSegfault);
     }
 
-    int count = discover(&current);
+    assert_buffer = malloc(ASSERT_BUFFER_SIZE);
+    if(assert_buffer == NULL)
+    {
+        fprintf(stderr, "Failed to allocated memory for the assert buffer.");
+        return EZTEST_EXIT_FAILURE;
+    }
+
+    const int count = discover(&current);
     unsigned int t;
 
     for (int i = 0; i < count; i++, current++)
@@ -2056,12 +2105,19 @@ int eztest_run(struct options *opts)
         }
         else
         {
+            // Reset buffer
+            assert_buffer[0] = '\0';
+            assert_buffer_len = 0;
+            // Reset result
             result = undefined; // Reset result before running new test.
+            // Run test
             t = execute(current);
         }
         register_result(t);
     }
     print_report();
+
+    free(assert_buffer);
 
     return fail_count;
 }
