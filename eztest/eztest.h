@@ -2034,6 +2034,18 @@ static void register_result(const unsigned int time)
 }
 
 /**
+ * Prints the total test time as long as the quiet options has not been set.
+ * 
+ * @param t The time 
+ */
+static void print_test_time(const unsigned int t)
+{
+    if(options->quiet) return;
+
+    printf("Total elapsed time: %dms\n", t);
+}
+
+/**
  * Executes the passed test, running the setup and teardown functions
  * if they are not @code NULL @endcode
  *
@@ -2054,7 +2066,7 @@ static unsigned int execute(const struct unit_test *test)
         test->teardown_fn();
     }
     t = clock() - t;
-    return ((unsigned int)(((double)t) / CLOCKS_PER_SEC) * 1000);
+    return ((unsigned int)((((float)t) / CLOCKS_PER_SEC) * 1000));
 }
 
 /** To be executed on signal: SIGSEGV */
@@ -2094,14 +2106,15 @@ int eztest_run(struct options *opts)
     }
 
     const int count = discover(&current);
-    unsigned int t;
+
+    unsigned int test_time = 0; // Time for the current test.
+    unsigned int total_time = 0; // Total time for all tests.
 
     for (int i = 0; i < count; i++, current++)
     {
         if(should_skip(current))
         {
             result = skip;
-            t = 0;
         }
         else
         {
@@ -2111,11 +2124,17 @@ int eztest_run(struct options *opts)
             // Reset result
             result = undefined; // Reset result before running new test.
             // Run test
-            t = execute(current);
+            test_time = execute(current);
+            total_time += test_time;
         }
-        register_result(t);
+        register_result(test_time);
     }
     print_report();
+
+    if(options->timer)
+    {
+        print_test_time(total_time);
+    }
 
     free(assert_buffer);
 
