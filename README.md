@@ -6,7 +6,7 @@ An easy to use unit testing framework written in, and created for, the C languag
 
 ## :scroll: Table of contents :scroll:
 * [Why use EzTest?](#Why-use-EzTest)
-* [Usage](#introduction)
+* [Introduction](#introduction)
 * [Getting started](#getting-started)
 * [Asserts](#asserts)
 * [Runner](#runner)
@@ -18,7 +18,7 @@ An easy to use unit testing framework written in, and created for, the C languag
 :heavy_check_mark: Easy to use: single header and runner file.    
 :heavy_check_mark: No writing main functions or add-test functions.    
 :heavy_check_mark: Skip tests without altering test code.    
-:heavy_check_mark: Configurable test runner.
+:heavy_check_mark: Configurable test runner.     
 :heavy_check_mark: Wide list of asserts.    
 :heavy_check_mark: No type prefix or suffix.    
 
@@ -26,10 +26,10 @@ An easy to use unit testing framework written in, and created for, the C languag
 
 <img src=".github/assets/example_output.png"/>
 
-Here is an example of a simple unit test written using EzTest:
+###### A simple test
 
 ```C
-TEST(MathTests, AddingTwoOnTwoShouldEqualFour)
+TEST(Math, AddingTwoOnTwoShouldEqualFour)
 {
     const int expected = 4;
     const int actual = math_add(2, 2);
@@ -37,25 +37,26 @@ TEST(MathTests, AddingTwoOnTwoShouldEqualFour)
     ASSERT_ARE_EQUAL(expected, actual); // or ASSERT_EQ(expected, actual); using the shorthand.
 }
 ```
-The [asserts](#asserts) are created using the power of the C11 macro ```_Generic```. The user doesn't have to provide some prefix or suffix to represent the data type. 
+The [asserts](#asserts) are created using the power of the C11 macro ```_Generic```. As seen in the above example, this means that the user doesn't have to provide any prefix or suffix to represent the data type. 
 
-EzTest also provides the option of setup and teardown functions that run before/ after each test. Using the ```TEST_FULL(suite, test)```, ```SETUP(suite)``` and ```TEARDOWN(suite)``` macros the developer can create a more complex test suite. When using the ```TEST_FULL(suite, name)``` macro the developer *must* implement the ```SETUP()``` and ```TEARDOWN()``` macros.
+###### A full test (Setup and Teardown)
+EzTest also provides the option of setup and teardown functions. The setup function is a function that runs before every test within a test suite. The teardown function has similar behaviour, but runs after the test. A test utilizing setup and teardown functions is defined by using the ```TEST_FULL(suite, name)``` macro. A setup and teardown function *must* also be defined for the test suite when using the full test macro. This is done with the ```SETUP(suite)``` and ```TEARDOWN(suite)``` macros.
 
 ```C
 
-SETUP(MathTests)
+SETUP(Math)
 {
-    // Code to run before every test in the MathTests suite.
+    // Code to run before every test in the Math suite.
 }
 
-TEST_FULL(MathTests, AddingTwoOnTwoShouldEqualFour)
+TEST_FULL(Math, AddingTwoOnTwoShouldEqualFour)
 {
     // Test code placed here.
 }
 
-TEARDOWN(MathTests)
+TEARDOWN(Math)
 {
-    // This code runs after every test in the MathTests suite.
+    // This code runs after every test in the Math suite.
 }
 
 ```
