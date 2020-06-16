@@ -52,7 +52,7 @@ struct options opts = DEFAULT_OPTIONS;
 
 int main(int argc, char **argv)
 {
-    if(handle_opts(&opts, argc, argv) != RESULT_OK)
+    if(handle_opts(&opts, argc, argv) != EZTEST_RESULT_OK)
     {
         return EXIT_FAILURE;
     }
@@ -124,9 +124,9 @@ int parse_opt(struct options *opts, const int opt)
             break;
 
         default:
-            return RESULT_ERR;
+            return EZTEST_RESULT_ERR;
     }
-    return RESULT_OK;
+    return EZTEST_RESULT_OK;
 }
 
 /**
@@ -144,12 +144,12 @@ int handle_opts(struct options *opts, const int argc, char **argv)
     int opt, opt_index;
     while((opt = getopt_long(argc, argv, "vhctqfs:", long_opts, &opt_index)) != -1)
     {
-        if(parse_opt(opts, opt) != RESULT_OK)
+        if(parse_opt(opts, opt) != EZTEST_RESULT_OK)
         {
             print_usage(stderr); 
-            return RESULT_ERR;
+            return EZTEST_RESULT_ERR;
         }
     }
-    return RESULT_OK;
+    return EZTEST_RESULT_OK;
 }
 

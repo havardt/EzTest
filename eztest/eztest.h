@@ -27,25 +27,25 @@ struct unit_test
 };
 
 /** Represents the standard ok/ success result value for non-pointer return types. */
-#define RESULT_OK 0
+#define EZTEST_RESULT_OK 0
 
 /** Represents the standard error/ fail result value for non-pointer return types. */
-#define RESULT_ERR (-1)
+#define EZTEST_RESULT_ERR (-1)
+
+#define EZTEST_MARKER 4242424242424242
 
 /** The max amount of bytes to print when printing value without type. */
-#define MAX_PRINTABLE_LEN 16
+#define EZTEST_MAX_PRINTABLE_LEN 16
 
-#define ANSWER_TO_LIFE 4242424242424242
+#define EZTEST_BASE_TEST_NAME "eztest_base_test"
 
-#define _BASE_TEST_NAME "_base_test"
+#define EZTEST_RUN_FN_NAME(suite, name) run_##suite##_##name
 
-#define _GET_RUN_FN_NAME(suite, name) run_##suite##_##name
+#define EZTEST_SETUP_FN_NAME(suite) setup_##suite
 
-#define _GET_SETUP_FN_NAME(suite) setup_##suite
+#define EZTEST_TEARDOWN_FN_NAME(suite) teardown_##suite
 
-#define _GET_TEARDOWN_FN_NAME(suite) teardown_##suite
-
-#define _GET_STRUCT_NAME(suite, name) struct_##suite##_##name
+#define EZTEST_STRUCT_NAME(suite, name) struct_##suite##_##name
 
 /**
  * Initializes the setup function for the given suite.
@@ -53,7 +53,7 @@ struct unit_test
  * @param suite The name of the test suite that this setup function belongs.
  * @note Each suite should only have one (1) setup function.
  */
-#define SETUP(suite) static void _GET_SETUP_FN_NAME(suite)(void)
+#define SETUP(suite) static void EZTEST_SETUP_FN_NAME(suite)(void)
 
 /**
  * Initializes the teardown function for the given suite.
@@ -61,26 +61,26 @@ struct unit_test
  * @param suite The name of the test suite that this teardown function belongs.
  * @note Each suite should only have one (1) teardown function.
  */
-#define TEARDOWN(suite) static void _GET_TEARDOWN_FN_NAME(suite)(void)
+#define TEARDOWN(suite) static void EZTEST_TEARDOWN_FN_NAME(suite)(void)
 
-#define _NEW_UNIT_TEST_STRUCT(suite, name)\
-    static struct unit_test _GET_STRUCT_NAME(suite, name) __attribute__ ((used, section(".eztest"), aligned(1))) = {\
+#define EZTEST_UNIT_TEST_STRUCT(suite, name)\
+    static struct unit_test EZTEST_STRUCT_NAME(suite, name) __attribute__ ((used, section(".eztest"), aligned(1))) = {\
         .test_name=#name,\
         .test_suite=#suite,\
         .setup_fn = NULL,\
         .teardown_fn = NULL,\
-        .run_fn = _GET_RUN_FN_NAME(suite, name),\
-        .marker = ANSWER_TO_LIFE\
+        .run_fn = EZTEST_RUN_FN_NAME(suite, name),\
+        .marker = EZTEST_MARKER\
     }
 
-#define _NEW_FULL_UNIT_TEST_STRUCT(suite, name)\
-    static struct unit_test _GET_STRUCT_NAME(suite, name) __attribute__ ((used, section(".eztest"), aligned(1))) = {\
+#define EZTEST_FULL_UNIT_TEST_STRUCT(suite, name)\
+    static struct unit_test EZTEST_STRUCT_NAME(suite, name) __attribute__ ((used, section(".eztest"), aligned(1))) = {\
         .test_name=#name,\
         .test_suite=#suite,\
-        .setup_fn = _GET_SETUP_FN_NAME(suite),\
-        .teardown_fn = _GET_TEARDOWN_FN_NAME(suite),\
-        .run_fn = _GET_RUN_FN_NAME(suite, name),\
-        .marker = ANSWER_TO_LIFE\
+        .setup_fn = EZTEST_SETUP_FN_NAME(suite),\
+        .teardown_fn = EZTEST_TEARDOWN_FN_NAME(suite),\
+        .run_fn = EZTEST_RUN_FN_NAME(suite, name),\
+        .marker = EZTEST_MARKER\
     }
 
 /**
@@ -92,9 +92,9 @@ struct unit_test
  *              Suite and test-name combination must be unique for the project.
  */
 #define TEST(suite, name)\
-    static void _GET_RUN_FN_NAME(suite, name)(void);\
-    _NEW_UNIT_TEST_STRUCT(suite, name);\
-    static void _GET_RUN_FN_NAME(suite, name)(void)
+    static void EZTEST_RUN_FN_NAME(suite, name)(void);\
+    EZTEST_UNIT_TEST_STRUCT(suite, name);\
+    static void EZTEST_RUN_FN_NAME(suite, name)(void)
 
 /**
  * Initializes a new unit test with setup and teardown functions.
@@ -105,44 +105,44 @@ struct unit_test
  *             Suite and test-name combination must be unique for the project.
  */
 #define TEST_FULL(suite, name)\
-    static void _GET_RUN_FN_NAME(suite, name)(void);\
-    _NEW_FULL_UNIT_TEST_STRUCT(suite, name);\
-    static void _GET_RUN_FN_NAME(suite, name)(void)
+    static void EZTEST_RUN_FN_NAME(suite, name)(void);\
+    EZTEST_FULL_UNIT_TEST_STRUCT(suite, name);\
+    static void EZTEST_RUN_FN_NAME(suite, name)(void)
 
-void _assert_is_null(const void *value, char *file, int line);
-#define ASSERT_IS_NULL(value) _assert_is_null(value, __FILE__, __LINE__);
+void assert_is_null(const void *value, char *file, int line);
+#define ASSERT_IS_NULL(value) assert_is_null(value, __FILE__, __LINE__);
 
-void _assert_is_not_null(const void *value, char *file, int line);
-#define ASSERT_IS_NOT_NULL(value) _assert_is_not_null(value, __FILE__, __LINE__);
+void assert_is_not_null(const void *value, char *file, int line);
+#define ASSERT_IS_NOT_NULL(value) assert_is_not_null(value, __FILE__, __LINE__);
 
-void _assert_is_true(bool condition, char *file, int line);
-#define ASSERT_IS_TRUE(condition) _assert_is_true(condition, __FILE__, __LINE__);
+void assert_is_true(bool condition, char *file, int line);
+#define ASSERT_IS_TRUE(condition) assert_is_true(condition, __FILE__, __LINE__);
 
-void _assert_is_false(bool condition, char *file, int line);
-#define ASSERT_IS_FALSE(condition) _assert_is_false(condition, __FILE__, __LINE__);
+void assert_is_false(bool condition, char *file, int line);
+#define ASSERT_IS_FALSE(condition) assert_is_false(condition, __FILE__, __LINE__);
 
-void _assert_are_same(const void *expected, const void *actual, char *file, int line);
-#define ASSERT_ARE_SAME(expected, actual) _assert_are_same(expected, actual, __FILE__, __LINE__);
+void assert_are_same(const void *expected, const void *actual, char *file, int line);
+#define ASSERT_ARE_SAME(expected, actual) assert_are_same(expected, actual, __FILE__, __LINE__);
 
-void _assert_are_not_same(const void *unexpected, const void *actual, char *file, int line);
-#define ASSERT_ARE_NOT_SAME(unexpected, actual) _assert_are_not_same(unexpected, actual, __FILE__, __LINE__);
+void assert_are_not_same(const void *unexpected, const void *actual, char *file, int line);
+#define ASSERT_ARE_NOT_SAME(unexpected, actual) assert_are_not_same(unexpected, actual, __FILE__, __LINE__);
 
 #ifdef NAN
 
-void _assert_is_nan(float value, char *file, int line);
-#define ASSERT_IS_NAN(value) _assert_is_nan(value, __FILE__, __LINE__);
+void assert_is_nan(float value, char *file, int line);
+#define ASSERT_IS_NAN(value) assert_is_nan(value, __FILE__, __LINE__);
 
 #endif
 
-void _assert_are_equal_ch  (char            expected, char            actual, char *file, int line);
-void _assert_are_equal_sch (signed char     expected, signed char     actual, char *file, int line);
-void _assert_are_equal_uch (unsigned char   expected, unsigned char   actual, char *file, int line);
-void _assert_are_equal_int (intmax_t        expected, intmax_t        actual, char *file, int line);
-void _assert_are_equal_uint(uintmax_t       expected, uintmax_t       actual, char *file, int line);
-void _assert_are_equal_dbl (long double     expected, long double     actual, char *file, int line);
-void _assert_are_equal_str (const char    * expected, const char    * actual, char *file, int line);
-void _assert_are_equal_wstr(const wchar_t * expected, const wchar_t * actual, char *file, int line);
-void _assert_are_equal     (const void    * expected, const void    * actual, char *file, int line);
+void assert_are_equal_ch  (char            expected, char            actual, char *file, int line);
+void assert_are_equal_sch (signed char     expected, signed char     actual, char *file, int line);
+void assert_are_equal_uch (unsigned char   expected, unsigned char   actual, char *file, int line);
+void assert_are_equal_int (intmax_t        expected, intmax_t        actual, char *file, int line);
+void assert_are_equal_uint(uintmax_t       expected, uintmax_t       actual, char *file, int line);
+void assert_are_equal_dbl (long double     expected, long double     actual, char *file, int line);
+void assert_are_equal_str (const char    * expected, const char    * actual, char *file, int line);
+void assert_are_equal_wstr(const wchar_t * expected, const wchar_t * actual, char *file, int line);
+void assert_are_equal     (const void    * expected, const void    * actual, char *file, int line);
 /**
  * Tests whether the two values are equal.
  *
@@ -150,33 +150,33 @@ void _assert_are_equal     (const void    * expected, const void    * actual, ch
  * @param actual   The second value to compare. This is the value produced by the code under test.
  */
 #define ASSERT_ARE_EQUAL(expected, actual) _Generic((expected),\
-             char        : _assert_are_equal_ch,   \
-    signed   char        : _assert_are_equal_sch,  \
-    unsigned char        : _assert_are_equal_uch,  \
-                                                   \
-             short       : _assert_are_equal_int,  \
-    unsigned short       : _assert_are_equal_uint, \
-                                                   \
-             int         : _assert_are_equal_int,  \
-    unsigned int         : _assert_are_equal_uint, \
-                                                   \
-             long        : _assert_are_equal_int,  \
-    unsigned long        : _assert_are_equal_uint, \
-                                                   \
-             long long   : _assert_are_equal_int,  \
-    unsigned long long   : _assert_are_equal_uint, \
-                                                   \
-             float       : _assert_are_equal_dbl,  \
-             double      : _assert_are_equal_dbl,  \
-             long double : _assert_are_equal_dbl,  \
-                                                   \
-             char *      : _assert_are_equal_str,  \
-    const    char *      : _assert_are_equal_str,  \
-                                                   \
-             wchar_t *   : _assert_are_equal_wstr, \
-    const    wchar_t *   : _assert_are_equal_wstr, \
-                                                   \
-    default              : _assert_are_equal)(expected, actual, __FILE__, __LINE__)
+             char        : assert_are_equal_ch,   \
+    signed   char        : assert_are_equal_sch,  \
+    unsigned char        : assert_are_equal_uch,  \
+                                                  \
+             short       : assert_are_equal_int,  \
+    unsigned short       : assert_are_equal_uint, \
+                                                  \
+             int         : assert_are_equal_int,  \
+    unsigned int         : assert_are_equal_uint, \
+                                                  \
+             long        : assert_are_equal_int,  \
+    unsigned long        : assert_are_equal_uint, \
+                                                  \
+             long long   : assert_are_equal_int,  \
+    unsigned long long   : assert_are_equal_uint, \
+                                                  \
+             float       : assert_are_equal_dbl,  \
+             double      : assert_are_equal_dbl,  \
+             long double : assert_are_equal_dbl,  \
+                                                  \
+             char *      : assert_are_equal_str,  \
+    const    char *      : assert_are_equal_str,  \
+                                                  \
+             wchar_t *   : assert_are_equal_wstr, \
+    const    wchar_t *   : assert_are_equal_wstr, \
+                                                  \
+    default              : assert_are_equal)(expected, actual, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_ARE_EQUAL(expected, actual);
@@ -185,15 +185,15 @@ void _assert_are_equal     (const void    * expected, const void    * actual, ch
  */
 #define ASSERT_EQ(expected, actual) ASSERT_ARE_EQUAL(expected, actual)
 
-void _assert_are_not_equal_ch  (char            unexpected, char            actual, char *file, int line);
-void _assert_are_not_equal_sch (signed char     unexpected, signed char     actual, char *file, int line);
-void _assert_are_not_equal_uch (unsigned char   unexpected, unsigned char   actual, char *file, int line);
-void _assert_are_not_equal_int (intmax_t        unexpected, intmax_t        actual, char *file, int line);
-void _assert_are_not_equal_uint(uintmax_t       unexpected, uintmax_t       actual, char *file, int line);
-void _assert_are_not_equal_dbl (long double     unexpected, long double     actual, char *file, int line);
-void _assert_are_not_equal_str (const char    * unexpected, const char    * actual, char *file, int line);
-void _assert_are_not_equal_wstr(const wchar_t * unexpected, const wchar_t * actual, char *file, int line);
-void _assert_are_not_equal     (const void    * unexpected, const void    * actual, char *file, int line);
+void assert_are_not_equal_ch  (char            unexpected, char            actual, char *file, int line);
+void assert_are_not_equal_sch (signed char     unexpected, signed char     actual, char *file, int line);
+void assert_are_not_equal_uch (unsigned char   unexpected, unsigned char   actual, char *file, int line);
+void assert_are_not_equal_int (intmax_t        unexpected, intmax_t        actual, char *file, int line);
+void assert_are_not_equal_uint(uintmax_t       unexpected, uintmax_t       actual, char *file, int line);
+void assert_are_not_equal_dbl (long double     unexpected, long double     actual, char *file, int line);
+void assert_are_not_equal_str (const char    * unexpected, const char    * actual, char *file, int line);
+void assert_are_not_equal_wstr(const wchar_t * unexpected, const wchar_t * actual, char *file, int line);
+void assert_are_not_equal     (const void    * unexpected, const void    * actual, char *file, int line);
 /**
  * Tests for inequality.
  *
@@ -204,33 +204,33 @@ void _assert_are_not_equal     (const void    * unexpected, const void    * actu
  *       and provide the application specific epsilon.
  */
 #define ASSERT_ARE_NOT_EQUAL(unexpected, actual) _Generic((unexpected),\
-             char        : _assert_are_not_equal_ch,   \
-    signed   char        : _assert_are_not_equal_sch,  \
-    unsigned char        : _assert_are_not_equal_uch,  \
-                                                       \
-             short       : _assert_are_not_equal_int,  \
-    unsigned short       : _assert_are_not_equal_uint, \
-                                                       \
-             int         : _assert_are_not_equal_int,  \
-    unsigned int         : _assert_are_not_equal_uint, \
-                                                       \
-             long        : _assert_are_not_equal_int,  \
-    unsigned long        : _assert_are_not_equal_uint, \
-                                                       \
-             long long   : _assert_are_not_equal_int,  \
-    unsigned long long   : _assert_are_not_equal_uint, \
-                                                       \
-             float       : _assert_are_not_equal_dbl,  \
-             double      : _assert_are_not_equal_dbl,  \
-             long double : _assert_are_not_equal_dbl,  \
-                                                       \
-             char *      : _assert_are_not_equal_str,  \
-    const    char *      : _assert_are_not_equal_str,  \
-                                                       \
-             wchar_t *   : _assert_are_not_equal_wstr, \
-    const    wchar_t *   : _assert_are_not_equal_wstr, \
-                                                       \
-    default              : _assert_are_not_equal)(unexpected, actual, __FILE__, __LINE__)
+             char        : assert_are_not_equal_ch,   \
+    signed   char        : assert_are_not_equal_sch,  \
+    unsigned char        : assert_are_not_equal_uch,  \
+                                                      \
+             short       : assert_are_not_equal_int,  \
+    unsigned short       : assert_are_not_equal_uint, \
+                                                      \
+             int         : assert_are_not_equal_int,  \
+    unsigned int         : assert_are_not_equal_uint, \
+                                                      \
+             long        : assert_are_not_equal_int,  \
+    unsigned long        : assert_are_not_equal_uint, \
+                                                      \
+             long long   : assert_are_not_equal_int,  \
+    unsigned long long   : assert_are_not_equal_uint, \
+                                                      \
+             float       : assert_are_not_equal_dbl,  \
+             double      : assert_are_not_equal_dbl,  \
+             long double : assert_are_not_equal_dbl,  \
+                                                      \
+             char *      : assert_are_not_equal_str,  \
+    const    char *      : assert_are_not_equal_str,  \
+                                                      \
+             wchar_t *   : assert_are_not_equal_wstr, \
+    const    wchar_t *   : assert_are_not_equal_wstr, \
+                                                      \
+    default              : assert_are_not_equal)(unexpected, actual, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_ARE_NOT_EQUAL(unexpected, actual);
@@ -239,7 +239,7 @@ void _assert_are_not_equal     (const void    * unexpected, const void    * actu
  */
 #define ASSERT_NE(unexpected, actual) ASSERT_ARE_NOT_EQUAL(unexpected, actual)
 
-void _assert_equal_mem(const void *expected, const void *actual, size_t size, char *file, int line);
+void assert_equal_mem(const void *expected, const void *actual, size_t size, char *file, int line);
 /**
  * Checks for equality by comparing each byte at the given memory locations.
  *
@@ -248,7 +248,7 @@ void _assert_equal_mem(const void *expected, const void *actual, size_t size, ch
  * @param size     The size of the passed types.
  */
 #define ASSERT_EQUAL_MEM(expected, actual, size)\
-    _assert_equal_mem(expected, actual, size, __FILE__, __LINE__)
+    assert_equal_mem(expected, actual, size, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_EQUAL_MEM(expected, actual, size);
@@ -257,7 +257,7 @@ void _assert_equal_mem(const void *expected, const void *actual, size_t size, ch
  */
 #define ASSERT_EQ_MEM(expected, actual, size) ASSERT_EQUAL_MEM(expected, actual, size)
 
-void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t size, char *file, int line);
+void assert_not_equal_mem(const void *unexpected, const void *actual, size_t size, char *file, int line);
 /**
  * Checks for inequality by comparing each byte at the given memory locations.
  *
@@ -266,7 +266,7 @@ void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t si
  * @param size       The size of the passed types.
  */
 #define ASSERT_NOT_EQUAL_MEM(unexpected, actual, size)\
-    _assert_not_equal_mem(unexpected, actual, size, __FILE__, __LINE__)
+    assert_not_equal_mem(unexpected, actual, size, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_NOT_EQUAL_MEM(unexpected, actual, size);
@@ -275,7 +275,7 @@ void _assert_not_equal_mem(const void *unexpected, const void *actual, size_t si
  */
 #define ASSERT_NE_MEM(unexpected, actual, size) ASSERT_NOT_EQUAL_MEM(unexpected, actual, size)
 
-void _assert_greater_mem(const void *greater, const void *lesser, size_t size, char *file, int line);
+void assert_greater_mem(const void *greater, const void *lesser, size_t size, char *file, int line);
 /**
  * Tests whether the first value is greater than the second value by comparing
  * the bytes at the memory location.
@@ -287,12 +287,12 @@ void _assert_greater_mem(const void *greater, const void *lesser, size_t size, c
  *                expects to be lesser than the first value.
  */
 #define ASSERT_GREATER_MEM(greater, lesser, size)\
-    _assert_greater_mem(greater, lesser, size, __FILE__, __LINE__)
+    assert_greater_mem(greater, lesser, size, __FILE__, __LINE__)
 
 #define ASSERT_GT_MEM(greater, lesser, size)\
-    _assert_greater_mem(greater, lesser, size, __FILE__, __LINE__)
+    assert_greater_mem(greater, lesser, size, __FILE__, __LINE__)
 
-void _assert_greater_equal_mem(const void *ge, const void *le, size_t size, char *file, int line);
+void assert_greater_equal_mem(const void *ge, const void *le, size_t size, char *file, int line);
 /**
  * Tests whether the first value is greater than or equal to the second value
  * by comparing the bytes at the memory location.
@@ -304,12 +304,12 @@ void _assert_greater_equal_mem(const void *ge, const void *le, size_t size, char
  *           expects to be lesser than or equal to the first value.
  */
 #define ASSERT_GREATER_EQUAL_MEM(ge, le, size)\
-    _assert_greater_equal_mem(ge, le, size, __FILE__, __LINE__)
+    assert_greater_equal_mem(ge, le, size, __FILE__, __LINE__)
 
 #define ASSERT_GE_MEM(ge, le, size)\
-    _assert_greater_equal_mem(ge, le, size, __FILE__, __LINE__)
+    assert_greater_equal_mem(ge, le, size, __FILE__, __LINE__)
 
-void _assert_less_mem(const void *lesser, const void *greater, size_t size, char *file, int line);
+void assert_less_mem(const void *lesser, const void *greater, size_t size, char *file, int line);
 /**
  * Tests whether the first value is less than the second value by comparing
  * the bytes at the memory location.
@@ -321,12 +321,12 @@ void _assert_less_mem(const void *lesser, const void *greater, size_t size, char
  *                expects to be greater than the first value.
  */
 #define ASSERT_LESS_MEM(lesser, greater, size)\
-    _assert_less_mem(lesser, greater, size, __FILE__, __LINE__)
+    assert_less_mem(lesser, greater, size, __FILE__, __LINE__)
 
 #define ASSERT_LT_MEM(lesser, greater, size)\
-    _assert_less_mem(lesser, greater, size, __FILE__, __LINE__)
+    assert_less_mem(lesser, greater, size, __FILE__, __LINE__)
 
-void _assert_less_equal_mem(const void *le, const void *ge, size_t size, char *file, int line);
+void assert_less_equal_mem(const void *le, const void *ge, size_t size, char *file, int line);
 /**
  * Tests whether the first value is less than or equal to the second value 
  * by comparing the bytes at the memory location.
@@ -338,13 +338,13 @@ void _assert_less_equal_mem(const void *le, const void *ge, size_t size, char *f
  *           expects to be greater than or equal to the first value.
  */
 #define ASSERT_LESS_EQUAL_MEM(le, ge, size)\
-    _assert_less_equal_mem(le, ge, size, __FILE__, __LINE__)
+    assert_less_equal_mem(le, ge, size, __FILE__, __LINE__)
 
 #define ASSERT_LE_MEM(le, ge, size)\
-    _assert_less_equal_mem(le, ge, size, __FILE__, __LINE__)
+    assert_less_equal_mem(le, ge, size, __FILE__, __LINE__)
 
 
-void _assert_are_equal_cmp(const void *expected, 
+void assert_are_equal_cmp(const void *expected, 
                            const void *actual, 
                            int(*cmp_fn)(const void *ptr1, const void *ptr2),
                            char *file,
@@ -365,7 +365,7 @@ void _assert_are_equal_cmp(const void *expected,
  *                 the first value is greater than the second value.                 
  */
 #define ASSERT_ARE_EQUAL_CMP(expected, actual, cmp_fn)\
-    _assert_are_equal_cmp(expected, actual, cmp_fn, __FILE__, __LINE__)
+    assert_are_equal_cmp(expected, actual, cmp_fn, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_ARE_EQUAL_CMP(expected, actual, cmp_fn);
@@ -374,7 +374,7 @@ void _assert_are_equal_cmp(const void *expected,
  */
 #define ASSERT_EQ_CMP(expected, actual, cmp_fn) ASSERT_ARE_EQUAL_CMP(expected, actual, cmp_fn)
 
-void _assert_are_not_equal_cmp(const void *unexpected, 
+void assert_are_not_equal_cmp(const void *unexpected, 
                                const void *actual, 
                                int(*cmp_fn)(const void *ptr1, const void *ptr2),
                                char *file,
@@ -395,9 +395,9 @@ void _assert_are_not_equal_cmp(const void *unexpected,
  *                  the first value is greater than the second value.*                   
  */
 #define ASSERT_ARE_NOT_EQUAL_CMP(unexpected, actual, cmp_fn)\
-    _assert_are_not_equal_cmp(unexpected, actual, cmp_fn, __FILE__, __LINE__)
+    assert_are_not_equal_cmp(unexpected, actual, cmp_fn, __FILE__, __LINE__)
 
-void _assert_greater_cmp(const void *greater, 
+void assert_greater_cmp(const void *greater, 
                          const void *lesser, 
                          int(*cmp_fn)(const void *ptr1, const void *ptr2),
                          char *file,
@@ -418,7 +418,7 @@ void _assert_greater_cmp(const void *greater,
  *                the first value is greater than the second value.
  */
 #define ASSERT_GREATER_CMP(greater, lesser, cmp_fn)\
-    _assert_greater_cmp(greater, lesser, cmp_fn, __FILE__, __LINE__)
+    assert_greater_cmp(greater, lesser, cmp_fn, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_GREATER_CMP(greater, lesser, cmp_fn);
@@ -428,7 +428,7 @@ void _assert_greater_cmp(const void *greater,
 #define ASSERT_GT_CMP(greater, lesser, cmp_fn)\
     ASSERT_GREATER_CMP(greater, lesser, cmp_fn)
 
-void _assert_less_cmp(const void *lesser,
+void assert_less_cmp(const void *lesser,
                       const void *greater,
                       int(*cmp_fn)(const void *ptr1, const void *ptr2),
                       char *file,
@@ -451,7 +451,7 @@ void _assert_less_cmp(const void *lesser,
  *                the first value is greater than the second value.
  */
 #define ASSERT_LESS_CMP(lesser, greater, cmp_fn)\
-    _assert_less_cmp(lesser, greater, cmp_fn, __FILE__, __LINE__)
+    assert_less_cmp(lesser, greater, cmp_fn, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_LESS_CMP(lesser, greater, cmp_fn);
@@ -461,7 +461,7 @@ void _assert_less_cmp(const void *lesser,
 #define ASSERT_LT_CMP(lesser, greater, cmp_fn)\
     ASSERT_LESS_CMP(lesser, greater, cmp_fn)
 
-void _assert_less_equal_cmp(const void *le,
+void assert_less_equal_cmp(const void *le,
                             const void *ge,
                             int(*cmp_fn)(const void *ptr1, const void *ptr2),
                             char *file,
@@ -484,7 +484,7 @@ void _assert_less_equal_cmp(const void *le,
  *                the first value is greater than the second value.
  */
 #define ASSERT_LESS_EQUAL_CMP(le, ge, cmp_fn)\
-    _assert_less_equal_cmp(le, ge, cmp_fn, __FILE__, __LINE__)
+    assert_less_equal_cmp(le, ge, cmp_fn, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_LESS_EQUAL_CMP(le, ge, cmp_fn);
@@ -494,7 +494,7 @@ void _assert_less_equal_cmp(const void *le,
 #define ASSERT_LE_CMP(le, ge, cmp_fn)\
     ASSERT_LESS_EQUAL_CMP(le, ge, cmp_fn)
 
-void _assert_greater_equal_cmp(const void *ge, 
+void assert_greater_equal_cmp(const void *ge, 
                                const void *le, 
                                int(*cmp_fn)(const void *ptr1, const void *ptr2),
                                char *file,
@@ -510,7 +510,7 @@ void _assert_greater_equal_cmp(const void *ge,
  *           expected to be lesser than or equal to the first value.
  */
 #define ASSERT_GREATER_EQUAL_CMP(ge, le, cmp_fn)\
-    _assert_greater_equal_cmp(ge, le, cmp_fn, __FILE__, __LINE__)
+    assert_greater_equal_cmp(ge, le, cmp_fn, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_GREATER_EQUAL_CMP(ge, le, cmp_fn);
@@ -527,7 +527,7 @@ void _assert_greater_equal_cmp(const void *ge,
  */
 #define ASSERT_NE_CMP(unexpected, actual, cmp_fn) ASSERT_ARE_NOT_EQUAL_CMP(unexpected, actual, cmp_fn)
 
-void _assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, int line);
+void assert_are_equal_precision(long double expected, long double actual, long double epsilon, char *file, int line);
 /**
  * Tests for equality between two floating point numbers.
  *
@@ -541,7 +541,7 @@ void _assert_are_equal_precision(long double expected, long double actual, long 
  *                for equality.
  */
 #define ASSERT_ARE_EQUAL_PRECISION(expected, actual, epsilon)\
-    _assert_are_equal_precision(expected, actual, epsilon, __FILE__, __LINE__)
+    assert_are_equal_precision(expected, actual, epsilon, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_ARE_EQUAL_PRECISION(expected, actual, epsilon);
@@ -550,7 +550,7 @@ void _assert_are_equal_precision(long double expected, long double actual, long 
  */
 #define ASSERT_EQ_PRECISION(expected, actual, epsilon) ASSERT_ARE_EQUAL_PRECISION(expected, actual, epsilon)
 
-void _assert_are_not_equal_precision(long double   unexpected,
+void assert_are_not_equal_precision(long double   unexpected,
                                      long double   actual,
                                      long double   epsilon,
                                      char        * file,
@@ -567,7 +567,7 @@ void _assert_are_not_equal_precision(long double   unexpected,
  *                for equality.
  */
 #define ASSERT_ARE_NOT_EQUAL_PRECISION(unexpected, actual, epsilon)\
-    _assert_are_not_equal_precision(unexpected, actual, epsilon, __FILE__, __LINE__)
+    assert_are_not_equal_precision(unexpected, actual, epsilon, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_ARE_NOT_EQUAL_PRECISION(unexpected, actual, epsilon);
@@ -576,15 +576,15 @@ void _assert_are_not_equal_precision(long double   unexpected,
  */
 #define ASSERT_NE_PRECISION(unexpected, actual, epsilon) ASSERT_ARE_NOT_EQUAL_PRECISION(unexpected, actual, epsilon)
 
-void _assert_greater_ch  (char            greater, char            lesser, char *file, int line);
-void _assert_greater_sch (signed char     greater, signed char     lesser, char *file, int line);
-void _assert_greater_uch (unsigned char   greater, unsigned char   lesser, char *file, int line);
-void _assert_greater_int (intmax_t        greater, intmax_t        lesser, char *file, int line);
-void _assert_greater_uint(uintmax_t       greater, uintmax_t       lesser, char *file, int line);
-void _assert_greater_dbl (long double     greater, long double     lesser, char *file, int line);
-void _assert_greater_str (const char    * greater, const char    * lesser, char *file, int line);
-void _assert_greater_wstr(const wchar_t * greater, const wchar_t * lesser, char *file, int line);
-void _assert_greater     (const void    * greater, const void    * lesser, char *file, int line);
+void assert_greater_ch  (char            greater, char            lesser, char *file, int line);
+void assert_greater_sch (signed char     greater, signed char     lesser, char *file, int line);
+void assert_greater_uch (unsigned char   greater, unsigned char   lesser, char *file, int line);
+void assert_greater_int (intmax_t        greater, intmax_t        lesser, char *file, int line);
+void assert_greater_uint(uintmax_t       greater, uintmax_t       lesser, char *file, int line);
+void assert_greater_dbl (long double     greater, long double     lesser, char *file, int line);
+void assert_greater_str (const char    * greater, const char    * lesser, char *file, int line);
+void assert_greater_wstr(const wchar_t * greater, const wchar_t * lesser, char *file, int line);
+void assert_greater     (const void    * greater, const void    * lesser, char *file, int line);
 /**
  * Tests whether the first value is greater than the second value.
  *
@@ -595,33 +595,33 @@ void _assert_greater     (const void    * greater, const void    * lesser, char 
  *                expects to be lesser than the first value.
  */
 #define ASSERT_GREATER(greater, lesser) _Generic((greater),\
-             char        : _assert_greater_ch,   \
-    signed   char        : _assert_greater_sch,  \
-    unsigned char        : _assert_greater_uch,  \
-                                                 \
-             short       : _assert_greater_int,  \
-    unsigned short       : _assert_greater_uint, \
-                                                 \
-             int         : _assert_greater_int,  \
-    unsigned int         : _assert_greater_uint, \
-                                                 \
-             long        : _assert_greater_int,  \
-    unsigned long        : _assert_greater_uint, \
-                                                 \
-             long long   : _assert_greater_int,  \
-    unsigned long long   : _assert_greater_uint, \
-                                                 \
-             float       : _assert_greater_dbl,  \
-             double      : _assert_greater_dbl,  \
-             long double : _assert_greater_dbl,  \
-                                                 \
-             char *      : _assert_greater_str,  \
-    const    char *      : _assert_greater_str,  \
-                                                 \
-             wchar_t *   : _assert_greater_wstr, \
-    const    wchar_t *   : _assert_greater_wstr, \
-                                                 \
-    default              : _assert_greater)(greater, lesser, __FILE__, __LINE__)
+             char        : assert_greater_ch,   \
+    signed   char        : assert_greater_sch,  \
+    unsigned char        : assert_greater_uch,  \
+                                                \
+             short       : assert_greater_int,  \
+    unsigned short       : assert_greater_uint, \
+                                                \
+             int         : assert_greater_int,  \
+    unsigned int         : assert_greater_uint, \
+                                                \
+             long        : assert_greater_int,  \
+    unsigned long        : assert_greater_uint, \
+                                                \
+             long long   : assert_greater_int,  \
+    unsigned long long   : assert_greater_uint, \
+                                                \
+             float       : assert_greater_dbl,  \
+             double      : assert_greater_dbl,  \
+             long double : assert_greater_dbl,  \
+                                                \
+             char *      : assert_greater_str,  \
+    const    char *      : assert_greater_str,  \
+                                                \
+             wchar_t *   : assert_greater_wstr, \
+    const    wchar_t *   : assert_greater_wstr, \
+                                                \
+    default              : assert_greater)(greater, lesser, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_GREATER(greater, less);
@@ -630,7 +630,7 @@ void _assert_greater     (const void    * greater, const void    * lesser, char 
  */
 #define ASSERT_GT(greater, lesser) ASSERT_GREATER(greater, lesser)
 
-void _assert_greater_precision(long double   greater,
+void assert_greater_precision(long double   greater,
                                long double   lesser,
                                long double   epsilon,
                                char        * file,
@@ -649,7 +649,7 @@ void _assert_greater_precision(long double   greater,
  *                for equality.
  */
 #define ASSERT_GREATER_PRECISION(greater, less, epsilon)\
-    _assert_greater_precision(greater, less, epsilon, __FILE__, __LINE__)
+    assert_greater_precision(greater, less, epsilon, __FILE__, __LINE__)
 
 /**
 * @see ASSERT_GREATER_PRECISION(greater, less, epsilon);
@@ -657,17 +657,17 @@ void _assert_greater_precision(long double   greater,
 * @remarks This is just a short-hand for ASSERT_GREATER_PRECISION.
 */
 #define ASSERT_GT_PRECISION(greater, less, epsilon)\
-    _assert_greater_precision(greater, less, epsilon, __FILE__, __LINE__)
+    assert_greater_precision(greater, less, epsilon, __FILE__, __LINE__)
 
-void _assert_greater_equal_ch  (char            ge, char            le, char *file, int line);
-void _assert_greater_equal_sch (signed char     ge, signed char     le, char *file, int line);
-void _assert_greater_equal_uch (unsigned char   ge, unsigned char   le, char *file, int line);
-void _assert_greater_equal_int (intmax_t        ge, intmax_t        le, char *file, int line);
-void _assert_greater_equal_uint(uintmax_t       ge, uintmax_t       le, char *file, int line);
-void _assert_greater_equal_dbl (long double     ge, long double     le, char *file, int line);
-void _assert_greater_equal_str (const char    * ge, const char    * le, char *file, int line);
-void _assert_greater_equal_wstr(const wchar_t * ge, const wchar_t * le, char *file, int line);
-void _assert_greater_equal     (const void    * ge, const void    * le, char *file, int line);
+void assert_greater_equal_ch  (char            ge, char            le, char *file, int line);
+void assert_greater_equal_sch (signed char     ge, signed char     le, char *file, int line);
+void assert_greater_equal_uch (unsigned char   ge, unsigned char   le, char *file, int line);
+void assert_greater_equal_int (intmax_t        ge, intmax_t        le, char *file, int line);
+void assert_greater_equal_uint(uintmax_t       ge, uintmax_t       le, char *file, int line);
+void assert_greater_equal_dbl (long double     ge, long double     le, char *file, int line);
+void assert_greater_equal_str (const char    * ge, const char    * le, char *file, int line);
+void assert_greater_equal_wstr(const wchar_t * ge, const wchar_t * le, char *file, int line);
+void assert_greater_equal     (const void    * ge, const void    * le, char *file, int line);
 /**
  * Tests whether the first value is greater than or equal to the second value.
  *
@@ -678,33 +678,33 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
  *                expects to be lesser than or equal to the first value.
  */
 #define ASSERT_GREATER_EQUAL(ge, le) _Generic((ge),\
-             char        : _assert_greater_equal_ch,   \
-    signed   char        : _assert_greater_equal_sch,  \
-    unsigned char        : _assert_greater_equal_uch,  \
-                                                       \
-             short       : _assert_greater_equal_int,  \
-    unsigned short       : _assert_greater_equal_uint, \
-                                                       \
-             int         : _assert_greater_equal_int,  \
-    unsigned int         : _assert_greater_equal_uint, \
-                                                       \
-             long        : _assert_greater_equal_int,  \
-    unsigned long        : _assert_greater_equal_uint, \
-                                                       \
-             long long   : _assert_greater_equal_int,  \
-    unsigned long long   : _assert_greater_equal_uint, \
-                                                       \
-             float       : _assert_greater_equal_dbl,  \
-             double      : _assert_greater_equal_dbl,  \
-             long double : _assert_greater_equal_dbl,  \
-                                                       \
-             char *      : _assert_greater_equal_str,  \
-    const    char *      : _assert_greater_equal_str,  \
-                                                       \
-             wchar_t *   : _assert_greater_equal_wstr, \
-    const    wchar_t *   : _assert_greater_equal_wstr, \
-                                                       \
-    default              : _assert_greater_equal)(ge, le, __FILE__, __LINE__)
+             char        : assert_greater_equal_ch,   \
+    signed   char        : assert_greater_equal_sch,  \
+    unsigned char        : assert_greater_equal_uch,  \
+                                                      \
+             short       : assert_greater_equal_int,  \
+    unsigned short       : assert_greater_equal_uint, \
+                                                      \
+             int         : assert_greater_equal_int,  \
+    unsigned int         : assert_greater_equal_uint, \
+                                                      \
+             long        : assert_greater_equal_int,  \
+    unsigned long        : assert_greater_equal_uint, \
+                                                      \
+             long long   : assert_greater_equal_int,  \
+    unsigned long long   : assert_greater_equal_uint, \
+                                                      \
+             float       : assert_greater_equal_dbl,  \
+             double      : assert_greater_equal_dbl,  \
+             long double : assert_greater_equal_dbl,  \
+                                                      \
+             char *      : assert_greater_equal_str,  \
+    const    char *      : assert_greater_equal_str,  \
+                                                      \
+             wchar_t *   : assert_greater_equal_wstr, \
+    const    wchar_t *   : assert_greater_equal_wstr, \
+                                                      \
+    default              : assert_greater_equal)(ge, le, __FILE__, __LINE__)
 
 /**
 * @see ASSERT_GREATER_EQUAL(ge, le);
@@ -713,7 +713,7 @@ void _assert_greater_equal     (const void    * ge, const void    * le, char *fi
 */
 #define ASSERT_GE(ge, le) ASSERT_GREATER_EQUAL(ge, le)
 
-void _assert_greater_equal_precision(long double  ge,
+void assert_greater_equal_precision(long double  ge,
                                      long double  le,
                                      long double  epsilon,
                                      char        *file,
@@ -732,7 +732,7 @@ void _assert_greater_equal_precision(long double  ge,
  *                for equality.
  */
 #define ASSERT_GREATER_EQUAL_PRECISION(ge, le, epsilon)\
-    _assert_greater_equal_precision(ge, le, epsilon, __FILE__, __LINE__)
+    assert_greater_equal_precision(ge, le, epsilon, __FILE__, __LINE__)
 
 /**
 * @see ASSERT_GREATER_EQUAL_PRECISION(ge, le, epsilon);
@@ -740,17 +740,17 @@ void _assert_greater_equal_precision(long double  ge,
 * @remarks This is just a short-hand for ASSERT_GREATER_EQUAL_PRECISION.
 */
 #define ASSERT_GE_PRECISION(ge, le, epsilon)\
-    _assert_greater_equal_precision(ge, le, epsilon, __FILE__, __LINE__)
+    assert_greater_equal_precision(ge, le, epsilon, __FILE__, __LINE__)
 
-void _assert_less_ch  (char           lesser, char           greater, char *file, int line);
-void _assert_less_sch (signed char    lesser, signed char    greater, char *file, int line);
-void _assert_less_uch (unsigned char  lesser, unsigned char  greater, char *file, int line);
-void _assert_less_int (intmax_t       lesser, intmax_t       greater, char *file, int line);
-void _assert_less_uint(uintmax_t      lesser, uintmax_t      greater, char *file, int line);
-void _assert_less_dbl (long double    lesser, long double    greater, char *file, int line);
-void _assert_less_str (const char    *lesser, const char    *greater, char *file, int line);
-void _assert_less_wstr(const wchar_t *lesser, const wchar_t *greater, char *file, int line);
-void _assert_less     (const void    *lesser, const void    *greater, char *file, int line);
+void assert_less_ch  (char           lesser, char           greater, char *file, int line);
+void assert_less_sch (signed char    lesser, signed char    greater, char *file, int line);
+void assert_less_uch (unsigned char  lesser, unsigned char  greater, char *file, int line);
+void assert_less_int (intmax_t       lesser, intmax_t       greater, char *file, int line);
+void assert_less_uint(uintmax_t      lesser, uintmax_t      greater, char *file, int line);
+void assert_less_dbl (long double    lesser, long double    greater, char *file, int line);
+void assert_less_str (const char    *lesser, const char    *greater, char *file, int line);
+void assert_less_wstr(const wchar_t *lesser, const wchar_t *greater, char *file, int line);
+void assert_less     (const void    *lesser, const void    *greater, char *file, int line);
 /**
  * Tests whether the first value is lesser than the second value.
  *
@@ -761,33 +761,33 @@ void _assert_less     (const void    *lesser, const void    *greater, char *file
  *                expects to be greater than the first value.
  */
 #define ASSERT_LESS(lesser, greater) _Generic((lesser),\
-             char        : _assert_less_ch,   \
-    signed   char        : _assert_less_sch,  \
-    unsigned char        : _assert_less_uch,  \
-                                              \
-             short       : _assert_less_int,  \
-    unsigned short       : _assert_less_uint, \
-                                              \
-             int         : _assert_less_int,  \
-    unsigned int         : _assert_less_uint, \
-                                              \
-             long        : _assert_less_int,  \
-    unsigned long        : _assert_less_uint, \
-                                              \
-             long long   : _assert_less_int,  \
-    unsigned long long   : _assert_less_uint, \
-                                              \
-             float       : _assert_less_dbl,  \
-             double      : _assert_less_dbl,  \
-             long double : _assert_less_dbl,  \
-                                              \
-             char *      : _assert_less_str,  \
-    const    char *      : _assert_less_str,  \
-                                              \
-             wchar_t *   : _assert_less_wstr, \
-    const    wchar_t *   : _assert_less_wstr, \
-                                              \
-    default              : _assert_less)(lesser, greater, __FILE__, __LINE__)
+             char        : assert_less_ch,   \
+    signed   char        : assert_less_sch,  \
+    unsigned char        : assert_less_uch,  \
+                                             \
+             short       : assert_less_int,  \
+    unsigned short       : assert_less_uint, \
+                                             \
+             int         : assert_less_int,  \
+    unsigned int         : assert_less_uint, \
+                                             \
+             long        : assert_less_int,  \
+    unsigned long        : assert_less_uint, \
+                                             \
+             long long   : assert_less_int,  \
+    unsigned long long   : assert_less_uint, \
+                                             \
+             float       : assert_less_dbl,  \
+             double      : assert_less_dbl,  \
+             long double : assert_less_dbl,  \
+                                             \
+             char *      : assert_less_str,  \
+    const    char *      : assert_less_str,  \
+                                             \
+             wchar_t *   : assert_less_wstr, \
+    const    wchar_t *   : assert_less_wstr, \
+                                             \
+    default              : assert_less)(lesser, greater, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_LESS(lesser, greater);
@@ -796,7 +796,7 @@ void _assert_less     (const void    *lesser, const void    *greater, char *file
  */
 #define ASSERT_LT(lesser, greater) ASSERT_LESS(lesser, greater)
 
-void _assert_less_precision(long double  lesser,
+void assert_less_precision(long double  lesser,
                             long double  greater,
                             long double  epsilon,
                             char        *file,
@@ -815,7 +815,7 @@ void _assert_less_precision(long double  lesser,
  *                for equality.
  */
 #define ASSERT_LESS_PRECISION(lesser, greater, epsilon)\
-    _assert_less_precision(lesser, greater, epsilon, __FILE__, __LINE__)
+    assert_less_precision(lesser, greater, epsilon, __FILE__, __LINE__)
 
 /**
 * @see ASSERT_LESS_PRECISION(lesser, greater, epsilon);
@@ -823,17 +823,17 @@ void _assert_less_precision(long double  lesser,
 * @remarks This is just a short-hand for ASSERT_LESS_PRECISION.
 */
 #define ASSERT_LT_PRECISION(lesser, greater, epsilon)\
-    _assert_less_precision(lesser, greater, epsilon, __FILE__, __LINE__)
+    assert_less_precision(lesser, greater, epsilon, __FILE__, __LINE__)
 
-void _assert_less_equal_ch  (char           le, char           ge, char *file, int line);
-void _assert_less_equal_sch (signed char    le, signed char    ge, char *file, int line);
-void _assert_less_equal_uch (unsigned char  le, unsigned char  ge, char *file, int line);
-void _assert_less_equal_int (intmax_t       le, intmax_t       ge, char *file, int line);
-void _assert_less_equal_uint(uintmax_t      le, uintmax_t      ge, char *file, int line);
-void _assert_less_equal_dbl (long double    le, long double    ge, char *file, int line);
-void _assert_less_equal_str (const char    *le, const char    *ge, char *file, int line);
-void _assert_less_equal_wstr(const wchar_t *le, const wchar_t *ge, char *file, int line);
-void _assert_less_equal     (const void    *le, const void    *ge, char *file, int line);
+void assert_less_equal_ch  (char           le, char           ge, char *file, int line);
+void assert_less_equal_sch (signed char    le, signed char    ge, char *file, int line);
+void assert_less_equal_uch (unsigned char  le, unsigned char  ge, char *file, int line);
+void assert_less_equal_int (intmax_t       le, intmax_t       ge, char *file, int line);
+void assert_less_equal_uint(uintmax_t      le, uintmax_t      ge, char *file, int line);
+void assert_less_equal_dbl (long double    le, long double    ge, char *file, int line);
+void assert_less_equal_str (const char    *le, const char    *ge, char *file, int line);
+void assert_less_equal_wstr(const wchar_t *le, const wchar_t *ge, char *file, int line);
+void assert_less_equal     (const void    *le, const void    *ge, char *file, int line);
 /**
  * Tests whether the first value is lesser than or equal to the second value.
  *
@@ -844,33 +844,33 @@ void _assert_less_equal     (const void    *le, const void    *ge, char *file, i
  *           expects to be greater than or equal to the first value.
  */
 #define ASSERT_LESS_EQUAL(le, ge) _Generic((le),\
-             char        : _assert_less_equal_ch,   \
-    signed   char        : _assert_less_equal_sch,  \
-    unsigned char        : _assert_less_equal_uch,  \
-                                                    \
-             short       : _assert_less_equal_int,  \
-    unsigned short       : _assert_less_equal_uint, \
-                                                    \
-             int         : _assert_less_equal_int,  \
-    unsigned int         : _assert_less_equal_uint, \
-                                                    \
-             long        : _assert_less_equal_int,  \
-    unsigned long        : _assert_less_equal_uint, \
-                                                    \
-             long long   : _assert_less_equal_int,  \
-    unsigned long long   : _assert_less_equal_uint, \
-                                                    \
-             float       : _assert_less_equal_dbl,  \
-             double      : _assert_less_equal_dbl,  \
-             long double : _assert_less_equal_dbl,  \
-                                                    \
-             char *      : _assert_less_equal_str,  \
-    const    char *      : _assert_less_equal_str,  \
-                                                    \
-             wchar_t *   : _assert_less_equal_wstr, \
-    const    wchar_t *   : _assert_less_equal_wstr, \
-                                                    \
-    default              : _assert_less_equal)(le, ge, __FILE__, __LINE__)
+             char        : assert_less_equal_ch,   \
+    signed   char        : assert_less_equal_sch,  \
+    unsigned char        : assert_less_equal_uch,  \
+                                                   \
+             short       : assert_less_equal_int,  \
+    unsigned short       : assert_less_equal_uint, \
+                                                   \
+             int         : assert_less_equal_int,  \
+    unsigned int         : assert_less_equal_uint, \
+                                                   \
+             long        : assert_less_equal_int,  \
+    unsigned long        : assert_less_equal_uint, \
+                                                   \
+             long long   : assert_less_equal_int,  \
+    unsigned long long   : assert_less_equal_uint, \
+                                                   \
+             float       : assert_less_equal_dbl,  \
+             double      : assert_less_equal_dbl,  \
+             long double : assert_less_equal_dbl,  \
+                                                   \
+             char *      : assert_less_equal_str,  \
+    const    char *      : assert_less_equal_str,  \
+                                                   \
+             wchar_t *   : assert_less_equal_wstr, \
+    const    wchar_t *   : assert_less_equal_wstr, \
+                                                   \
+    default              : assert_less_equal)(le, ge, __FILE__, __LINE__)
 
 /**
  * @see ASSERT_LESS_EQUAL(le, ge);
@@ -879,7 +879,7 @@ void _assert_less_equal     (const void    *le, const void    *ge, char *file, i
  */
 #define ASSERT_LE(le, ge) ASSERT_LESS_EQUAL(le, ge)
 
-void _assert_less_equal_precision(long double  le,
+void assert_less_equal_precision(long double  le,
                                   long double  ge,
                                   long double  epsilon,
                                   char        *file,
@@ -898,7 +898,7 @@ void _assert_less_equal_precision(long double  le,
  *                for equality.
  */
 #define ASSERT_LESS_EQUAL_PRECISION(le, ge, epsilon)\
-    _assert_less_equal_precision(le, ge, epsilon, __FILE__, __LINE__)
+    assert_less_equal_precision(le, ge, epsilon, __FILE__, __LINE__)
 
 /**
 * @see ASSERT_LESS_EQUAL_PRECISION(le, ge, epsilon);
@@ -906,7 +906,7 @@ void _assert_less_equal_precision(long double  le,
 * @remarks This is just a short-hand for ASSERT_LESS_EQUAL_PRECISION.
 */
 #define ASSERT_LE_PRECISION(le, ge, epsilon)\
-    _assert_less_equal_precision(le, ge, epsilon, __FILE__, __LINE__)
+    assert_less_equal_precision(le, ge, epsilon, __FILE__, __LINE__)
 
 #ifdef TEST_RUNNER
 
@@ -958,26 +958,26 @@ enum test_result
 };
 
 /** Used to separate items in the skip list. */
-const char *separator = ",";
+static const char *separator = ",";
 
 /** A list of test suit names to skip separated by @see separator.*/
-char *skip_list = NULL;
+static char *skip_list = NULL;
 
-const size_t ASSERT_BUFFER_SIZE = 512;
+static const size_t ASSERT_BUFFER_SIZE = 512;
 
 /** 
  * Holds the output of asserts for the current test.
  *
  * @remarks It should be "cleared" between each test.
  */
-char *assert_buffer = NULL;
+static char *assert_buffer = NULL;
 
 /** 
  * The current length of the assert buffer. 
  * 
  * @remarks This exists to remove some strlen calls.
  */
-int assert_buffer_len = 0;
+static int assert_buffer_len = 0;
 
 static int pass_count = 0;
 static int fail_count = 0;
@@ -993,7 +993,7 @@ static struct options *options = NULL;
 static enum test_result result = undefined;
 
 /** Create base/ reference test. */
-TEST(_base_suite, _base_test){}
+TEST(eztest_base_suite, eztest_base_test){}
 
 //region printers
 
@@ -1162,7 +1162,7 @@ static void register_fail(char *file, const int line, const char *msg, ...)
 
 //region asserts
 
-void _assert_is_null(const void *value, char *file, const int line)
+void assert_is_null(const void *value, char *file, const int line)
 {
     if (value != NULL)
     {
@@ -1170,7 +1170,7 @@ void _assert_is_null(const void *value, char *file, const int line)
     }
 }
 
-void _assert_is_not_null(const void *value, char *file, const int line)
+void assert_is_not_null(const void *value, char *file, const int line)
 {
     if (value == NULL)
     {
@@ -1178,7 +1178,7 @@ void _assert_is_not_null(const void *value, char *file, const int line)
     }
 }
 
-void _assert_is_true(const bool condition, char *file, const int line)
+void assert_is_true(const bool condition, char *file, const int line)
 {
     if(condition != true)
     {
@@ -1186,7 +1186,7 @@ void _assert_is_true(const bool condition, char *file, const int line)
     }
 }
 
-void _assert_is_false(const bool condition, char *file, const int line)
+void assert_is_false(const bool condition, char *file, const int line)
 {
     if(condition != false)
     {
@@ -1194,7 +1194,7 @@ void _assert_is_false(const bool condition, char *file, const int line)
     }
 }
 
-void _assert_are_same(const void *expected, const void *actual, char *file, const int line)
+void assert_are_same(const void *expected, const void *actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -1202,7 +1202,7 @@ void _assert_are_same(const void *expected, const void *actual, char *file, cons
     }
 }
 
-void _assert_are_not_same(const void *unexpected, const void *actual, char *file, const int line)
+void assert_are_not_same(const void *unexpected, const void *actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -1212,7 +1212,7 @@ void _assert_are_not_same(const void *unexpected, const void *actual, char *file
 
 #ifdef NAN
 
-void _assert_is_nan(const float value, char *file, const int line)
+void assert_is_nan(const float value, char *file, const int line)
 {
     if(!isnan(value))
     {
@@ -1236,15 +1236,15 @@ void mem_test_failed(const void *ptr1, const void *ptr2, const size_t  size, cha
     buf[0] = '\0';
 
     snprintf(buf, 128, "%s '0x", msg1);
-    register_bytes(buf, ptr1, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
-    snprintf(buf + strlen(buf), 128 - strlen(buf), "%s'%s '0x", (size > MAX_PRINTABLE_LEN ? "..." : ""), msg2);
-    register_bytes(buf, ptr2, (size > MAX_PRINTABLE_LEN ? MAX_PRINTABLE_LEN : size));
-    snprintf(buf + strlen(buf), 128 - strlen(buf), "%s", (size > MAX_PRINTABLE_LEN ? "...'." : "'."));
+    register_bytes(buf, ptr1, (size > EZTEST_MAX_PRINTABLE_LEN ? EZTEST_MAX_PRINTABLE_LEN : size));
+    snprintf(buf + strlen(buf), 128 - strlen(buf), "%s'%s '0x", (size > EZTEST_MAX_PRINTABLE_LEN ? "..." : ""), msg2);
+    register_bytes(buf, ptr2, (size > EZTEST_MAX_PRINTABLE_LEN ? EZTEST_MAX_PRINTABLE_LEN : size));
+    snprintf(buf + strlen(buf), 128 - strlen(buf), "%s", (size > EZTEST_MAX_PRINTABLE_LEN ? "...'." : "'."));
 
     register_fail(file, line, buf);
 }
 
-void _assert_equal_mem(const void *expected, const void *actual, const size_t size, char *file, const int line)
+void assert_equal_mem(const void *expected, const void *actual, const size_t size, char *file, const int line)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
@@ -1254,7 +1254,7 @@ void _assert_equal_mem(const void *expected, const void *actual, const size_t si
     }
 }
 
-void _assert_not_equal_mem(const void *unexpected, const void *actual, const size_t size, char *file, const int line)
+void assert_not_equal_mem(const void *unexpected, const void *actual, const size_t size, char *file, const int line)
 {
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && memcmp(unexpected, actual, size) == 0))
@@ -1265,7 +1265,7 @@ void _assert_not_equal_mem(const void *unexpected, const void *actual, const siz
 
 
 
-void _assert_greater_mem(const void *greater, const void *lesser, const size_t size, char *file, const int line)
+void assert_greater_mem(const void *greater, const void *lesser, const size_t size, char *file, const int line)
 {
     if((greater == NULL && lesser != NULL) ||
        (greater == NULL && lesser == NULL) ||
@@ -1275,7 +1275,7 @@ void _assert_greater_mem(const void *greater, const void *lesser, const size_t s
     }
 }
 
-void _assert_greater_equal_mem(const void *ge, const void *le, const size_t size, char *file, const int line)
+void assert_greater_equal_mem(const void *ge, const void *le, const size_t size, char *file, const int line)
 {
     if((ge == NULL && le != NULL) ||
        (ge != NULL && le != NULL && memcmp(ge, le, size) < 0))
@@ -1284,7 +1284,7 @@ void _assert_greater_equal_mem(const void *ge, const void *le, const size_t size
     }
 }
 
-void _assert_less_mem(const void *lesser, const void *greater, const size_t size, char *file, const int line)
+void assert_less_mem(const void *lesser, const void *greater, const size_t size, char *file, const int line)
 {
     if((lesser != NULL && greater == NULL) ||
        (lesser == NULL && greater == NULL) ||
@@ -1294,7 +1294,7 @@ void _assert_less_mem(const void *lesser, const void *greater, const size_t size
     }
 }
 
-void _assert_less_equal_mem(const void *le, const void *ge, const size_t size, char *file, const int line)
+void assert_less_equal_mem(const void *le, const void *ge, const size_t size, char *file, const int line)
 {
     if((le != NULL && ge == NULL) ||
        (le != NULL && ge != NULL && memcmp(le, ge, size) > 0))
@@ -1303,7 +1303,7 @@ void _assert_less_equal_mem(const void *le, const void *ge, const size_t size, c
     }
 }
 
-void _assert_are_equal_cmp(const void *expected, 
+void assert_are_equal_cmp(const void *expected, 
                            const void *actual, 
                            int(*cmp_fn)(const void *ptr1, const void *ptr2),
                            char *file,
@@ -1315,7 +1315,7 @@ void _assert_are_equal_cmp(const void *expected,
     }
 }
 
-void _assert_are_not_equal_cmp(const void *unexpected, 
+void assert_are_not_equal_cmp(const void *unexpected, 
                                const void *actual, 
                                int(*cmp_fn)(const void *ptr1, const void *ptr2),
                                char *file,
@@ -1327,7 +1327,7 @@ void _assert_are_not_equal_cmp(const void *unexpected,
     }
 }
 
-void _assert_greater_cmp(const void *greater,
+void assert_greater_cmp(const void *greater,
                          const void *lesser,
                          int(*cmp_fn)(const void *ptr1, const void *ptr2),
                          char *file,
@@ -1339,7 +1339,7 @@ void _assert_greater_cmp(const void *greater,
     }
 }
 
-void _assert_greater_equal_cmp(const void *ge, 
+void assert_greater_equal_cmp(const void *ge, 
                                const void *le, 
                                int(*cmp_fn)(const void *ptr1, const void *ptr2),
                                char *file,
@@ -1351,7 +1351,7 @@ void _assert_greater_equal_cmp(const void *ge,
     }
 }
 
-void _assert_less_cmp(const void *lesser,
+void assert_less_cmp(const void *lesser,
                       const void *greater,
                       int(*cmp_fn)(const void *ptr1, const void *ptr2),
                       char *file,
@@ -1364,7 +1364,7 @@ void _assert_less_cmp(const void *lesser,
 }
 
 
-void _assert_less_equal_cmp(const void *le,
+void assert_less_equal_cmp(const void *le,
                             const void *ge,
                             int(*cmp_fn)(const void *ptr1, const void *ptr2),
                             char *file,
@@ -1376,7 +1376,7 @@ void _assert_less_equal_cmp(const void *le,
     }
 }
 
-void _assert_are_equal_ch(const char expected, const char actual, char *file, const int line)
+void assert_are_equal_ch(const char expected, const char actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -1384,7 +1384,7 @@ void _assert_are_equal_ch(const char expected, const char actual, char *file, co
     }
 }
 
-void _assert_are_equal_sch(const signed char expected, const signed char actual, char *file, const int line)
+void assert_are_equal_sch(const signed char expected, const signed char actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -1392,7 +1392,7 @@ void _assert_are_equal_sch(const signed char expected, const signed char actual,
     }
 }
 
-void _assert_are_equal_uch(const unsigned char expected, const unsigned char actual, char *file, const int line)
+void assert_are_equal_uch(const unsigned char expected, const unsigned char actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -1400,7 +1400,7 @@ void _assert_are_equal_uch(const unsigned char expected, const unsigned char act
     }
 }
 
-void _assert_are_equal_int(const intmax_t expected, const intmax_t actual, char *file, const int line)
+void assert_are_equal_int(const intmax_t expected, const intmax_t actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -1408,7 +1408,7 @@ void _assert_are_equal_int(const intmax_t expected, const intmax_t actual, char 
     }
 }
 
-void _assert_are_equal_uint(const uintmax_t expected, const uintmax_t actual, char *file, const int line)
+void assert_are_equal_uint(const uintmax_t expected, const uintmax_t actual, char *file, const int line)
 {
     if(expected != actual)
     {
@@ -1426,14 +1426,14 @@ void _assert_are_equal_uint(const uintmax_t expected, const uintmax_t actual, ch
  *          in its equality test. It is therefore often better to use assert_are_equal_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_are_equal_dbl(const long double expected, const long double actual, char *file, const int line)
+void assert_are_equal_dbl(const long double expected, const long double actual, char *file, const int line)
 {
     if(fabsl(expected - actual) > LDBL_EPSILON)
     {
         register_fail(file, line, "Assert are equal failed: expected '%0.8Lf', but got '%0.8Lf'.", expected, actual);
     }
 }
-void _assert_are_equal_str(const char *expected, const char *actual, char *file, const int line)
+void assert_are_equal_str(const char *expected, const char *actual, char *file, const int line)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
@@ -1443,7 +1443,7 @@ void _assert_are_equal_str(const char *expected, const char *actual, char *file,
     }
 }
 
-void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual, char *file, const int line)
+void assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual, char *file, const int line)
 {
     if((expected == NULL && actual != NULL) ||
        (expected != NULL && actual == NULL) ||
@@ -1454,12 +1454,12 @@ void _assert_are_equal_wstr(const wchar_t *expected, const wchar_t *actual, char
 }
 
 /** Triggered when attempting to compare using an unsupported data type. */
-void _assert_are_equal(const void *expected, const void *actual, char *file, const int line)
+void assert_are_equal(const void *expected, const void *actual, char *file, const int line)
 {
     register_fail(file, line, "Assert are equal failed: unsupported data type.");
 }
 
-void _assert_are_not_equal_ch(const char unexpected, const char actual, char *file, const int line)
+void assert_are_not_equal_ch(const char unexpected, const char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -1467,7 +1467,7 @@ void _assert_are_not_equal_ch(const char unexpected, const char actual, char *fi
     }
 }
 
-void _assert_are_not_equal_sch(const signed char unexpected, const signed char actual, char *file, const int line)
+void assert_are_not_equal_sch(const signed char unexpected, const signed char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -1475,7 +1475,7 @@ void _assert_are_not_equal_sch(const signed char unexpected, const signed char a
     }
 }
 
-void _assert_are_not_equal_uch(const unsigned char unexpected, const unsigned char actual, char *file, const int line)
+void assert_are_not_equal_uch(const unsigned char unexpected, const unsigned char actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -1483,7 +1483,7 @@ void _assert_are_not_equal_uch(const unsigned char unexpected, const unsigned ch
     }
 }
 
-void _assert_are_not_equal_int(const intmax_t unexpected, const intmax_t actual, char *file, const int line)
+void assert_are_not_equal_int(const intmax_t unexpected, const intmax_t actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -1491,7 +1491,7 @@ void _assert_are_not_equal_int(const intmax_t unexpected, const intmax_t actual,
     }
 }
 
-void _assert_are_not_equal_uint(const uintmax_t unexpected, const uintmax_t actual, char *file, const int line)
+void assert_are_not_equal_uint(const uintmax_t unexpected, const uintmax_t actual, char *file, const int line)
 {
     if(unexpected == actual)
     {
@@ -1509,7 +1509,7 @@ void _assert_are_not_equal_uint(const uintmax_t unexpected, const uintmax_t actu
  *          in its equality test. It is therefore often better to use assert_are_equal_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_are_not_equal_dbl(const long double unexpected, const long double actual, char *file, const int line)
+void assert_are_not_equal_dbl(const long double unexpected, const long double actual, char *file, const int line)
 {
     if(fabsl(unexpected - actual) <= LDBL_EPSILON)
     {
@@ -1517,7 +1517,7 @@ void _assert_are_not_equal_dbl(const long double unexpected, const long double a
     }
 }
 
-void _assert_are_not_equal_str(const char *unexpected, const char *actual, char *file, const int line)
+void assert_are_not_equal_str(const char *unexpected, const char *actual, char *file, const int line)
 {
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && strcmp(unexpected, actual) == 0))
@@ -1526,7 +1526,7 @@ void _assert_are_not_equal_str(const char *unexpected, const char *actual, char 
     }
 }
 
-void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual, char *file, const int line)
+void assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual, char *file, const int line)
 {
     if((unexpected == NULL && actual == NULL) ||
        (unexpected != NULL && actual != NULL && wcscmp(unexpected, actual) == 0))
@@ -1536,12 +1536,12 @@ void _assert_are_not_equal_wstr(const wchar_t *unexpected, const wchar_t *actual
 }
 
 /** Triggered when attempting to compare using an unsupported data type. */
-void _assert_are_not_equal(const void *expected, const void *actual, char *file, const int line)
+void assert_are_not_equal(const void *expected, const void *actual, char *file, const int line)
 {
     register_fail(file, line, "Assert not equal failed: unsupported data type.");
 }
 
-void _assert_are_equal_precision(const long double  expected,
+void assert_are_equal_precision(const long double  expected,
                                  const long double  actual,
                                  const long double  epsilon,
                                  char              *file,
@@ -1553,7 +1553,7 @@ void _assert_are_equal_precision(const long double  expected,
     }
 }
 
-void _assert_are_not_equal_precision(const long double  unexpected,
+void assert_are_not_equal_precision(const long double  unexpected,
                                      const long double  actual,
                                      const long double  epsilon,
                                      char              *file,
@@ -1565,7 +1565,7 @@ void _assert_are_not_equal_precision(const long double  unexpected,
     }
 }
 
-void _assert_greater_ch(const char greater, const char lesser, char *file, const int line)
+void assert_greater_ch(const char greater, const char lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -1573,7 +1573,7 @@ void _assert_greater_ch(const char greater, const char lesser, char *file, const
     }
 }
 
-void _assert_greater_sch(const signed char greater, const signed char lesser, char *file, const int line)
+void assert_greater_sch(const signed char greater, const signed char lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -1581,7 +1581,7 @@ void _assert_greater_sch(const signed char greater, const signed char lesser, ch
     }
 }
 
-void _assert_greater_uch(const unsigned char greater, const unsigned char lesser, char *file, const int line)
+void assert_greater_uch(const unsigned char greater, const unsigned char lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -1589,7 +1589,7 @@ void _assert_greater_uch(const unsigned char greater, const unsigned char lesser
     }
 }
 
-void _assert_greater_int(const intmax_t greater, const intmax_t lesser, char *file, const int line)
+void assert_greater_int(const intmax_t greater, const intmax_t lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -1597,7 +1597,7 @@ void _assert_greater_int(const intmax_t greater, const intmax_t lesser, char *fi
     }
 }
 
-void _assert_greater_uint(const uintmax_t greater, const uintmax_t lesser, char *file, const int line)
+void assert_greater_uint(const uintmax_t greater, const uintmax_t lesser, char *file, const int line)
 {
     if(greater <= lesser)
     {
@@ -1615,14 +1615,14 @@ void _assert_greater_uint(const uintmax_t greater, const uintmax_t lesser, char 
  *          in its equality test. It is therefore often better to use assert_greater_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_greater_dbl(const long double greater, const long double lesser, char *file, const int line)
+void assert_greater_dbl(const long double greater, const long double lesser, char *file, const int line)
 {
     if(fabsl(greater - lesser) <= LDBL_EPSILON || greater < lesser)
     {
         register_fail(file, line, "Assert greater failed: '%0.8Lf' is not greater than '%0.8Lf'.", greater, lesser);
     }
 }
-void _assert_greater_str(const char *greater, const char *lesser, char *file, const int line)
+void assert_greater_str(const char *greater, const char *lesser, char *file, const int line)
 {
     if((greater == NULL && lesser != NULL) ||
        (greater == NULL && lesser == NULL) ||
@@ -1632,7 +1632,7 @@ void _assert_greater_str(const char *greater, const char *lesser, char *file, co
     }
 }
 
-void _assert_greater_wstr(const wchar_t *greater, const wchar_t *lesser, char *file, const int line)
+void assert_greater_wstr(const wchar_t *greater, const wchar_t *lesser, char *file, const int line)
 {
     if((greater == NULL && lesser != NULL) ||
        (greater == NULL && lesser == NULL) ||
@@ -1643,12 +1643,12 @@ void _assert_greater_wstr(const wchar_t *greater, const wchar_t *lesser, char *f
 }
 
 /** Triggered when attempting to compare using an unsupported data type. */
-void _assert_greater(const void *greater, const void *lesser, char *file, const int line)
+void assert_greater(const void *greater, const void *lesser, char *file, const int line)
 {
     register_fail(file, line, "Assert greater failed: unsupported data type.");
 }
 
-void _assert_greater_precision(const long double   greater,
+void assert_greater_precision(const long double   greater,
                                const long double   lesser,
                                const long double   epsilon,
                                char              * file,
@@ -1660,7 +1660,7 @@ void _assert_greater_precision(const long double   greater,
     }
 }
 
-void _assert_greater_equal_ch(const char ge, const char le, char *file, const int line)
+void assert_greater_equal_ch(const char ge, const char le, char *file, const int line)
 {
     if(ge < le)
     {
@@ -1668,7 +1668,7 @@ void _assert_greater_equal_ch(const char ge, const char le, char *file, const in
     }
 }
 
-void _assert_greater_equal_sch (const signed char ge, const signed char le, char *file, const int line)
+void assert_greater_equal_sch (const signed char ge, const signed char le, char *file, const int line)
 {
     if(ge < le)
     {
@@ -1676,7 +1676,7 @@ void _assert_greater_equal_sch (const signed char ge, const signed char le, char
     }
 }
 
-void _assert_greater_equal_uch (const unsigned char ge, const unsigned char le, char *file, const int line)
+void assert_greater_equal_uch (const unsigned char ge, const unsigned char le, char *file, const int line)
 {
     if(ge < le)
     {
@@ -1684,7 +1684,7 @@ void _assert_greater_equal_uch (const unsigned char ge, const unsigned char le, 
     }
 }
 
-void _assert_greater_equal_int (const intmax_t ge, const intmax_t le, char *file, const int line)
+void assert_greater_equal_int (const intmax_t ge, const intmax_t le, char *file, const int line)
 {
     if(ge < le)
     {
@@ -1692,7 +1692,7 @@ void _assert_greater_equal_int (const intmax_t ge, const intmax_t le, char *file
     }
 }
 
-void _assert_greater_equal_uint(const uintmax_t ge, const uintmax_t le, char *file, const int line)
+void assert_greater_equal_uint(const uintmax_t ge, const uintmax_t le, char *file, const int line)
 {
     if(ge < le)
     {
@@ -1707,10 +1707,10 @@ void _assert_greater_equal_uint(const uintmax_t ge, const uintmax_t le, char *fi
  * @param le  The value that is expected to be less than or equal to the first value.
  *
  * @remarks It is important to known that this test uses the epsilon macro from float.h
- *          in its equality test. It is therefore often better to use _assert_greater_equal_precision()
+ *          in its equality test. It is therefore often better to use assert_greater_equal_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_greater_equal_dbl(const long double ge, const long double le, char *file, const int line)
+void assert_greater_equal_dbl(const long double ge, const long double le, char *file, const int line)
 {
     if(fabsl(ge - le) > LDBL_EPSILON && ge < le)
     {
@@ -1718,7 +1718,7 @@ void _assert_greater_equal_dbl(const long double ge, const long double le, char 
     }
 }
 
-void _assert_greater_equal_str(const char *ge, const char *le, char *file, const int line)
+void assert_greater_equal_str(const char *ge, const char *le, char *file, const int line)
 {
     if((ge == NULL && le != NULL) ||
        (ge != NULL && le != NULL && strcmp(ge, le) < 0))
@@ -1727,7 +1727,7 @@ void _assert_greater_equal_str(const char *ge, const char *le, char *file, const
     }
 }
 
-void _assert_greater_equal_wstr(const wchar_t *ge, const wchar_t *le, char *file, const int line)
+void assert_greater_equal_wstr(const wchar_t *ge, const wchar_t *le, char *file, const int line)
 {
     if((ge == NULL && le != NULL) ||
        (ge != NULL && le != NULL && wcscmp(ge, le) < 0))
@@ -1735,12 +1735,12 @@ void _assert_greater_equal_wstr(const wchar_t *ge, const wchar_t *le, char *file
         register_fail(file, line, "Assert greater or equal failed: '%ls' is lesser than '%ls'.", ge, le);
     }
 }
-void _assert_greater_equal(const void *ge, const void *le, char *file, const int line)
+void assert_greater_equal(const void *ge, const void *le, char *file, const int line)
 {
     register_fail(file, line, "Assert greater or equal failed: unsupported data type.");
 }
 
-void _assert_greater_equal_precision(long double  ge,
+void assert_greater_equal_precision(long double  ge,
                                      long double  le,
                                      long double  epsilon,
                                      char        *file,
@@ -1752,7 +1752,7 @@ void _assert_greater_equal_precision(long double  ge,
     }
 }
 
-void _assert_less_ch(const char lesser, const char greater, char *file, const int line)
+void assert_less_ch(const char lesser, const char greater, char *file, const int line)
 {
     if(lesser >= greater)
     {
@@ -1760,7 +1760,7 @@ void _assert_less_ch(const char lesser, const char greater, char *file, const in
     }
 }
 
-void _assert_less_sch(const signed char lesser, const signed char greater, char *file, const int line)
+void assert_less_sch(const signed char lesser, const signed char greater, char *file, const int line)
 {
     if(lesser >= greater)
     {
@@ -1768,7 +1768,7 @@ void _assert_less_sch(const signed char lesser, const signed char greater, char 
     }
 }
 
-void _assert_less_uch(const unsigned char lesser, const unsigned char greater, char *file, const int line)
+void assert_less_uch(const unsigned char lesser, const unsigned char greater, char *file, const int line)
 {
     if(lesser >= greater)
     {
@@ -1776,7 +1776,7 @@ void _assert_less_uch(const unsigned char lesser, const unsigned char greater, c
     }
 }
 
-void _assert_less_int(const intmax_t lesser, const intmax_t greater, char *file, const int line)
+void assert_less_int(const intmax_t lesser, const intmax_t greater, char *file, const int line)
 {
     if(lesser >= greater)
     {
@@ -1784,7 +1784,7 @@ void _assert_less_int(const intmax_t lesser, const intmax_t greater, char *file,
     }
 }
 
-void _assert_less_uint(const uintmax_t lesser, const uintmax_t greater, char *file, const int line)
+void assert_less_uint(const uintmax_t lesser, const uintmax_t greater, char *file, const int line)
 {
     if(lesser >= greater)
     {
@@ -1802,7 +1802,7 @@ void _assert_less_uint(const uintmax_t lesser, const uintmax_t greater, char *fi
  *          in its equality test. It is therefore often better to use assert_greater_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_less_dbl(const long double lesser, const long double greater, char *file, const int line)
+void assert_less_dbl(const long double lesser, const long double greater, char *file, const int line)
 {
     if(fabsl(greater - lesser) <= LDBL_EPSILON || lesser > greater)
     {
@@ -1810,7 +1810,7 @@ void _assert_less_dbl(const long double lesser, const long double greater, char 
     }
 }
 
-void _assert_less_str(const char *lesser, const char *greater, char *file, const int line)
+void assert_less_str(const char *lesser, const char *greater, char *file, const int line)
 {
     if((greater == NULL && lesser != NULL) ||
        (greater == NULL && lesser == NULL) ||
@@ -1820,7 +1820,7 @@ void _assert_less_str(const char *lesser, const char *greater, char *file, const
     }
 }
 
-void _assert_less_wstr(const wchar_t *lesser, const wchar_t *greater, char *file, const int line)
+void assert_less_wstr(const wchar_t *lesser, const wchar_t *greater, char *file, const int line)
 {
     if((greater == NULL && lesser != NULL) ||
        (greater == NULL && lesser == NULL) ||
@@ -1831,12 +1831,12 @@ void _assert_less_wstr(const wchar_t *lesser, const wchar_t *greater, char *file
 }
 
 /** Triggered when attempting to compare using an unsupported data type. */
-void _assert_less(const void *lesser, const void *greater, char *file, const int line)
+void assert_less(const void *lesser, const void *greater, char *file, const int line)
 {
     register_fail(file, line, "Assert less failed: unsupported data type.");
 }
 
-void _assert_less_precision(const long double  lesser,
+void assert_less_precision(const long double  lesser,
                             const long double  greater,
                             const long double  epsilon,
                             char              *file,
@@ -1848,7 +1848,7 @@ void _assert_less_precision(const long double  lesser,
     }
 }
 
-void _assert_less_equal_ch(const char le, const char ge, char *file, const int line)
+void assert_less_equal_ch(const char le, const char ge, char *file, const int line)
 {
     if(le > ge)
     {
@@ -1856,7 +1856,7 @@ void _assert_less_equal_ch(const char le, const char ge, char *file, const int l
     }
 }
 
-void _assert_less_equal_sch (const signed char le, const signed char ge, char *file, const int line)
+void assert_less_equal_sch (const signed char le, const signed char ge, char *file, const int line)
 {
     if(le > ge)
     {
@@ -1864,7 +1864,7 @@ void _assert_less_equal_sch (const signed char le, const signed char ge, char *f
     }
 }
 
-void _assert_less_equal_uch (const unsigned char le, const unsigned char ge, char *file, const int line)
+void assert_less_equal_uch (const unsigned char le, const unsigned char ge, char *file, const int line)
 {
     if(le > ge)
     {
@@ -1872,7 +1872,7 @@ void _assert_less_equal_uch (const unsigned char le, const unsigned char ge, cha
     }
 }
 
-void _assert_less_equal_int (const intmax_t le, const intmax_t ge, char *file, const int line)
+void assert_less_equal_int (const intmax_t le, const intmax_t ge, char *file, const int line)
 {
     if(le > ge)
     {
@@ -1880,7 +1880,7 @@ void _assert_less_equal_int (const intmax_t le, const intmax_t ge, char *file, c
     }
 }
 
-void _assert_less_equal_uint(const uintmax_t le, const uintmax_t ge, char *file, const int line)
+void assert_less_equal_uint(const uintmax_t le, const uintmax_t ge, char *file, const int line)
 {
     if(le > ge)
     {
@@ -1895,10 +1895,10 @@ void _assert_less_equal_uint(const uintmax_t le, const uintmax_t ge, char *file,
  * @param ge The value that is expected to be greater than or equal to the first value.
  *
  * @remarks It is important to known that this test uses the epsilon macro from float.h
- *          in its equality test. It is therefore often better to use _assert_greater_equal_precision()
+ *          in its equality test. It is therefore often better to use assert_greater_equal_precision()
  *          and provide the application specific epsilon.
  */
-void _assert_less_equal_dbl(const long double le, const long double ge, char *file, const int line)
+void assert_less_equal_dbl(const long double le, const long double ge, char *file, const int line)
 {
     if(fabsl(ge - le) > LDBL_EPSILON && le > ge)
     {
@@ -1906,7 +1906,7 @@ void _assert_less_equal_dbl(const long double le, const long double ge, char *fi
     }
 }
 
-void _assert_less_equal_str(const char *le, const char *ge, char *file, const int line)
+void assert_less_equal_str(const char *le, const char *ge, char *file, const int line)
 {
     if((ge == NULL && le != NULL) ||
        (ge != NULL && le != NULL && strcmp(le, ge) > 0))
@@ -1915,7 +1915,7 @@ void _assert_less_equal_str(const char *le, const char *ge, char *file, const in
     }
 }
 
-void _assert_less_equal_wstr(const wchar_t *le, const wchar_t *ge, char *file, const int line)
+void assert_less_equal_wstr(const wchar_t *le, const wchar_t *ge, char *file, const int line)
 {
     if((ge == NULL && le != NULL) ||
        (ge != NULL && le != NULL && wcscmp(le, ge) > 0))
@@ -1923,12 +1923,12 @@ void _assert_less_equal_wstr(const wchar_t *le, const wchar_t *ge, char *file, c
         register_fail(file, line, "Assert less or equal failed: '%ls' is greater then '%ls'.", le, ge);
     }
 }
-void _assert_less_equal(const void *le, const void *ge, char *file, const int line)
+void assert_less_equal(const void *le, const void *ge, char *file, const int line)
 {
     register_fail(file, line, "Assert less or equal failed: unsupported data type.");
 }
 
-void _assert_less_equal_precision(const long double  le,
+void assert_less_equal_precision(const long double  le,
                                   const long double  ge,
                                   const long double  epsilon,
                                   char              *file,
@@ -1958,9 +1958,9 @@ static int discover(struct unit_test **base_test)
 
     while(true)
     {
-        if(tmp->marker == ANSWER_TO_LIFE)
+        if(tmp->marker == EZTEST_MARKER)
         {
-            if(strcmp(tmp->test_name, _BASE_TEST_NAME) == 0)
+            if(strcmp(tmp->test_name, EZTEST_BASE_TEST_NAME) == 0)
             {
                 (*base_test)++;
                 tmp++;
@@ -2058,7 +2058,7 @@ static unsigned int execute(const struct unit_test *test)
 }
 
 /** To be executed on signal: SIGSEGV */
-void onSegfault(int signum)
+static void onSegfault(int signum)
 {
     register_fail("SIGNAL", signum, "Segmentation fault encountered.");
     register_result(0);
@@ -2079,7 +2079,7 @@ int eztest_run(struct options *opts)
     assert(opts != NULL);
     
     options = opts;
-    current = &_GET_STRUCT_NAME(_base_suite, _base_test);
+    current = &EZTEST_STRUCT_NAME(eztest_base_suite, eztest_base_test);
     
     if(options->sigsegv)
     {
