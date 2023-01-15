@@ -1,11 +1,21 @@
-# EzTest
+<h1 align="center">EzTest</h1>
+
+<div align="center">
+
 [![Release](https://img.shields.io/github/v/release/havardt/eztest?label=Release)](https://github.com/havardt/EzTest/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)    
 
-An easy to use unit testing framework written in, and created for, the C language.
+</div>
 
-## :scroll: Table of contents :scroll:
-* [Why use EzTest?](#Why-use-EzTest)
+<p align="center"><i>An easy to use unit testing framework written in, and created for, the C language.</i></p>
+
+<div align="center">
+<img src=".github/assets/example_output.png"/>
+</div>
+
+
+
+## Table of contents
 * [Introduction](#introduction)
 * [Getting started](#getting-started)
 * [Asserts](#asserts)
@@ -13,18 +23,8 @@ An easy to use unit testing framework written in, and created for, the C languag
 * [How to contribute](#contribute)
 * [License info](#license)
 
-## Why use EzTest?
-
-:heavy_check_mark: Easy to use: single header and runner file.    
-:heavy_check_mark: No writing main functions or add-test functions.    
-:heavy_check_mark: Skip tests without altering test code.    
-:heavy_check_mark: Configurable test runner.     
-:heavy_check_mark: Wide list of asserts.    
-:heavy_check_mark: No type prefix or suffix.    
-
 ## Introduction 
 
-<img src=".github/assets/example_output.png"/>
 
 ###### A simple test
 
@@ -136,8 +136,7 @@ The runner is the program that executes the tests.
 The exit code is EXIT_SUCCESS (0) if all tests passed and EXIT_FAILURE (non-zero) if one or more tests failed.
 
 #### Options
-
-| Short | Long | Description |    
+| Short | Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description |    
 | --- | --- | --- |
 | -v | --version | Prints the version number. |       
 | -h | --help | Prints help/ usage information. |           
